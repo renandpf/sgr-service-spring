@@ -1,5 +1,16 @@
 package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driver.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driver.controller.json.ClienteJson;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.usecase.AlterarClienteUsecase;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.usecase.CriarClienteUsecase;
@@ -10,18 +21,19 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClientePa
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
 import lombok.extern.slf4j.Slf4j;
 
-//@Controller("/clientes")
 @Slf4j
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("sgr/gerencial")
 public class ClienteController {
 
 	private ObterClienteUsecase obterClienteUseCase;
 	private CriarClienteUsecase criarClienteUseCase;
 	private AlterarClienteUsecase alterarClienteUseCase;
 
-	//	  @Get("/cpf/:cpf")
-	//	  @Returns(200, ClienteJson)
-	//	  @Returns(404).Description("Not found")
-	public ClienteJson obterPorCpf(/*@PathParams("cpf")*/ String cpf) {
+	
+	@GetMapping("clientes/cpf/{cpf}")
+	public ClienteJson obterPorCpf(@RequestParam String cpf) {
 		log.trace("Start cpf={}", cpf);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorCpf(cpf);
 		ClienteJson clienteJson = new ClienteJson(clienteDto);
@@ -29,10 +41,8 @@ public class ClienteController {
 		return clienteJson;
 	}
 
-	//	  @Get("/email/:email")
-	//	  @Returns(200, ClienteJson)
-	//	  @Returns(404).Description("Not found")
-	public ClienteJson obterPorEmail(/*@PathParams("email") */ String email) {
+	@GetMapping("clientes/email/{email}")
+	public ClienteJson obterPorEmail(@RequestParam String email) {
 		log.trace("Start email={}", email);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorEmail(email);
 		ClienteJson clienteJson = new ClienteJson(clienteDto);
@@ -40,10 +50,9 @@ public class ClienteController {
 		return clienteJson;
 	}
 
-	//	  @Post("/")
-	//	  @Returns(201, ClienteJson)
-	//	  @Returns(404).Description("Not found")
-	public Long criarCliente(/*@BodyParams()*/ ClienteJson cliente) {
+	@PostMapping("clientes")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Long criarCliente(@RequestBody(required = true) ClienteJson cliente) {
 		log.trace("Start cliente={}", cliente);
 		CriarClienteReturnDto returnDto = this.criarClienteUseCase.criar(CriarClienteParamsDto.builder().cliente(cliente.getDto()).build());
 		Long clienteId = returnDto.getClientId();
@@ -51,10 +60,8 @@ public class ClienteController {
 		return clienteId;
 	}
 
-	//	@Put("/:id")
-	//	@Returns(200)
-	//	@Returns(404).Description("Not found")
-	public void alterarCliente(/*@BodyParams() */ClienteJson clienteJson, /*@PathParams("id")*/ Long id){
+	@PutMapping("clientes/{id}")
+	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @RequestParam Long id){
 		log.trace("Start clienteJson={}, id={}", clienteJson, id);
 		this.alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(clienteJson.getDto(id)).build());
 		log.trace("End");
