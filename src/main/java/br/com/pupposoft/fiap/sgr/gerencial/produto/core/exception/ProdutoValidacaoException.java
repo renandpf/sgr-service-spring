@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception;
+package br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception;
 
 import br.com.pupposoft.fiap.starter.exception.SystemBaseException;
 import lombok.Getter;
