@@ -1,5 +1,7 @@
 package br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.usecase;
 
+import org.springframework.stereotype.Service;
+
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.ports.ProdutoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.CriarProdutoParamsDto;
@@ -8,6 +10,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception.ProdutoValidac
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class CriarProdutoUseCaseImpl implements CriarProdutoUseCase {
 
 	private ProdutoRepositoryGateway produtoRepositoryGateway;

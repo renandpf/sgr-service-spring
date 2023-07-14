@@ -2,12 +2,15 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.usecase;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.ports.ClienteRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
 
+@Service
 public class CriarClienteUsecaseImpl implements CriarClienteUsecase {
 	
 	private ClienteRepositoryGateway clienteRepositoryGateway;

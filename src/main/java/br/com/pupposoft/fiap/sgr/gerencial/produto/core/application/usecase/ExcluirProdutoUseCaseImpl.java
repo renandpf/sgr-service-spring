@@ -1,9 +1,12 @@
 package br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.usecase;
 
+import org.springframework.stereotype.Service;
+
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.ports.ProdutoRepositoryGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class ExcluirProdutoUseCaseImpl implements ExcluirProdutoUseCase {
 
 	private ProdutoRepositoryGateway produtoRepositoryGateway;

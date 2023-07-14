@@ -2,6 +2,8 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driven.repository;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.ports.ClienteRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
@@ -9,6 +11,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarCliente
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
 
+@Component
 public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 	
 	@Override
