@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driven.repositories;
+package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driven.repository;
 
 import java.util.Optional;
 

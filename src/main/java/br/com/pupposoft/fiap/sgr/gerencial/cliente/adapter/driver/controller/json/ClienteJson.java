@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driver.controllers.json;
+package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driver.controller.json;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
