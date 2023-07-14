@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.driven.repository.entity;
+package br.com.pupposoft.fiap.sgr.config.database.gerencial.entity;
 
 import java.math.BigDecimal;
 

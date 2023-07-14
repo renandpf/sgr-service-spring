@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driven.repository.entity;
+package br.com.pupposoft.fiap.sgr.config.database.gerencial.entity;
 
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 
