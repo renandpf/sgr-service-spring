@@ -8,6 +8,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CriarClienteReturnDto {
-	private Long clientId;
+	private Long clienteId;
 
 }

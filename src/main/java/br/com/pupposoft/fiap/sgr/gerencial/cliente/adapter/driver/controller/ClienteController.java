@@ -55,7 +55,7 @@ public class ClienteController {
 	public Long criarCliente(@RequestBody(required = true) ClienteJson cliente) {
 		log.trace("Start cliente={}", cliente);
 		CriarClienteReturnDto returnDto = this.criarClienteUseCase.criar(CriarClienteParamsDto.builder().cliente(cliente.getDto()).build());
-		Long clienteId = returnDto.getClientId();
+		Long clienteId = returnDto.getClienteId();
 		log.trace("End clienteId={}", clienteId);
 		return clienteId;
 	}
