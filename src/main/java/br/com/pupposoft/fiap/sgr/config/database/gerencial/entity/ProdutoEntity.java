@@ -4,40 +4,27 @@ import java.math.BigDecimal;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Builder
+@Getter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "Produto")
 public class ProdutoEntity {
-	//@PrimaryGeneratedColumn()
+	@Id
 	private Long id;
-
-	//    @Column({
-	//        type: "varchar",
-	//        length: 100,
-	//        nullable: false
-	//    })
 	private String nome;
-
-	//    @Column({
-	//        type: "varchar",
-	//        length: 500,
-	//        nullable: true
-	//    })
 	private String descricao;
-
-	//    @Column({
-	//        type: "text",
-	//        nullable: true
-	//    })
 	private byte[] imagem;
-
-	//    @Column({
-	//        type: "float",
-	//        nullable: false
-	//    })
 	private BigDecimal valor;
-
-	//    @Column({
-	//        nullable: false
-	//    })
 	private Categoria categoriaId;
 
 	ProdutoEntity(ProdutoDto produto){
@@ -48,7 +35,6 @@ public class ProdutoEntity {
 		this.imagem = produto.getImagem();
 		this.categoriaId = produto.getCategoria();
 	}
-
 
 	public ProdutoDto getProdutoDto() {
 		return ProdutoDto.builder()
