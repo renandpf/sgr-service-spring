@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
+@ToString(exclude = {"numero", "cvv", "cpf"})
 public class CartaoCreditoDto {
 	public String numero;
     public String cvv;

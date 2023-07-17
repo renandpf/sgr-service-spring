@@ -8,6 +8,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class PedidoDto {
-    public Long id;
+    private Long id;
     private Long statusId;
 }

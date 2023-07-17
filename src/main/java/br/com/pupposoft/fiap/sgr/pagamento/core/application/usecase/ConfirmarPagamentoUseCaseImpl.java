@@ -20,6 +20,7 @@ public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase 
 	
 	private PagamentoExternoServiceGateway pagamentoExternoServiceGateway;
 
+	@Override
     public void confirmar(String identificadorPagamento, String statusPagamento) {
         log.trace("Start identificadorPagamento={}, statusPagamento={}", identificadorPagamento, statusPagamento);
 

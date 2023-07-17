@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
@@ -11,8 +12,16 @@ import lombok.ToString;
 @ToString
 public class PagamentoDto {
     private Long id;
-    private PedidoDto pedido;
     private List<CartaoCreditoDto> cartoesCredito;
+    
+    @Setter
+    private PedidoDto pedido;
+
+    @Setter
     private String identificadorPagamentoExterno;
+    
+    public boolean haveCartaoCredito() {
+    	return cartoesCredito != null && !cartoesCredito.isEmpty();
+    }
 
 }
