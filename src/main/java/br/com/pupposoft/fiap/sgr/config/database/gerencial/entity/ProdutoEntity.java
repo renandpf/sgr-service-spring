@@ -27,7 +27,7 @@ public class ProdutoEntity {
 	private BigDecimal valor;
 	private Categoria categoriaId;
 
-	ProdutoEntity(ProdutoDto produto){
+	public ProdutoEntity(ProdutoDto produto){
 		this.id = produto.getId();
 		this.nome = produto.getNome();
 		this.descricao = produto.getDescricao();

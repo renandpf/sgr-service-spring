@@ -2,7 +2,7 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driven.repository;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ClienteEntityRepository;
@@ -15,8 +15,8 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteRe
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ErrorToAccessRepositoryException;
 import lombok.extern.slf4j.Slf4j;
 
-@Repository
 @Slf4j
+@Component
 public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 	private ClienteEntityRepository clienteEntityRepository; 

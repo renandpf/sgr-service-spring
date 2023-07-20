@@ -3,43 +3,101 @@ package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.driven.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
+import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ProdutoEntityRepository;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ErrorToAccessRepositoryException;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.ports.ProdutoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
 
+	@Autowired
+	private ProdutoEntityRepository produtoEntityRepository;
+
 	@Override
 	public Optional<ProdutoDto> obterPorId(Long produtoId) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		try {
+			log.trace("Start produtoId={}", produtoId);
+			Optional<ProdutoEntity> produtoEntityOp = produtoEntityRepository.findById(produtoId);
+
+			Optional<ProdutoDto> produtoOp = 
+					produtoEntityOp.isEmpty() ? 
+							Optional.empty(): Optional.of(produtoEntityOp.get().getProdutoDto());
+
+
+			log.trace("End produtoOp={}", produtoOp);
+			return produtoOp;
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErrorToAccessRepositoryException();
+		}	
 	}
 
 	@Override
 	public List<ProdutoDto> obterPorCategoria(Categoria categoria) {
-		// TODO Auto-generated method stub
-		return null;
+        try {
+            log.trace("Start categoria={}", categoria);
+            List<ProdutoEntity> produtosEntities = produtoEntityRepository.findByCategoriaId(categoria.ordinal());
+            List<ProdutoDto> produtosDto = produtosEntities.stream().map(ProdutoEntity::getProdutoDto).toList();
+            log.trace("End produtosDto={}", produtosDto);
+            return produtosDto;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
 
 	@Override
-	public Long criar(ProdutoDto produto) {
-		// TODO Auto-generated method stub
-		return null;
+	public Long criar(ProdutoDto produtoDto) {
+        try {
+            log.trace("Start produtoDto={}", produtoDto);
+            ProdutoEntity produtoSavedEntity = produtoEntityRepository.save(new ProdutoEntity(produtoDto));
+            Long idProdutoCreated = produtoSavedEntity.getId();
+            log.trace("End idProdutoCreated={}", idProdutoCreated);
+            return idProdutoCreated;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
 
 	@Override
 	public void alterar(ProdutoDto produtoDto) {
-		// TODO Auto-generated method stub
+        try {
+            log.trace("Start produtoDto={}", produtoDto);
+            produtoEntityRepository.save(new ProdutoEntity(produtoDto));
+            log.trace("End");
 
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
 
 	@Override
 	public void excluir(Long produtoId) {
-		// TODO Auto-generated method stub
-
+        try {
+            log.trace("Start id={}", produtoId);
+            produtoEntityRepository.deleteById(produtoId);
+            log.trace("End");
+        }
+        catch (Exception e) {
+            //TODO: este if deve ser removido assim que o usecase de exclusão verificar a associação de pedido x produto
+//            if(e.code === 'ER_ROW_IS_REFERENCED_2'){//TODO: verificar qual a exceção de contraint
+//                throw new ExclusaoProdutoAssociadoPedidoException();
+//            }
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
-
 }
