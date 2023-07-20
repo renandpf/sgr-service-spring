@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.pupposoft.fiap.sgr.config.database.pagamento.entity.PagamentoEntity;
 
 @Repository
-public interface PagamentoRepository extends JpaRepository<PagamentoEntity, Long>{
+public interface PagamentoEntityRepository extends JpaRepository<PagamentoEntity, Long>{
 
 }

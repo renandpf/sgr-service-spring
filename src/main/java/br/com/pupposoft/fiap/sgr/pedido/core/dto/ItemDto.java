@@ -7,9 +7,8 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class ClienteDto {
-	private Long id;
-    private String nome;
-    private String cpf;
-    private String email;
+public class ItemDto {
+	private Long quantidade;
+	private PedidoDto pedido;
+	private ProdutoDto produto;
 }

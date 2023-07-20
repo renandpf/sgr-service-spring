@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.config.database.pagamento.entity;
 
+import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,6 +22,6 @@ public class PagamentoEntity {
 	private String codigoPagamento;
 
 //	  @ManyToOne(() => PedidoEntity, (pedido) => pedido.pagamentos, {eager: true})
-//	  pedido?: PedidoEntity;
+	private PedidoEntity pedido;
 	
 }

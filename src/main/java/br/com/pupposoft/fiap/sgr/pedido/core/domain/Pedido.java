@@ -27,6 +27,10 @@ public class Pedido {
         return this.cliente != null;
     }
     
+    public boolean contemItens() {
+    	return itens != null && !itens.isEmpty();
+    }
+    
 	public void setStatus(Status status) {
 		//IMPLEMENTAR
 		

@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@ToString
 @Builder
+@ToString
 public class ProdutoDto {
     private Long id;
     private String nome;

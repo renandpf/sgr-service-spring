@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import br.com.pupposoft.fiap.sgr.config.database.pagamento.entity.PagamentoEntity;
-import br.com.pupposoft.fiap.sgr.config.database.pagamento.repository.PagamentoRepository;
+import br.com.pupposoft.fiap.sgr.config.database.pagamento.repository.PagamentoEntityRepository;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PagamentoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessRepositoryException;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PagamentoMySqlRepositoryGateway implements PagamentoRepositoryGateway {
 
 	@Autowired
-	private PagamentoRepository pagamentoRepository;
+	private PagamentoEntityRepository pagamentoRepository;
 	
 	@Override
 	public Long criar(PagamentoDto pagamentoDto) {
