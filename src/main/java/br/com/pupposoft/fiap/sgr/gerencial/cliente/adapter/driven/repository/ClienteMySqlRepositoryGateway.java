@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ClienteEntityRepository;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.exception.ErrorToAccessDataRepositoryException;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.ports.ClienteRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteReturnDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ErrorToAccessRepositoryException;
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -32,7 +32,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			throw new ErrorToAccessDataRepositoryException();
+			throw new ErrorToAccessRepositoryException();
 		}
 	}
 
@@ -47,7 +47,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			throw new ErrorToAccessDataRepositoryException();
+			throw new ErrorToAccessRepositoryException();
 		}
 	}
 
@@ -62,7 +62,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			throw new ErrorToAccessDataRepositoryException();
+			throw new ErrorToAccessRepositoryException();
 		}
 	}
 
@@ -77,7 +77,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			throw new ErrorToAccessDataRepositoryException();
+			throw new ErrorToAccessRepositoryException();
 		}
 	}
 
@@ -92,7 +92,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			throw new ErrorToAccessDataRepositoryException();
+			throw new ErrorToAccessRepositoryException();
 		}	
 	}
 

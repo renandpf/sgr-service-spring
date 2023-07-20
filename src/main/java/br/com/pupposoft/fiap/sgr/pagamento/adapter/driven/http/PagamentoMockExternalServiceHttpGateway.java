@@ -1,0 +1,41 @@
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.driven.http;
+
+import org.springframework.stereotype.Component;
+
+import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PagamentoExternoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
+import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class PagamentoMockExternalServiceHttpGateway implements PagamentoExternoServiceGateway {
+
+	@Override
+	public EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto dto) {
+        try {
+            log.trace("Start dto={}", dto);
+
+            log.warn("### MOCK ###");
+            final EnviaPagamentoReturnDto returnDto = 
+            		EnviaPagamentoReturnDto.builder().identificadorPagamento("identificiadorPagamentoMock").build();
+
+            log.trace("End returnDto={}", returnDto);
+
+            return returnDto;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessPagamentoServicoExternoException();
+        }
+	}
+
+	@Override
+	public Status mapStatus(String statusPagamento) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
