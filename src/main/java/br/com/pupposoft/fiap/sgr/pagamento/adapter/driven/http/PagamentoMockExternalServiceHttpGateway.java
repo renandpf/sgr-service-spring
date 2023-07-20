@@ -41,7 +41,7 @@ public class PagamentoMockExternalServiceHttpGateway implements PagamentoExterno
 //        }
 		//FIXME - implementar
 		return null;
-        log.trace("End statusPedido={}", statusPedido);
+        //log.trace("End statusPedido={}", statusPedido);
         //return statusPedido;	
       }
 
