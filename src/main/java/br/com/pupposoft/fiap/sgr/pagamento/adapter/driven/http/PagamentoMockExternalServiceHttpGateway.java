@@ -34,8 +34,15 @@ public class PagamentoMockExternalServiceHttpGateway implements PagamentoExterno
 
 	@Override
 	public Status mapStatus(String statusPagamento) {
-		// TODO Auto-generated method stub
+		log.trace("Start statusPagamento={}", statusPagamento);
+//        let statusPedido = StatusPedido.PAGAMENTO_INVALIDO;
+//        if (statusPagamento === "pago_sucesso") {
+//            statusPedido = StatusPedido.PAGO;
+//        }
+		//FIXME - implementar
 		return null;
-	}
+        log.trace("End statusPedido={}", statusPedido);
+        //return statusPedido;	
+      }
 
 }
