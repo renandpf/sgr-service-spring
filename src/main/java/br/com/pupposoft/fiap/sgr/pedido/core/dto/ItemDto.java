@@ -8,7 +8,8 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ItemDto {
-	private Long quantidade;
-	private PedidoDto pedido;
-	private ProdutoDto produto;
+	  private Long id;
+	  private Long quantidade;
+	  private ProdutoDto produto;
+	  private PedidoDto pedido;
 }

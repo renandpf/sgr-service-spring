@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 
 @Repository
-interface PedidoEntityRepository extends JpaRepository<PedidoEntity, Long>{
+public interface PedidoEntityRepository extends JpaRepository<PedidoEntity, Long>{
 
 }
