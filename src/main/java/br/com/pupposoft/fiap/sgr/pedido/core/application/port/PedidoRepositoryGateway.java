@@ -10,7 +10,7 @@ public interface PedidoRepositoryGateway {
     Long criar(PedidoDto pedido);
     void atualizarStatus(PedidoDto pedido);
     Optional<PedidoDto> obterPorId(Long pedidoId);
-    Optional<List<PedidoDto>> obterEmAndamento();
-    Optional<List<PedidoDto>> obterPorStatusAndIdentificadorPagamento(Status status, String identificadorPagamento);
+    List<PedidoDto> obterEmAndamento();
+    List<PedidoDto> obterPorStatusAndIdentificadorPagamento(Status status, String identificadorPagamento);
     Optional<PedidoDto> obterPorIdentificadorPagamento(String identificadorPagamento);
 }
