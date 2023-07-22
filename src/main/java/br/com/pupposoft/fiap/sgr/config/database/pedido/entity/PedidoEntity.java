@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
+import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
 import br.com.pupposoft.fiap.sgr.config.database.pagamento.entity.PagamentoEntity;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import jakarta.persistence.Entity;
@@ -46,6 +47,11 @@ public class PedidoEntity {
 		dataCadastro = pedido.getDataCadastro();
 		dataConclusao = pedido.getDataConclusao();
 		observacao = pedido.getObservacao();
-		itens = pedido.getItens().stream().map(ItemEntity::new).toList();
+		itens = pedido.getItens().stream().map(iDto -> 
+			new ItemEntity(
+					iDto, 
+					this, 
+					ProdutoEntity.builder().id(iDto.getProduto().getId()).build()))
+				.toList();
 	}
 }

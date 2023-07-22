@@ -6,10 +6,14 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
+import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.ItemEntityRepository;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.PedidoEntityRepository;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.port.PedidoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ClienteDto;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.ErrorToAccessRepositoryException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 
 	private PedidoEntityRepository pedidoEntityRepository;
+	
+	private ItemEntityRepository itemEntityRepository;
 	
 	@Override
 	public Long criar(PedidoDto pedido) {
@@ -28,14 +34,7 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
             pedidoEntityRepository.save(pedidoEntity);
             Long pedidoCreatedId = pedidoEntity.getId();
 
-//            if (pedidoEntity.getI) {
-//                for (let i = 0; i < pedidoEntity.itens.length; i++) {
-//                    const item = pedidoEntity.itens[i];
-//                    item.pedido = pedidoEntityCreated;
-//                    await this.pedidoItemRepository.save(item);
-//                }
-//            }
-
+            pedidoEntity.getItens().forEach(ie -> itemEntityRepository.save(ie));
             log.trace("End pedidoCreatedId={}", pedidoCreatedId);
             return pedidoCreatedId;
 
@@ -48,32 +47,88 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 
 	@Override
 	public void atualizarStatus(PedidoDto pedido) {
-		// TODO Auto-generated method stub
-
+        try {
+            log.trace("Start pedido={}", pedido);
+            this.pedidoEntityRepository.save(
+            		PedidoEntity.builder().
+            			id(pedido.getId())
+            			.statusId(pedido.getStatusId())
+            		.build());
+            log.trace("End");
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
 
 	@Override
 	public Optional<PedidoDto> obterPorId(Long pedidoId) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+        try {
+            log.trace("Start pedidoId={}", pedidoId);
+            Optional<PedidoEntity> pedidoEntityOp = this.pedidoEntityRepository.findById(pedidoId);
+            
+            Optional<PedidoDto> pedidoDtoOp = Optional.empty();
+            if(pedidoEntityOp.isPresent()) {
+            	PedidoEntity pedidoEntity = pedidoEntityOp.get();
+            	
+            	PedidoDto pedidoDto = mapEntityToDto(pedidoEntity);
+            	
+            	pedidoDtoOp = Optional.of(pedidoDto);
+            }
+            
+            
+            log.trace("End pedidoDtoOp={}", pedidoDtoOp);
+            return pedidoDtoOp;
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }
 	}
 
 	@Override
-	public List<PedidoDto> obterEmAndamento() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<PedidoDto> obterPorStatus(List<Status> statusList) {
+        try {
+            log.trace("Start statusList={}", statusList);
+            
+            List<Long> statusIdList = statusList.stream().mapToLong(s -> Status.get(s)).boxed().toList();
+            
+            List<PedidoEntity> pedidoEntityList = this.pedidoEntityRepository.findByStatusIdIn(statusIdList);
 
-	@Override
-	public List<PedidoDto> obterPorStatusAndIdentificadorPagamento(Status status, String identificadorPagamento) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            List<PedidoDto> pedidosDtos = pedidoEntityList.stream().map(this::mapEntityToDto).toList();
+            
+            log.trace("End pedidosDtos={}", pedidosDtos);
+            return pedidosDtos;
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessRepositoryException();
+        }	
+    }
 
-	@Override
-	public Optional<PedidoDto> obterPorIdentificadorPagamento(String identificadorPagamento) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	private PedidoDto mapEntityToDto(PedidoEntity pedidoEntity) {
+		ClienteDto clienteDto = ClienteDto.builder().build();
+		List<ItemDto> itensDto = pedidoEntity.getItens().stream()
+				.map(ie -> ItemDto.builder()
+						.id(ie.getId())
+						.quantidade(ie.getQuantidade())
+						.produto(ProdutoDto.builder()
+								.id(ie.getProduto().getId())
+								.nome(ie.getProduto().getNome())
+								.build())
+				.build())
+			.toList();
+		
+		PedidoDto pedidoDto = PedidoDto.builder()
+			.id(pedidoEntity.getId())
+			.observacao(pedidoEntity.getObservacao())
+			.statusId(pedidoEntity.getStatusId())
+			.dataCadastro(pedidoEntity.getDataCadastro())
+			.dataConclusao(pedidoEntity.getDataConclusao())
+			.cliente(clienteDto)
+			.itens(itensDto)
+		.build();
+		return pedidoDto;
 	}
-
 }

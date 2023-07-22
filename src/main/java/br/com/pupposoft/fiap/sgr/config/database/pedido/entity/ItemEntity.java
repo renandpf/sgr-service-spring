@@ -27,10 +27,13 @@ public class ItemEntity {
 	//@ManyToOne(() => PedidoEntity, (pedido) => pedido.itens, { nullable: false })
 	private PedidoEntity pedido;
 	
-	public ItemEntity(ItemDto item) {
+	public ItemEntity(ItemDto item, PedidoEntity pedido, ProdutoEntity produto) {
 		id = item.getId();
 		quantidade = item.getQuantidade();
 		produto = ProdutoEntity.builder().id(item.getProduto().getId()).build();
+		
+		this.pedido = pedido;
+		this.produto = produto;
 	}
 
 }
