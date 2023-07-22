@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.ports.ProdutoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception.ProdutoNotFoundException;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception.ProdutoNaoEncontradoException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,7 +24,7 @@ public class ObterProdutoUseCaseImpl implements ObterProdutoUseCase {
         Optional<ProdutoDto> produtoFoundOp = produtoRepositoryGateway.obterPorId(id);
         if (produtoFoundOp.isEmpty()) {
             log.warn("Produto not found: {}", id);
-            throw new ProdutoNotFoundException();
+            throw new ProdutoNaoEncontradoException();
         }
 
         ProdutoDto produtoFound = produtoFoundOp.get();

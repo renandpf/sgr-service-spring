@@ -4,22 +4,26 @@ import java.math.BigDecimal;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class ProdutoJson {
-	  public Long id;
+	  private Long id;
 
-	  public String nome;
-	  public String descricao;
-	  public BigDecimal valor;
-	  public Categoria categoria;
-	  public String imagem;
+	  private String nome;
+	  private String descricao;
+	  private BigDecimal valor;
+	  private Categoria categoria;
+	  private String imagem;
 
 	  public ProdutoJson(ProdutoDto produto){
-	    this.id = produto.getId();
-	    this.nome = produto.getNome();
-	    this.descricao = produto.getDescricao();
-	    this.valor = produto.getValor();
-	    this.categoria = produto.getCategoria();
+	    id = produto.getId();
+	    nome = produto.getNome();
+	    descricao = produto.getDescricao();
+	    valor = produto.getValor();
+	    categoria = produto.getCategoria();
 	  }
 
 	  public ProdutoDto getDto(Long id) {

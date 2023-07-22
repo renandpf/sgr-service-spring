@@ -66,4 +66,9 @@ public class ClienteController {
 		this.alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(clienteJson.getDto(id)).build());
 		log.trace("End");
 	}
+
+	public ClienteJson obterById(Long clienteId) {
+		// TODO Implementar!
+		return null;
+	}
 }
