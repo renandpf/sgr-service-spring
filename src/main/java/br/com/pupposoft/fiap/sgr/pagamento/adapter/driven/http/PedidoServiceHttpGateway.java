@@ -21,11 +21,4 @@ public class PedidoServiceHttpGateway implements PedidoServiceGateway {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public Optional<PedidoDto> obterPorIdentificadorPagamento(String identificadorPagamento) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-
 }

@@ -16,7 +16,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnD
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNotFoundException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 		Optional<PedidoDto> pedidoOp = this.pedidoServiceGateway.obterPorId(pagamento.getPedido().getId());
 		if (pedidoOp.isEmpty()) {
 			log.warn("Pedido não encontrado. pagamento.pedido.id={}", pagamento.getPedido().getId());
-			throw new PedidoNotFoundException();
+			throw new PedidoNaoEncontradoException();
 		}
 
 		return pedidoOp.get();

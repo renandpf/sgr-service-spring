@@ -17,27 +17,27 @@ import lombok.extern.slf4j.Slf4j;
 public class ProdutoServiceDirectCallGateway implements ProdutoServiceGateway {
 
 	private ProdutoController produtoController;
-	
+
 	@Override
 	public Optional<ProdutoDto> obterPorId(Long produtoId) {
 		try {
 			Optional<ProdutoDto> produtoDtoOp = Optional.empty();
 			try {
 				log.trace("Start produtoId={}", produtoId);
-				
+
 				ProdutoJson produtoJson = produtoController.obterById(produtoId);
-				
+
 				ProdutoDto produtoDto = mapJsonToDto(produtoJson);
-				
-				 produtoDtoOp = Optional.of(produtoDto);
-				
+
+				produtoDtoOp = Optional.of(produtoDto);
+
 			} catch (ProdutoNaoEncontradoException e) {
 				produtoDtoOp = Optional.empty();
 			}
-			
+
 			log.trace("End produtoDtoOp={}", produtoDtoOp);
 			return produtoDtoOp;
-			
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new ErrorToAccessProdutoServiceException();

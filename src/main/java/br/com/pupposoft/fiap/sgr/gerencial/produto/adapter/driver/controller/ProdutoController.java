@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,7 @@ public class ProdutoController {
 	private ExcluirProdutoUseCase excluirProdutoUseCase; 
 
 	@GetMapping("categorias/{categoria}/produtos")
-	public List<ProdutoJson> obterPorCategoria(@RequestParam Categoria categoria) {
+	public List<ProdutoJson> obterPorCategoria(@PathVariable Categoria categoria) {
 		log.trace("Start categoria={}", categoria);
 		List<ProdutoDto> produtos = this.obterProdutoUseCase.obterPorCategoria(categoria);
 		List<ProdutoJson> produtosJson = produtos.stream().map(ProdutoJson::new).toList();
@@ -46,7 +47,7 @@ public class ProdutoController {
 	}
 
 	@GetMapping("produtos/{id}")
-	public ProdutoJson obterById(@RequestParam Long id) {
+	public ProdutoJson obterById(@PathVariable Long id) {
 		log.trace("Start id={}", id);
 		ProdutoDto produtoDto = this.obterProdutoUseCase.obterPorId(id);
 		ProdutoJson produtoJson = new ProdutoJson(produtoDto);
@@ -67,14 +68,14 @@ public class ProdutoController {
 	}
 
 	@PutMapping("produtos/{id}")
-	public void alterar(@RequestParam Long id, @RequestBody(required = true) ProdutoJson produtoJson){
+	public void alterar(@PathVariable Long id, @RequestBody(required = true) ProdutoJson produtoJson){
 		log.trace("Start id={}, produtoJson={}", id, produtoJson);
 		this.alterarProdutoUseCase.alterar(AlterarProdutoParamsDto.builder().produto(produtoJson.getDto(id)).build());
 		log.trace("End");
 	}
 
 	@DeleteMapping("produtos/{id}")
-	public void excluir(@RequestParam Long id) {
+	public void excluir(@PathVariable Long id) {
 		log.trace("Start id={}", id);
 		this.excluirProdutoUseCase.excluir(id);
 		log.trace("End");

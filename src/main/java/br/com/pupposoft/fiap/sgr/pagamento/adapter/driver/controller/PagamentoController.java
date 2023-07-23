@@ -1,7 +1,11 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.driver.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +16,9 @@ import br.com.pupposoft.fiap.sgr.pagamento.adapter.driver.controller.json.Confir
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.driver.controller.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.usecase.ConfirmarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.usecase.EfetuarPagamentoUseCase;
+import br.com.pupposoft.fiap.sgr.pagamento.core.application.usecase.ObterPagamentoUsecase;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 public class PagamentoController {
     private EfetuarPagamentoUseCase efetuarPagamentoUseCase;
     private ConfirmarPagamentoUseCase confirmarPagamentoUseCase;
+    private ObterPagamentoUsecase obterPagamentoUseCase;
 
 	@PostMapping("efetuar")
 	@ResponseStatus(HttpStatus.CREATED)
     public Long efetuar(@RequestBody(required = true) PagamentoJson pagamentoJson) {
         log.trace("Start pagamentoJson={}", pagamentoJson);
-        EfetuarPagamentoReturnDto returnDto = this.efetuarPagamentoUseCase.efetuar(EfetuarPagamentoParamDto.builder().pagamento(pagamentoJson.getDto()).build());
+        
+        EfetuarPagamentoParamDto paramsDto = mapJsonToDto(pagamentoJson);
+        EfetuarPagamentoReturnDto returnDto = this.efetuarPagamentoUseCase.efetuar(paramsDto);
+        
         Long pagamentoId = returnDto.getPagamentoId();
         log.trace("End pagamentoId={}", pagamentoId);
         return pagamentoId;
@@ -39,8 +50,50 @@ public class PagamentoController {
     public void confirmar(@RequestBody(required = true)  ConfirmacaoPagamentoJson confirmacaoPagamentoJson) {
         log.trace("Start confirmacaoPagamentoJson={}", confirmacaoPagamentoJson);
 
-        //fixme: Esta chamada deve ser async
-        this.confirmarPagamentoUseCase.confirmar(confirmacaoPagamentoJson.getIdentificador(), confirmacaoPagamentoJson.getStatus());
+        //TODO - alterar este método para NÃO receber o status. Na pratica o sistema deve ir buscar o status no sistema terceiro
+        //FIXME: Esta chamada deve ser async
+        confirmarPagamentoUseCase.confirmar(confirmacaoPagamentoJson.getIdentificador(), confirmacaoPagamentoJson.getStatus());
         log.trace("End");
     }
+
+	@GetMapping("identificador-pagamento-externo/{identificadorPagamentoExterno}")
+	public PagamentoJson obterByIdentificadorPagamento(@PathVariable String identificadorPagamentoExterno) {
+		log.trace("Start identificadorPagamento={}", identificadorPagamentoExterno);
+		PagamentoDto dto = obterPagamentoUseCase.obterPorIdentificadorPagamento(identificadorPagamentoExterno);
+		PagamentoJson json = mapDtoToJson(dto);
+		log.trace("End json={}", json);
+		return json;
+	}
+
+	private PagamentoJson mapDtoToJson(PagamentoDto dto) {
+		PagamentoJson json = PagamentoJson.builder()
+				.id(dto.getId())
+				.identificadorPagamento(dto.getIdentificadorPagamentoExterno())
+				.pedidoId(dto.getPedido().getId())
+				.build();
+		return json;
+	}
+	
+	private EfetuarPagamentoParamDto mapJsonToDto(PagamentoJson pagamentoJson) {
+		List<CartaoCreditoDto> ccDtoList = pagamentoJson.getCartoesCreditos().stream().map(ccJson -> {
+        	return CartaoCreditoDto.builder()
+        			.cpf(ccJson.getCpf())
+        			.nome(ccJson.getNome())
+        			.numero(ccJson.getNumero())
+        			.cvv(ccJson.getCvv())
+        			.valor(ccJson.getValor())
+        			.build();
+        }).toList();
+        
+        EfetuarPagamentoParamDto paramsDto = EfetuarPagamentoParamDto.builder()
+        .pagamento(PagamentoDto
+        		.builder()
+        		.id(pagamentoJson.getId())
+        		.identificadorPagamentoExterno(pagamentoJson.getIdentificadorPagamento())
+        		.cartoesCredito(ccDtoList)
+        		.build())
+        .build();
+		return paramsDto;
+	}
+
 }

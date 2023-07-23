@@ -19,7 +19,7 @@ public class PagamentoEntity {
 	@Id
     private Long id;
 
-	private String codigoPagamento;
+	private String identificadorPagamentoExterno;
 
 //	  @ManyToOne(() => PedidoEntity, (pedido) => pedido.pagamentos, {eager: true})
 	private PedidoEntity pedido;
