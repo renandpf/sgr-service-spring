@@ -40,7 +40,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 	public AlterarClienteReturnDto alterar(AlterarClienteParamsDto paramsDto) {
 		try {
 			log.trace("Start paramsDto={}", paramsDto);
-			this.clienteEntityRepository.save(new ClienteEntity(paramsDto.getCliente()));
+			this.clienteEntityRepository.save(mapDtoToEntity(paramsDto.getCliente()));
 			AlterarClienteReturnDto returnDto = new AlterarClienteReturnDto();
 			log.trace("End returnDto={}", returnDto);
 			return returnDto;
@@ -70,7 +70,7 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 	public CriarClienteReturnDto criar(CriarClienteParamsDto paramsDto) {
 		try {
 			log.trace("Start paramsDto={}", paramsDto);
-			ClienteEntity clientEntity = this.clienteEntityRepository.save(new ClienteEntity(paramsDto.getCliente()));
+			ClienteEntity clientEntity = this.clienteEntityRepository.save(mapDtoToEntity(paramsDto.getCliente()));
 			CriarClienteReturnDto returnDto = CriarClienteReturnDto.builder().clienteId(clientEntity.getId()).build();
 			log.trace("End returnDto={}", returnDto);
 			return returnDto;
@@ -99,9 +99,30 @@ public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 	private Optional<ClienteDto> mapEntityOpToDtoOp(Optional<ClienteEntity> clientEntityOp) {
 		Optional<ClienteDto> clienteDtoOp = Optional.empty();
 		if(clientEntityOp.isPresent()) {
-			clienteDtoOp = Optional.of(clientEntityOp.get().getClientDto());
+			clienteDtoOp = Optional.of(mapEntityToDto(clientEntityOp.get()));
 		}
 		return clienteDtoOp;
 	}
 
+	
+	private ClienteEntity mapDtoToEntity(ClienteDto dto) {
+		
+		return ClienteEntity.builder()
+				.id(dto.getId())
+				.nome(dto.getNome())
+				.cpf(dto.getCpf())
+				.email(dto.getEmail())
+				.build();
+	}
+	
+	private ClienteDto mapEntityToDto(ClienteEntity entity) {
+		
+		return ClienteDto.builder()
+				.id(entity.getId())
+				.nome(entity.getNome())
+				.cpf(entity.getCpf())
+				.email(entity.getEmail())
+				.build();
+	}
+	
 }

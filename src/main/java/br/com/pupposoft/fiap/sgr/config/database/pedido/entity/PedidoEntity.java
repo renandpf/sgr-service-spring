@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
-import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
 import br.com.pupposoft.fiap.sgr.config.database.pagamento.entity.PagamentoEntity;
-import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,28 +30,13 @@ public class PedidoEntity {
 	private LocalDate dataConclusao;
 	private String observacao;
 	
-	//	  @ManyToOne(() => ClienteEntity, (cliente) => cliente.pedidos, { nullable: true })
-	//@JoinColumn()
+	@ManyToOne()
 	private ClienteEntity cliente;
 
-	//@OneToMany(() => PedidoItemEntity, (item) => item.pedido)
-	//@JoinTable()
+	@OneToMany
 	private List<ItemEntity> itens;
 
-	//@OneToMany(() => PagamentoEntity, (pagamento) => pagamento.pedido)
+	@OneToMany
 	private List<PagamentoEntity> pagamentos;
 
-	public PedidoEntity(PedidoDto pedido) {
-		id = pedido.getId();
-		statusId = pedido.getStatusId();
-		dataCadastro = pedido.getDataCadastro();
-		dataConclusao = pedido.getDataConclusao();
-		observacao = pedido.getObservacao();
-		itens = pedido.getItens().stream().map(iDto -> 
-			new ItemEntity(
-					iDto, 
-					this, 
-					ProdutoEntity.builder().id(iDto.getProduto().getId()).build()))
-				.toList();
-	}
 }

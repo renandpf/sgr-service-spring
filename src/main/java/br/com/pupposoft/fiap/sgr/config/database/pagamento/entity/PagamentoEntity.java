@@ -3,6 +3,7 @@ package br.com.pupposoft.fiap.sgr.config.database.pagamento.entity;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +18,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "Pagamento")
 public class PagamentoEntity {
 	@Id
-    private Long id;
+	private Long id;
 
 	private String identificadorPagamentoExterno;
 
-//	  @ManyToOne(() => PedidoEntity, (pedido) => pedido.pagamentos, {eager: true})
+	@ManyToOne
 	private PedidoEntity pedido;
-	
+
 }

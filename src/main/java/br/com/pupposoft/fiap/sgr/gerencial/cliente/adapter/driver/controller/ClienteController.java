@@ -36,7 +36,7 @@ public class ClienteController {
 	public ClienteJson obterPorCpf(@RequestParam String cpf) {
 		log.trace("Start cpf={}", cpf);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorCpf(cpf);
-		ClienteJson clienteJson = new ClienteJson(clienteDto);
+		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
 	}
@@ -45,7 +45,7 @@ public class ClienteController {
 	public ClienteJson obterPorEmail(@RequestParam String email) {
 		log.trace("Start email={}", email);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorEmail(email);
-		ClienteJson clienteJson = new ClienteJson(clienteDto);
+		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
 	}
@@ -54,7 +54,7 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long criarCliente(@RequestBody(required = true) ClienteJson cliente) {
 		log.trace("Start cliente={}", cliente);
-		CriarClienteReturnDto returnDto = this.criarClienteUseCase.criar(CriarClienteParamsDto.builder().cliente(cliente.getDto()).build());
+		CriarClienteReturnDto returnDto = this.criarClienteUseCase.criar(CriarClienteParamsDto.builder().cliente(mapJsonToDto(null, cliente)).build());
 		Long clienteId = returnDto.getClienteId();
 		log.trace("End clienteId={}", clienteId);
 		return clienteId;
@@ -63,7 +63,7 @@ public class ClienteController {
 	@PutMapping("clientes/{id}")
 	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @RequestParam Long id){
 		log.trace("Start clienteJson={}, id={}", clienteJson, id);
-		this.alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(clienteJson.getDto(id)).build());
+		this.alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(mapJsonToDto(id, clienteJson)).build());
 		log.trace("End");
 	}
 
@@ -71,4 +71,23 @@ public class ClienteController {
 		// TODO Implementar!
 		return null;
 	}
+	
+	private ClienteJson mapDtoToJson(ClienteDto dto) {
+		return ClienteJson.builder()
+				.id(dto.getId())
+				.nome(dto.getNome())
+				.cpf(dto.getCpf())
+				.email(dto.getEmail())
+				.build();
+	}
+	
+	private ClienteDto mapJsonToDto(Long id, ClienteJson json) {
+		return ClienteDto.builder()
+				.id(id)
+				.nome(json.getNome())
+				.cpf(json.getCpf())
+				.email(json.getEmail())
+				.build();
+	}
+	
 }

@@ -35,7 +35,7 @@ public class CriarProdutoUseCaseImpl implements CriarProdutoUseCase {
             log.warn("Valor é obrigatório");
             throw new ProdutoValidacaoException("Valor é obrigatório");
         }
-        else if(produtoDto.getCategoria() == null){
+        else if(produtoDto.getCategoriaId() == null){
             log.warn("Categoria é obrigatória");
             throw new ProdutoValidacaoException("Categoria é obrigatória");
         }

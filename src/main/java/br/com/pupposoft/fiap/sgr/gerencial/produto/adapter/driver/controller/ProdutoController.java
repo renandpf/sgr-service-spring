@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +40,7 @@ public class ProdutoController {
 	public List<ProdutoJson> obterPorCategoria(@PathVariable Categoria categoria) {
 		log.trace("Start categoria={}", categoria);
 		List<ProdutoDto> produtos = this.obterProdutoUseCase.obterPorCategoria(categoria);
-		List<ProdutoJson> produtosJson = produtos.stream().map(ProdutoJson::new).toList();
+		List<ProdutoJson> produtosJson = produtos.stream().map(this::mapDtoToJson).toList();
 		log.trace("End produtosJson={}", produtosJson);
 		return produtosJson;
 	}
@@ -50,7 +49,7 @@ public class ProdutoController {
 	public ProdutoJson obterById(@PathVariable Long id) {
 		log.trace("Start id={}", id);
 		ProdutoDto produtoDto = this.obterProdutoUseCase.obterPorId(id);
-		ProdutoJson produtoJson = new ProdutoJson(produtoDto);
+		ProdutoJson produtoJson = mapDtoToJson(produtoDto);
 		log.trace("End produtoJson={}", produtoJson);
 		return produtoJson;
 	}
@@ -61,7 +60,7 @@ public class ProdutoController {
 		log.trace("Start produtoJson={}", produtoJson);
 		CriarProdutoReturnDto returnDto = 
 				this.criarProdutoUseCase.criar(CriarProdutoParamsDto.builder()
-						.produto(produtoJson.getDto(null)).build());
+						.produto(mapJsonToDto(null, produtoJson)).build());
 		Long id = returnDto.getId();
 		log.trace("End id={}", id);
 		return id;
@@ -70,7 +69,7 @@ public class ProdutoController {
 	@PutMapping("produtos/{id}")
 	public void alterar(@PathVariable Long id, @RequestBody(required = true) ProdutoJson produtoJson){
 		log.trace("Start id={}, produtoJson={}", id, produtoJson);
-		this.alterarProdutoUseCase.alterar(AlterarProdutoParamsDto.builder().produto(produtoJson.getDto(id)).build());
+		this.alterarProdutoUseCase.alterar(AlterarProdutoParamsDto.builder().produto(mapJsonToDto(id, produtoJson)).build());
 		log.trace("End");
 	}
 
@@ -80,4 +79,27 @@ public class ProdutoController {
 		this.excluirProdutoUseCase.excluir(id);
 		log.trace("End");
 	}
+	
+	private ProdutoDto mapJsonToDto(Long id, ProdutoJson json) {
+		return ProdutoDto.builder()
+				.id(id)
+				.nome(json.getNome())
+				.descricao(json.getDescricao())
+				.valor(json.getValor())
+				.categoriaId( Categoria.get(Categoria.valueOf(json.getCategoria())))
+				.imagem(json.getImagem())
+				.build();
+	}
+	
+	private ProdutoJson mapDtoToJson(ProdutoDto dto) {
+		return ProdutoJson.builder()
+				.id(dto.getId())
+				.nome(dto.getNome())
+				.descricao(dto.getDescricao())
+				.valor(dto.getValor())
+				.categoria(Categoria.get(dto.getCategoriaId()).name())
+				.imagem(dto.getImagem())
+				.build();
+	}
+	
 }

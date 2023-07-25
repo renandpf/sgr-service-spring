@@ -1,9 +1,11 @@
 package br.com.pupposoft.fiap.sgr.config.database.pedido.entity;
 
+import java.math.BigDecimal;
+
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
-import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,20 +22,13 @@ public class ItemEntity {
 	@Id
 	private Long id;
 	private Long quantidade;
+	private BigDecimal valor;
 
-	//@ManyToOne(() => ProdutoEntity, { nullable: false })
+	@ManyToOne()
 	private ProdutoEntity produto;
 
-	//@ManyToOne(() => PedidoEntity, (pedido) => pedido.itens, { nullable: false })
+	@ManyToOne
 	private PedidoEntity pedido;
 	
-	public ItemEntity(ItemDto item, PedidoEntity pedido, ProdutoEntity produto) {
-		id = item.getId();
-		quantidade = item.getQuantidade();
-		produto = ProdutoEntity.builder().id(item.getProduto().getId()).build();
-		
-		this.pedido = pedido;
-		this.produto = produto;
-	}
 
 }

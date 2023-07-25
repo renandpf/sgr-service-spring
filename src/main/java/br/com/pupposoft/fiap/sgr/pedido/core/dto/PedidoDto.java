@@ -18,4 +18,19 @@ public class PedidoDto {
     private LocalDate dataConclusao;
     private ClienteDto cliente;
     private List<ItemDto> itens;
+    private List<PagamentoDto> pagamentos;
+    
+    public boolean hasCliente() {
+    	return cliente != null;
+    }
+    
+    public boolean hasItens() {
+    	return itens != null && !itens.isEmpty();
+    }
+
+    public boolean hasPagamentos() {
+    	return pagamentos != null && !pagamentos.isEmpty();
+    }
+    
+    
 }

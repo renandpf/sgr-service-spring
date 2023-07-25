@@ -1,10 +1,15 @@
 package br.com.pupposoft.fiap.sgr.pedido.adapter.driven.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
+import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
+import br.com.pupposoft.fiap.sgr.config.database.pagamento.entity.PagamentoEntity;
+import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.ItemEntity;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.ItemEntityRepository;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.PedidoEntityRepository;
@@ -30,7 +35,7 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
         try {
             log.trace("Start pedido={}", pedido);
 
-            PedidoEntity pedidoEntity = new PedidoEntity(pedido);
+            PedidoEntity pedidoEntity = mapDtoToEntity(pedido);
             pedidoEntityRepository.save(pedidoEntity);
             Long pedidoCreatedId = pedidoEntity.getId();
 
@@ -131,4 +136,53 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 		.build();
 		return pedidoDto;
 	}
+	
+	private PedidoEntity mapDtoToEntity(PedidoDto pedidoDto) {
+		
+		ClienteEntity clienteEntity = null;
+		if(pedidoDto.hasCliente()) {
+			ClienteDto clienteDto = pedidoDto.getCliente();
+			clienteEntity = ClienteEntity.builder()
+					.id(clienteDto.getId())
+					.nome(clienteDto.getNome())
+					.cpf(clienteDto.getCpf())
+					.email(clienteDto.getEmail())
+					.build();
+		}
+		
+		List<ItemEntity> itens = new ArrayList<>();
+		if(pedidoDto.hasItens()) {
+			itens = pedidoDto.getItens().stream().map(i -> {
+				return ItemEntity.builder()
+						.id(null)
+						.quantidade(null)
+						.valor(null)
+						.produto(ProdutoEntity.builder().id(null).build())
+						.build();
+			}).toList();
+		}
+		
+		List<PagamentoEntity> pagamentos = new ArrayList<>();
+		if(pedidoDto.hasPagamentos()) {
+			pagamentos = pedidoDto.getPagamentos().stream().map(p -> {
+				return PagamentoEntity.builder()
+						.id(p.getId())
+						.identificadorPagamentoExterno(p.getIdentificadorPagamento())
+						.build();
+			}).toList();
+		}
+		
+		return PedidoEntity.builder()
+				.id(pedidoDto.getId())
+				.statusId(pedidoDto.getStatusId())
+				.dataCadastro(pedidoDto.getDataCadastro())
+				.dataConclusao(pedidoDto.getDataConclusao())
+				.observacao(pedidoDto.getObservacao())
+				.cliente(clienteEntity)
+				.itens(itens)
+				.pagamentos(pagamentos)
+				.build();
+		
+	}	
+	
 }

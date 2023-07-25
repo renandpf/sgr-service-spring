@@ -50,7 +50,7 @@ public class ProdutoServiceDirectCallGateway implements ProdutoServiceGateway {
 				.nome(produtoJson.getNome())
 				.descricao(produtoJson.getDescricao())
 				.valor(produtoJson.getValor())
-				.categoria(produtoJson.getCategoria().name())
+				.categoria(produtoJson.getCategoria())
 				.build();
 		return produtoDto;
 	}

@@ -29,7 +29,7 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
 
 			Optional<ProdutoDto> produtoOp = 
 					produtoEntityOp.isEmpty() ? 
-							Optional.empty(): Optional.of(produtoEntityOp.get().getProdutoDto());
+							Optional.empty(): Optional.of(mapEntityToDto(produtoEntityOp.get()));
 
 
 			log.trace("End produtoOp={}", produtoOp);
@@ -46,7 +46,7 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
         try {
             log.trace("Start categoria={}", categoria);
             List<ProdutoEntity> produtosEntities = produtoEntityRepository.findByCategoriaId(categoria.ordinal());
-            List<ProdutoDto> produtosDto = produtosEntities.stream().map(ProdutoEntity::getProdutoDto).toList();
+            List<ProdutoDto> produtosDto = produtosEntities.stream().map(this::mapEntityToDto).toList();
             log.trace("End produtosDto={}", produtosDto);
             return produtosDto;
 
@@ -60,7 +60,7 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
 	public Long criar(ProdutoDto produtoDto) {
         try {
             log.trace("Start produtoDto={}", produtoDto);
-            ProdutoEntity produtoSavedEntity = produtoEntityRepository.save(new ProdutoEntity(produtoDto));
+            ProdutoEntity produtoSavedEntity = produtoEntityRepository.save(mapDtoToEntity(produtoDto));
             Long idProdutoCreated = produtoSavedEntity.getId();
             log.trace("End idProdutoCreated={}", idProdutoCreated);
             return idProdutoCreated;
@@ -75,7 +75,7 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
 	public void alterar(ProdutoDto produtoDto) {
         try {
             log.trace("Start produtoDto={}", produtoDto);
-            produtoEntityRepository.save(new ProdutoEntity(produtoDto));
+            produtoEntityRepository.save(mapDtoToEntity(produtoDto));
             log.trace("End");
 
         } catch (Exception e) {
@@ -100,4 +100,26 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
             throw new ErrorToAccessRepositoryException();
         }
 	}
+	
+	private ProdutoDto mapEntityToDto(ProdutoEntity entity) {
+		return ProdutoDto.builder()
+				.id(entity.getId())
+				.nome(entity.getNome())
+				.descricao(entity.getDescricao())
+				.valor(entity.getValor())
+				.categoriaId( entity.getCategoriaId())
+				.imagem(entity.getImagem())
+				.build();
+	}
+	
+	private ProdutoEntity mapDtoToEntity(ProdutoDto dto) {
+		return ProdutoEntity.builder()
+				.id(dto.getId())
+				.nome(dto.getNome())
+				.descricao(dto.getDescricao())
+				.valor(dto.getValor())
+				.categoriaId( dto.getCategoriaId())
+				.imagem(dto.getImagem())
+				.build();
+	}	
 }

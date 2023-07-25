@@ -1,8 +1,11 @@
 package br.com.pupposoft.fiap.sgr.config.database.gerencial.entity;
 
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
+import java.util.List;
+
+import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,22 +25,7 @@ public class ClienteEntity {
     private String cpf;
     private String email;
 
-    //@OneToMany(() => PedidoEntity, (pedido) => pedido.cliente)
-    //private List<PedidoEntity> pedidos;
+    @OneToMany
+    private List<PedidoEntity> pedidos;
 
-    public ClienteEntity(ClienteDto clienteDto) {
-    	id = clienteDto.getId();
-    	nome = clienteDto.getNome();
-    	cpf = clienteDto.getCpf();
-    	email = clienteDto.getEmail();
-	}
-    
-    public ClienteDto getClientDto() {
-        return ClienteDto.builder()
-        		.id(id)
-        		.nome(nome)
-        		.cpf(cpf)
-        		.email(email)
-        		.build();
-    }
 }
