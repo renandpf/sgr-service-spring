@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.driven.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +121,7 @@ public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
 				.valor(dto.getValor())
 				.categoriaId( dto.getCategoriaId())
 				.imagem(dto.getImagem())
+				.itens(new ArrayList<>())
 				.build();
 	}	
 }

@@ -25,7 +25,7 @@ public class ClienteEntity {
     private String cpf;
     private String email;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cliente")
     private List<PedidoEntity> pedidos;
 
 }

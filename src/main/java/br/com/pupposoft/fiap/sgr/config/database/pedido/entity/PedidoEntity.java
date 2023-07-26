@@ -35,7 +35,7 @@ public class PedidoEntity {
 	@JoinColumn(name = "clienteId")
 	private ClienteEntity cliente;
 
-	@OneToMany
+	@OneToMany(mappedBy = "pedido")
 	private List<ItemEntity> itens;
 
 	@OneToMany
