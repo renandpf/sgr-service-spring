@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,9 +26,11 @@ public class ItemEntity {
 	private BigDecimal valor;
 
 	@ManyToOne()
+	@JoinColumn(name = "produtoId")
 	private ProdutoEntity produto;
 
 	@ManyToOne
+	@JoinColumn(name = "pedidoId")
 	private PedidoEntity pedido;
 	
 

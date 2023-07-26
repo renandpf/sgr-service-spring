@@ -3,6 +3,7 @@ package br.com.pupposoft.fiap.sgr.config.database.pagamento.entity;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class PagamentoEntity {
 	private String identificadorPagamentoExterno;
 
 	@ManyToOne
+	@JoinColumn(name = "pedidoId")
 	private PedidoEntity pedido;
 
 }
