@@ -2,6 +2,7 @@ package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.driver.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.AlterarProdutoParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.CriarProdutoParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.CriarProdutoReturnDto;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,9 +33,17 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("sgr/gerencial")
 public class ProdutoController {
+	
+	@Autowired
 	private ObterProdutoUseCase obterProdutoUseCase;
+	
+	@Autowired
 	private CriarProdutoUseCase criarProdutoUseCase;
+	
+	@Autowired
 	private AlterarProdutoUseCase alterarProdutoUseCase; 
+	
+	@Autowired
 	private ExcluirProdutoUseCase excluirProdutoUseCase; 
 
 	@GetMapping("categorias/{categoria}/produtos")

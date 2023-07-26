@@ -3,6 +3,7 @@ package br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.usecase;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.application.ports.ProdutoRepositoryGateway;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ObterProdutoUseCaseImpl implements ObterProdutoUseCase {
 
+	@Autowired
 	private ProdutoRepositoryGateway produtoRepositoryGateway;
 	
 	@Override
