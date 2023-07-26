@@ -1,9 +1,11 @@
 package br.com.pupposoft.fiap.sgr.pedido.adapter.driven.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
@@ -26,8 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 
+	@Autowired
 	private PedidoEntityRepository pedidoEntityRepository;
 	
+	@Autowired
 	private ItemEntityRepository itemEntityRepository;
 	
 	@Override
@@ -154,10 +158,10 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 		if(pedidoDto.hasItens()) {
 			itens = pedidoDto.getItens().stream().map(i -> {
 				return ItemEntity.builder()
-						.id(null)
-						.quantidade(null)
-						.valor(null)
-						.produto(ProdutoEntity.builder().id(null).build())
+						.id(i.getId())
+						.quantidade(i.getQuantidade())
+						.valor(BigDecimal.ZERO)//FIXME: pegar o valor do produto atual
+						.produto(ProdutoEntity.builder().id(i.getProduto().getId()).build())
 						.build();
 			}).toList();
 		}
@@ -172,16 +176,20 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 			}).toList();
 		}
 		
-		return PedidoEntity.builder()
-				.id(pedidoDto.getId())
-				.statusId(pedidoDto.getStatusId())
-				.dataCadastro(pedidoDto.getDataCadastro())
-				.dataConclusao(pedidoDto.getDataConclusao())
-				.observacao(pedidoDto.getObservacao())
-				.cliente(clienteEntity)
-				.itens(itens)
-				.pagamentos(pagamentos)
-				.build();
+		PedidoEntity pedidoEntity = PedidoEntity.builder()
+		.id(pedidoDto.getId())
+		.statusId(pedidoDto.getStatusId())
+		.dataCadastro(pedidoDto.getDataCadastro())
+		.dataConclusao(pedidoDto.getDataConclusao())
+		.observacao(pedidoDto.getObservacao())
+		.cliente(clienteEntity)
+		.itens(itens)
+		.pagamentos(pagamentos)
+		.build();
+		
+		itens.forEach(i -> i.setPedido(pedidoEntity));
+		
+		return pedidoEntity;
 		
 	}	
 	

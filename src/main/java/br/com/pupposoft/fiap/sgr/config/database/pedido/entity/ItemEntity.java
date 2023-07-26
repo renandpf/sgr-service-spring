@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -25,6 +26,7 @@ public class ItemEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	private Long quantidade;
 	private BigDecimal valor;
 
@@ -32,6 +34,7 @@ public class ItemEntity {
 	@JoinColumn(name = "produtoId")
 	private ProdutoEntity produto;
 
+	@Setter
 	@ManyToOne
 	@JoinColumn(name = "pedidoId")
 	private PedidoEntity pedido;

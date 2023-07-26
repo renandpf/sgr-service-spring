@@ -1,28 +1,44 @@
 package br.com.pupposoft.fiap.sgr.pedido.adapter.driver.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pupposoft.fiap.sgr.pedido.adapter.driver.controller.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.usecase.AtualizarStatusPedidoUseCase;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.usecase.CriarPedidoUseCase;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.usecase.ObterPedidoUseCase;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ClienteDto;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
+import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("sgr/pedidos")
 public class PedidoController {
 
+	@Autowired
     private ObterPedidoUseCase obterPedidoUseCase;
+	
+	@Autowired
     private CriarPedidoUseCase criarPedidoUseCase;
+
+	@Autowired
     private AtualizarStatusPedidoUseCase atualizarStatusPedidoUseCase;
 	
 	
@@ -79,18 +95,21 @@ public class PedidoController {
 		.dataCadastro(dto.getDataCadastro())
 		.dataConclusao(dto.getDataConclusao())
 		.build();
-    	
     }
     
     private PedidoDto mapJsonToDto(Long pedidoId, PedidoJson json) {
     	return PedidoDto.builder()
     			.id(json.getId())
     			.observacao(json.getObservacao())
-    			.statusId(Status.get(json.getStatus()))
+    			.statusId(json.getStatus() == null ? null : Status.get(json.getStatus()))
     			.dataCadastro(json.getDataCadastro())
     			.dataConclusao(json.getDataConclusao())
+    			.cliente(json.getClienteId() == null ? null : ClienteDto.builder().id(json.getClienteId()).build())
+    			.itens(json.getItens() == null ? Arrays.asList() : json.getItens().stream().map(i -> ItemDto.builder()
+    					.id(i.getId())
+    					.quantidade(i.getQuantidade())
+    					.produto(ProdutoDto.builder().id(i.getProdutoId()).build())
+    					.build()).toList())
     			.build();
     }
-    
-    
 }

@@ -2,6 +2,7 @@ package br.com.pupposoft.fiap.sgr.pedido.adapter.driven.http;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.driver.controller.ProdutoController;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class ProdutoServiceDirectCallGateway implements ProdutoServiceGateway {
 
+	@Autowired
 	private ProdutoController produtoController;
 
 	@Override

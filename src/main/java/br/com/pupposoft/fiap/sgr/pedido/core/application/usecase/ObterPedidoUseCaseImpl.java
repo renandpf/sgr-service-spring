@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.pupposoft.fiap.sgr.pedido.core.application.port.PagamentoServiceGateway;
@@ -19,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ObterPedidoUseCaseImpl implements ObterPedidoUseCase {
 
+	@Autowired
 	private PagamentoServiceGateway pagamentoServiceGateway;
 	
+	@Autowired
 	private PedidoRepositoryGateway pedidoRepositoryGateway;
 	
 	@Override

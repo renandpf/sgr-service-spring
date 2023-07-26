@@ -19,7 +19,7 @@ public class Pedido {
     private Status status;
     private LocalDate dataCadastro;
     private LocalDate dataConclusao;
-    private List<PedidoItem> itens;
+    private List<Item> itens;
     private List<Pagamento> pagamentos;
 
 	
