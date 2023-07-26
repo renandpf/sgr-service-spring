@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "Item")
 public class ItemEntity {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long quantidade;
 	private BigDecimal valor;

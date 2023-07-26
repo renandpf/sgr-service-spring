@@ -1,13 +1,14 @@
 package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.driver.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,13 +28,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("sgr/gerencial")
 public class ClienteController {
 
+	@Autowired
 	private ObterClienteUsecase obterClienteUseCase;
+	
+	@Autowired
 	private CriarClienteUsecase criarClienteUseCase;
+
+	@Autowired
 	private AlterarClienteUsecase alterarClienteUseCase;
 
 	
 	@GetMapping("clientes/cpf/{cpf}")
-	public ClienteJson obterPorCpf(@RequestParam String cpf) {
+	public ClienteJson obterPorCpf(@PathVariable String cpf) {
 		log.trace("Start cpf={}", cpf);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorCpf(cpf);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
@@ -42,7 +48,7 @@ public class ClienteController {
 	}
 
 	@GetMapping("clientes/email/{email}")
-	public ClienteJson obterPorEmail(@RequestParam String email) {
+	public ClienteJson obterPorEmail(@PathVariable String email) {
 		log.trace("Start email={}", email);
 		ClienteDto clienteDto = this.obterClienteUseCase.obterPorEmail(email);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
@@ -61,15 +67,20 @@ public class ClienteController {
 	}
 
 	@PutMapping("clientes/{id}")
-	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @RequestParam Long id){
+	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @PathVariable Long id){
 		log.trace("Start clienteJson={}, id={}", clienteJson, id);
-		this.alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(mapJsonToDto(id, clienteJson)).build());
+		alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(mapJsonToDto(id, clienteJson)).build());
 		log.trace("End");
 	}
 
-	public ClienteJson obterById(Long clienteId) {
-		// TODO Implementar!
-		return null;
+	
+	@GetMapping("clientes/{clienteId}")
+	public ClienteJson obterById(@PathVariable Long clienteId) {
+		log.trace("Start clienteId={}", clienteId);
+		ClienteDto clienteDto = obterClienteUseCase.obterPorId(clienteId);
+		ClienteJson clienteJson = mapDtoToJson(clienteDto);
+		log.trace("End clienteJson={}", clienteJson);
+		return clienteJson;
 	}
 	
 	private ClienteJson mapDtoToJson(ClienteDto dto) {

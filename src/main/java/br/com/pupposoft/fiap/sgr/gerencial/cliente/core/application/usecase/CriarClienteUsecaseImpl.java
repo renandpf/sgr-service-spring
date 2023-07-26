@@ -2,6 +2,7 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.usecase;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.application.ports.ClienteRepositoryGateway;
@@ -13,6 +14,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteRe
 @Service
 public class CriarClienteUsecaseImpl implements CriarClienteUsecase {
 	
+	@Autowired
 	private ClienteRepositoryGateway clienteRepositoryGateway;
 
 	@Override
