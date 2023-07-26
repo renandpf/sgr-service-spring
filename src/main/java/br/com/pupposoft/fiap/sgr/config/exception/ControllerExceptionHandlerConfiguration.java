@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.starter.exception;
+package br.com.pupposoft.fiap.sgr.config.exception;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import br.com.pupposoft.fiap.starter.exception.ExceptionJson;
+import br.com.pupposoft.fiap.starter.exception.SystemBaseException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
