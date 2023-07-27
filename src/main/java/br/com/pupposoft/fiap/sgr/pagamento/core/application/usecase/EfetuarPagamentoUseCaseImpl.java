@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PagamentoExternoServiceGateway;
@@ -25,8 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
+	@Autowired
 	private PedidoServiceGateway pedidoServiceGateway;
+	
+	@Autowired
 	private PagamentoExternoServiceGateway pagamentoExternoServiceGateway;
+	
+	@Autowired
 	private PagamentoRepositoryGateway pagamentoRepositoryGateway;
 
 	@Override

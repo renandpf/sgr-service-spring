@@ -20,6 +20,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.application.usecase.EfetuarPagam
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.usecase.ObterPagamentoUsecase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
 import lombok.extern.slf4j.Slf4j;
@@ -96,6 +97,7 @@ public class PagamentoController {
         .pagamento(PagamentoDto
         		.builder()
         		.id(pagamentoJson.getId())
+        		.pedido(PedidoDto.builder().id(pagamentoJson.getPedidoId()).build())
         		.identificadorPagamentoExterno(pagamentoJson.getIdentificadorPagamento())
         		.cartoesCredito(ccDtoList)
         		.build())
