@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -29,6 +30,7 @@ public class PedidoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Setter
 	private Long statusId;
 	private LocalDate dataCadastro;
 	private LocalDate dataConclusao;
@@ -41,7 +43,7 @@ public class PedidoEntity {
 	@OneToMany(mappedBy = "pedido")
 	private List<ItemEntity> itens;
 
-	@OneToMany
+	@OneToMany(mappedBy = "pedido")
 	private List<PagamentoEntity> pagamentos;
 
 }

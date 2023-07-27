@@ -58,11 +58,9 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
 	public void atualizarStatus(PedidoDto pedido) {
         try {
             log.trace("Start pedido={}", pedido);
-            this.pedidoEntityRepository.save(
-            		PedidoEntity.builder().
-            			id(pedido.getId())
-            			.statusId(pedido.getStatusId())
-            		.build());
+            PedidoEntity pedidoEntity = this.pedidoEntityRepository.findById(pedido.getId()).get();
+            pedidoEntity.setStatusId(pedido.getStatusId());
+            this.pedidoEntityRepository.save(pedidoEntity);
             log.trace("End");
         }
         catch (Exception e) {

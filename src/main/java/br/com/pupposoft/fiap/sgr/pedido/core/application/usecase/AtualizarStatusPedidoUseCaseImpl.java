@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pedido.core.application.usecase;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +7,6 @@ import br.com.pupposoft.fiap.sgr.pedido.core.application.port.PedidoRepositoryGa
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
-import br.com.pupposoft.fiap.sgr.pedido.core.exception.PedidoNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,19 +16,19 @@ public class AtualizarStatusPedidoUseCaseImpl implements AtualizarStatusPedidoUs
 	@Autowired
 	private PedidoRepositoryGateway pedidoRepositoryGateway;
 	
+	@Autowired
+	private ObterPedidoUseCase obterPedidoUseCase;
+	
 	@Override
 	public void atualizarStatus(Long pedidoId, Status status) {
         log.trace("Start id={}, status={}", pedidoId, status);
-        Optional<PedidoDto> pedidoOp = this.pedidoRepositoryGateway.obterPorId(pedidoId);
-        if (pedidoOp.isEmpty()) {
-            log.warn("Pedido id={} não encontrado", pedidoId);
-            throw new PedidoNotFoundException();
-        }
-        PedidoDto pedidoDto = pedidoOp.get();
-        Pedido pedido = Pedido.builder().id(pedidoId).status(status).build();
+        
+        PedidoDto pedidoDto = obterPedidoUseCase.obterPorId(pedidoId);
+        
+        Pedido pedido = Pedido.builder().id(pedidoId).status(Status.get(pedidoDto.getStatusId())).build();
         pedido.setStatus(status);
         
-        this.pedidoRepositoryGateway.atualizarStatus(pedidoDto);
+        this.pedidoRepositoryGateway.atualizarStatus(PedidoDto.builder().id(pedidoId).statusId(pedidoId).build());
         log.trace("End");
 	}
 	
