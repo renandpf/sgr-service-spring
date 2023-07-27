@@ -2,6 +2,7 @@ package br.com.pupposoft.fiap.sgr.pagamento.adapter.driver.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("sgr/pagamentos")
 public class PagamentoController {
+	
+	@Autowired
     private EfetuarPagamentoUseCase efetuarPagamentoUseCase;
+	
+	@Autowired
     private ConfirmarPagamentoUseCase confirmarPagamentoUseCase;
+	
+	@Autowired
     private ObterPagamentoUsecase obterPagamentoUseCase;
 
 	@PostMapping("efetuar")

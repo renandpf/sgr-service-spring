@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.pupposoft.fiap.sgr.pedido.adapter.driver.controller.json.ItemJson;
 import br.com.pupposoft.fiap.sgr.pedido.adapter.driver.controller.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.usecase.AtualizarStatusPedidoUseCase;
 import br.com.pupposoft.fiap.sgr.pedido.core.application.usecase.CriarPedidoUseCase;
@@ -94,6 +95,13 @@ public class PedidoController {
 		.status(Status.get(dto.getStatusId()))
 		.dataCadastro(dto.getDataCadastro())
 		.dataConclusao(dto.getDataConclusao())
+		.itens(dto.getItens().stream().map(i -> ItemJson.builder()
+				.id(i.getId())
+				.produtoId(i.getProduto().getId())
+				.quantidade(i.getQuantidade())
+				.build()).toList())
+		.clienteId(dto.hasCliente() ? dto.getCliente().getId() : null)
+		
 		.build();
     }
     

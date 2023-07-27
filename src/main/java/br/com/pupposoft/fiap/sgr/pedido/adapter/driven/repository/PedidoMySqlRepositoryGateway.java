@@ -117,7 +117,18 @@ public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
     }
 
 	private PedidoDto mapEntityToDto(PedidoEntity pedidoEntity) {
-		ClienteDto clienteDto = ClienteDto.builder().build();
+		ClienteDto clienteDto = null;
+		if(pedidoEntity.getCliente() != null) {
+			ClienteEntity clienteEntity = pedidoEntity.getCliente();
+			clienteDto = ClienteDto.builder()
+					.id(clienteEntity.getId())
+					.cpf(clienteEntity.getCpf())
+					.email(clienteEntity.getEmail())
+					.nome(clienteEntity.getNome())
+					.build();
+		}
+		
+		
 		List<ItemDto> itensDto = pedidoEntity.getItens().stream()
 				.map(ie -> ItemDto.builder()
 						.id(ie.getId())
