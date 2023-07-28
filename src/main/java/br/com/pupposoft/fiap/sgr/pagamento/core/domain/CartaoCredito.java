@@ -10,9 +10,9 @@ import lombok.ToString;
 @Builder
 @ToString
 public class CartaoCredito {
-	public String numero;
-    public String cvv;
-    public String nome;
-    public String cpf;
-    public BigDecimal valor;
+	private String numero;
+    private String cvv;
+    private String nome;
+    private String cpf;
+    private BigDecimal valor;
 }

@@ -1,5 +1,7 @@
 package br.com.pupposoft.fiap.sgr.config.database.pagamento.entity;
 
+import java.math.BigDecimal;
+
 import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,8 @@ public class PagamentoEntity {
 	private Long id;
 
 	private String identificadorPagamentoExterno;
+	
+	private BigDecimal valor;
 
 	@ManyToOne
 	@JoinColumn(name = "pedidoId")

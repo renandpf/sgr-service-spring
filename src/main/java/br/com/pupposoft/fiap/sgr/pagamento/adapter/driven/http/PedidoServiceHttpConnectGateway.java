@@ -1,17 +1,11 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.driven.http;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.driven.http.json.PedidoJson;
@@ -26,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PedidoServiceDirectCallGateway implements PedidoServiceGateway {
+public class PedidoServiceHttpConnectGateway implements PedidoServiceGateway {
 
 	@Value("${sgr.pedido-service.url}")
 	private String baseUrl;

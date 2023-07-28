@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PagamentoExternoServiceGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PagamentoRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PedidoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.CartaoCredito;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.Pagamento;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
@@ -55,6 +58,13 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         dto.getPagamento().setIdentificadorPagamentoExterno(responsePagamentoDto.getIdentificadorPagamento());
         dto.getPagamento().setPedido(pedidoDto);
 
+        Pagamento pagamento = Pagamento.builder()
+        		.pedido(Pedido.builder().id(dto.getPagamento().getPedido().getId()).build())
+        		.cartoesCredito(dto.getPagamento().getCartoesCredito().stream().map(this::mapCcDtoToCcDomain).toList())
+        		.build();
+        
+        dto.getPagamento().setValor(pagamento.getValor());
+        
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
         Long idPagamento = this.pagamentoRepositoryGateway.criar(dto.getPagamento());
 
@@ -65,6 +75,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         return returnDto;
 	}
 
+	
 	private PedidoDto obtemPedidoVerificandoSeEleExiste(PagamentoDto pagamento) {
 		Optional<PedidoDto> pedidoOp = this.pedidoServiceGateway.obterPorId(pagamento.getPedido().getId());
 		if (pedidoOp.isEmpty()) {
@@ -90,5 +101,15 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 		}
 	}
 
+	
+	private CartaoCredito mapCcDtoToCcDomain(CartaoCreditoDto dto) {
+		return CartaoCredito.builder()
+				.cpf(dto.getCpf())
+				.cvv(dto.getCvv())
+				.nome(dto.getNome())
+				.numero(dto.getNumero())
+				.valor(dto.getValor())
+				.build();
+	}
 
 }

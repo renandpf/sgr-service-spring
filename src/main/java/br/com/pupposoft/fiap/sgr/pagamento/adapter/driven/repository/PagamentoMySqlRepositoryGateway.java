@@ -28,6 +28,7 @@ public class PagamentoMySqlRepositoryGateway implements PagamentoRepositoryGatew
 
 			PagamentoEntity pagamentoEntity = PagamentoEntity.builder()
 					.identificadorPagamentoExterno(pagamentoDto.getIdentificadorPagamentoExterno())
+					.valor(pagamentoDto.getValor())
 					.pedido(PedidoEntity.builder().id(pagamentoDto.getPedido().getId()).build())
 					.build();
 
