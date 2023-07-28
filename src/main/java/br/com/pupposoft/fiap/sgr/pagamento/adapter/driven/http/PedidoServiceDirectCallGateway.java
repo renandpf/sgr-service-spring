@@ -1,7 +1,9 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.driven.http;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -9,11 +11,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.driven.http.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.application.ports.PedidoServiceGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPedidoServiceException;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import br.com.pupposoft.fiap.starter.http.HttpConnectGateway;
+import br.com.pupposoft.fiap.starter.http.dto.HttpConnectDto;
+import br.com.pupposoft.fiap.starter.http.exception.HttpConnectorException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,42 +30,46 @@ public class PedidoServiceDirectCallGateway implements PedidoServiceGateway {
 
 	@Value("${sgr.pedido-service.url}")
 	private String baseUrl;
+	
+	@Autowired
+	private HttpConnectGateway httpConnectGateway;
 
+    @Autowired
+    private ObjectMapper mapper;
+	
 	@Override
 	public Optional<PedidoDto> obterPorId(Long pedidoId) {
 		try {
 			log.trace("Start pedidoId={}", pedidoId);
+			
+			
 			Optional<PedidoDto> pedidoDtoOp = Optional.empty();
 			try {
-
 				final String url = baseUrl + "/sgr/pedidos/" + pedidoId;
-
-				final WebClient webClient = WebClient.create();
-
-				ResponseSpec responseSpec = 
-						webClient.get()
-						.uri(url)
-						.retrieve();
-
-				PedidoJson response = responseSpec.bodyToMono(PedidoJson.class).block();
+				
+				HttpConnectDto httpConnectDto = HttpConnectDto.builder().url(url).build();
+				
+				final String response = httpConnectGateway.get(httpConnectDto);
+				log.info("response={}", response);
+				
+				PedidoJson pedidoJson = mapper.readValue(response, PedidoJson.class);
 				PedidoDto pedidoDto = PedidoDto.builder()
-					.id(response.getId())
-					.statusId(Status.get(response.getStatus()))
-				.build();
+						.id(pedidoJson.getId())
+						.statusId(Status.get(pedidoJson.getStatus()))
+						.build();
 				
 				pedidoDtoOp = Optional.of(pedidoDto);
 
-			} catch (WebClientResponseException e) {
-				log.warn("Erro ao acessar pedido service: {}", e);
-				HttpStatusCode statusCode = e.getStatusCode();
-				if(statusCode.value() == 404){
-					//TODO: verificar response body
+				
+			} catch (HttpConnectorException e) {
+				if(e.getHttpStatus() == 404) {
+					log.warn("Pedido not found");
 					pedidoDtoOp = Optional.empty();
 				} else {
 					throw e;
 				}
-
 			}
+			
 			log.trace("End pedidoDtoOp={}", pedidoDtoOp);
 			return pedidoDtoOp;
 

@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr;
+package br.com.pupposoft.fiap;
 
 import java.util.Locale;
 
