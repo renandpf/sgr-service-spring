@@ -101,6 +101,38 @@ public class HttpConnect implements HttpConnectGateway {
 			throw processException(e);
 		}
 	}
+
+	@Override
+	public String patch(HttpConnectDto dto) {
+		try {
+			log.trace("Start dto={}", dto);
+			
+			String url = dto.getUrl();
+			
+			if (dto.getUrlParameters() != null) {
+				url = url.concat("?").concat(dto.getUrlParameters());
+			} 
+			
+			final WebClient webClient = WebClient.create();
+			
+			String response = 
+					webClient.patch()
+					.uri(url)
+					.body(Mono.just(dto.getRequestBody()), dto.getRequestBody().getClass())
+					.header("Content-Type", "application/json")
+					.retrieve()
+					.bodyToMono(String.class)
+					.block();
+			
+			
+			log.trace("End response={}", response);
+			
+			return response;
+		} catch (Exception e) {
+			throw processException(e);
+		}
+	}
+
 	
 	private HttpConnectorException processException(Exception e) {
 		int statusCode = 500;
@@ -117,5 +149,6 @@ public class HttpConnect implements HttpConnectGateway {
 		log.error(e.getMessage(), e);
 		return new HttpConnectorException(statusCode, message);
 	}
+
 
 }

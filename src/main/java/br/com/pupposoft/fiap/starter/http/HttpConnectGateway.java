@@ -6,4 +6,5 @@ public interface HttpConnectGateway {
 	public String postWithRequestBodyMultipart(HttpConnectDto dto);
 	public String postWhithRequestBody(HttpConnectDto dto);
 	public String get(HttpConnectDto dto);
+	public String patch(HttpConnectDto httpConnectDto);
 }

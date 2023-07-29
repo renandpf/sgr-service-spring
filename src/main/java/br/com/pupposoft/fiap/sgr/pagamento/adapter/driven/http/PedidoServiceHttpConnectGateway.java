@@ -47,17 +47,14 @@ public class PedidoServiceHttpConnectGateway implements PedidoServiceGateway {
 				log.info("response={}", response);
 				
 				PedidoJson pedidoJson = mapper.readValue(response, PedidoJson.class);
-				PedidoDto pedidoDto = PedidoDto.builder()
-						.id(pedidoJson.getId())
-						.statusId(Status.get(pedidoJson.getStatus()))
-						.build();
+				PedidoDto pedidoDto = mapJsonToDto(pedidoJson);
 				
 				pedidoDtoOp = Optional.of(pedidoDto);
 
 				
 			} catch (HttpConnectorException e) {
 				if(e.getHttpStatus() == 404) {
-					log.warn("Pedido not found");
+					log.warn("Pedido not found. pedidoId={}", pedidoId);
 					pedidoDtoOp = Optional.empty();
 				} else {
 					throw e;
@@ -78,7 +75,15 @@ public class PedidoServiceHttpConnectGateway implements PedidoServiceGateway {
 	public void alterarStatus(PedidoDto pedido) {
 		try {
 			log.trace("Start pedido={}", pedido);
-			//TODO IMPLEMENTAR
+			
+			final String url = baseUrl + "/sgr/pedidos/" + pedido.getId() + "/status"; 
+			HttpConnectDto httpConnectDto = HttpConnectDto.builder()
+					.url(url)
+					.requestBody(PedidoJson.builder().status(Status.get(pedido.getStatusId())).build())
+					.build();
+			
+			final String response = httpConnectGateway.patch(httpConnectDto);
+			log.info("response={}", response);
 			
 			log.trace("End");
 
@@ -86,6 +91,14 @@ public class PedidoServiceHttpConnectGateway implements PedidoServiceGateway {
 			log.error(e.getMessage(), e);
 			throw new ErrorToAccessPedidoServiceException();
 		}
-
 	}
+	
+	private PedidoDto mapJsonToDto(PedidoJson pedidoJson) {
+		PedidoDto pedidoDto = PedidoDto.builder()
+				.id(pedidoJson.getId())
+				.statusId(Status.get(pedidoJson.getStatus()))
+				.build();
+		return pedidoDto;
+	}
+
 }
