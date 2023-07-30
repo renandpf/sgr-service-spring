@@ -28,7 +28,7 @@ public class AtualizarStatusPedidoUseCaseImpl implements AtualizarStatusPedidoUs
         Pedido pedido = Pedido.builder().id(pedidoId).status(Status.get(pedidoDto.getStatusId())).build();
         pedido.setStatus(status);
         
-        this.pedidoRepositoryGateway.atualizarStatus(PedidoDto.builder().id(pedidoId).statusId(pedidoId).build());
+        this.pedidoRepositoryGateway.atualizarStatus(PedidoDto.builder().id(pedidoId).statusId(Status.get(pedido.getStatus())).build());
         log.trace("End");
 	}
 	

@@ -34,6 +34,7 @@ public class Pedido {
 	public void setStatus(Status status) {
 		//IMPLEMENTAR
 		
+		this.status = status;
 	}
 	
     public Status getStatus() {

@@ -34,7 +34,7 @@ public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase 
         PedidoDto pedidoDto = getPedidoById(pagamentoDto.getPedido().getId());
         Status status = this.pagamentoExternoServiceGateway.mapStatus(statusPagamento);
         
-        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
+        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(status).build();
         pedido.setStatus(status);//Regras de negócio dentro do domain
 
         PedidoDto pedidoDtoStatusPago = PedidoDto.builder()

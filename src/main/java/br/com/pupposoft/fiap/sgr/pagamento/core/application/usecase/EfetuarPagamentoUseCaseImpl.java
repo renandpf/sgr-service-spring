@@ -46,9 +46,11 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
         PedidoDto pedidoDto = this.obtemPedidoVerificandoSeEleExiste(dto.getPagamento());
         
+        final Status statusAguardandoConfirmacaoPagamento = Status.AGUARDANDO_CONFIRMACAO_PAGAMENTO;
         Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
-        pedido.setStatus(Status.AGUARDANDO_CONFIRMACAO_PAGAMENTO);
-
+        pedido.setStatus(statusAguardandoConfirmacaoPagamento);
+        pedidoDto.setStatusId(Status.get(statusAguardandoConfirmacaoPagamento));
+        
         EnviaPagamentoReturnDto responsePagamentoDto = 
         		this.pagamentoExternoServiceGateway.enviarPagamento(
         				EnviaPagamentoExternoParamDto.builder()
