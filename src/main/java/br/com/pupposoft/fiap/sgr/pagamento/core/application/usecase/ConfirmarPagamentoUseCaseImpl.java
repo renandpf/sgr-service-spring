@@ -13,10 +13,12 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PagamentoNaoEncontrado
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase {
 	
 	private PedidoServiceGateway pedidoServiceGateway;
