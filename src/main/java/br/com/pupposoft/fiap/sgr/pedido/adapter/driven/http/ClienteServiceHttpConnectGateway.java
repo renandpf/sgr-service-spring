@@ -37,7 +37,7 @@ public class ClienteServiceHttpConnectGateway implements ClienteServiceGateway {
 
 			Optional<ClienteDto> clienteDtoOp = Optional.empty();
 			try {
-				final String url = baseUrl + "/sgr/gerencial/produtos/" + clienteId;
+				final String url = baseUrl + "/sgr/gerencial/clientes/" + clienteId;
 
 				HttpConnectDto httpConnectDto = HttpConnectDto.builder().url(url).build();
 
