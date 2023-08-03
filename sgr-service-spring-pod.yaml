@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sgr-service-spring
+spec:
+  containers:
+  - name: sgr-service-spring
+    image: renandpf/sgr-service-spring:1.0.0
+    ports:
+    - containerPort: 8080
