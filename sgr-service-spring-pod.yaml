@@ -2,9 +2,16 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: sgr-service-spring
+  #O label é usado para poder ser acessado por outros pods, services, etc (tipo DNS). Não da pra usar o "metadata.name". É recomendado sempre colocar
+  labels:
+    app: sgr-service-spring
+
 spec:
   containers:
   - name: sgr-service-spring
     image: renandpf/sgr-service-spring:1.0.0
     ports:
     - containerPort: 8080
+    env:
+    - name: spring_datasource_url
+      value: "jdbc:mysql://10.98.147.170:3306/sgr_database"    
