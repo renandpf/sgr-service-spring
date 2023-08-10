@@ -1,11 +1,13 @@
-FROM maven:3.8.7-openjdk-18-slim AS build
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+FROM maven:3.8.7-openjdk-18-slim AS MAVEN_BUILD
+COPY pom.xml /build/
+COPY src /build/src/
+WORKDIR /build/
+RUN mvn package
 
 FROM openjdk:18-jdk
 ENV TZ America/Sao_Paulo
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+WORKDIR /app
+COPY --from=MAVEN_BUILD /build/target/*.jar /app/
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
