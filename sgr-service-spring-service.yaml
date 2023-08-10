@@ -1,20 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: sgr-service-spring-clusterip
+  name: sgr-service-spring-nodeport
 spec:
-  #ClusterIP somente é acessado de dentro do cluster
-  #NodePort é acessado de fora
-  #LoadBalancer é trabalha com balanceameto
-  type: NodePort
-  
-  #Referencia o pod pelo label (não pelo name)
+  ports:
+  - nodePort: 30880
+    port: 80
+    targetPort: 8080
   selector:
-    app: "sgr-service-spring"
-  ports: 
-    # A porta 80 é a do service. Ela é a default
-    - port: 80
-      #Porta do container
-      targetPort: 8080 
-      #Porta que será exposta pra fora do cluster
-      nodePort: 30880
+    app: sgr-service-spring
+  type: NodePort
