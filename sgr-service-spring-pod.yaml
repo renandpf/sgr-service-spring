@@ -6,10 +6,10 @@ metadata:
   name: sgr-service-spring
 spec:
   containers:
-  - env:
-    - name: spring_datasource_url
-      value: jdbc:mysql://sgr-database-clusterip:80/sgr_database
+  - name: sgr-service-spring
     image: renandpf/sgr-service-spring:1.0.0
-    name: sgr-service-spring
     ports:
-    - containerPort: 8080
+      - containerPort: 8080
+    envFrom:
+      - configMapRef:
+          name: sgr-service-spring-cm
