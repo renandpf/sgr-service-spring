@@ -1,5 +1,5 @@
 # sgr-service
-sudo docker build -t renandpf/sgr-service-spring:1.0.0 .
+docker build -t renandpf/sgr-service-spring:1.0.0 .
 docker tag renandpf/sgr-service-spring:1.0.0 renandpf/sgr-service-spring:1.0.0
 docker push renandpf/sgr-service-spring:1.0.0
 

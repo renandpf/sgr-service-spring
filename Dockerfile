@@ -7,7 +7,7 @@ RUN mvn package
 FROM openjdk:18-jdk
 ENV TZ America/Sao_Paulo
 WORKDIR /app
-COPY --from=MAVEN_BUILD /build/target/*.jar /app/
+COPY --from=MAVEN_BUILD /build/target/*.jar /app/app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
