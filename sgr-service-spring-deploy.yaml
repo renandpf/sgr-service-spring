@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sgr-service-spring-deployment
+  labels:
+    app: sgr-service-spring-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sgr-service-spring
+  template:
+    metadata:
+      labels:
+        app: sgr-service-spring
+    spec:
+      containers:
+        - name: sgr-service-spring
+          image: renandpf/sgr-service-spring:1.0.0
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 5
+            initialDelaySeconds: 3
+          resources:
+            requests:
+              cpu: 1m
+          envFrom:
+            - configMapRef:
+                name: sgr-service-spring-cm
+          env:
+            - name: spring_datasource_password
+              valueFrom:
+                secretKeyRef:
+                  name: sgr-service-spring-secrets
+                  key: password
