@@ -22,4 +22,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: sgr-service-spring-cm
-
+          env:
+            - name: spring_datasource_password
+              valueFrom:
+                secretKeyRef:
+                  name: sgr-service-spring-secrets
+                  key: password
