@@ -1,10 +1,15 @@
 # sgr-service
+
+GERAR BUILD
 docker build -t renandpf/sgr-service-spring:1.0.0 .
 docker tag renandpf/sgr-service-spring:1.0.0 renandpf/sgr-service-spring:1.0.0
 docker push renandpf/sgr-service-spring:1.0.0
 
-Para criar pod a partir do arquivo yaml
-kubectl apply -f sgr-service-spring-pod.yaml
+SUBIR MINIKUBE
+minikube start
 
-Para acessar o pod (teminal), devemos usar:
-kubectl exec -it sgr-service-spring
+SUBIR APP (PS: banco de dados deve estar up)
+kubectl apply -f sgr-service-spring-cm.yaml
+kubectl apply -f sgr-service-spring-secrets.yaml
+kubectl apply -f sgr-service-spring-svc.yaml
+kubectl apply -f sgr-service-spring-deploy.yaml
