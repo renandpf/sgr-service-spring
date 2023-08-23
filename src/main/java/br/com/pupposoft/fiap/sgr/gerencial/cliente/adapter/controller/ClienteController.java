@@ -13,13 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.controller.json.ClienteJson;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.controller.ClienteCoreController;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.AlterarClienteUsecase;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.CriarClienteUsecase;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.ObterClienteUsecase;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,19 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ClienteController {
 
 	@Autowired
-	private ObterClienteUsecase obterClienteUseCase;
-	
-	@Autowired
-	private CriarClienteUsecase criarClienteUseCase;
-
-	@Autowired
-	private AlterarClienteUsecase alterarClienteUseCase;
-
+	private ClienteCoreController clienteCoreController;
 	
 	@GetMapping("clientes/cpf/{cpf}")
 	public ClienteJson obterPorCpf(@PathVariable String cpf) {
 		log.trace("Start cpf={}", cpf);
-		ClienteDto clienteDto = this.obterClienteUseCase.obterPorCpf(cpf);
+		ClienteDto clienteDto = clienteCoreController.obterPorCpf(cpf);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
@@ -50,7 +38,7 @@ public class ClienteController {
 	@GetMapping("clientes/email/{email}")
 	public ClienteJson obterPorEmail(@PathVariable String email) {
 		log.trace("Start email={}", email);
-		ClienteDto clienteDto = this.obterClienteUseCase.obterPorEmail(email);
+		ClienteDto clienteDto = clienteCoreController.obterPorEmail(email);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
@@ -60,8 +48,7 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long criarCliente(@RequestBody(required = true) ClienteJson cliente) {
 		log.trace("Start cliente={}", cliente);
-		CriarClienteReturnDto returnDto = this.criarClienteUseCase.criar(CriarClienteParamsDto.builder().cliente(mapJsonToDto(null, cliente)).build());
-		Long clienteId = returnDto.getClienteId();
+		Long clienteId = clienteCoreController.criar(mapJsonToDto(null, cliente));
 		log.trace("End clienteId={}", clienteId);
 		return clienteId;
 	}
@@ -69,7 +56,7 @@ public class ClienteController {
 	@PutMapping("clientes/{id}")
 	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @PathVariable Long id){
 		log.trace("Start clienteJson={}, id={}", clienteJson, id);
-		alterarClienteUseCase.alterar(AlterarClienteParamsDto.builder().cliente(mapJsonToDto(id, clienteJson)).build());
+		clienteCoreController.alterar(mapJsonToDto(id, clienteJson));
 		log.trace("End");
 	}
 
@@ -77,7 +64,7 @@ public class ClienteController {
 	@GetMapping("clientes/{clienteId}")
 	public ClienteJson obterById(@PathVariable Long clienteId) {
 		log.trace("Start clienteId={}", clienteId);
-		ClienteDto clienteDto = obterClienteUseCase.obterPorId(clienteId);
+		ClienteDto clienteDto = clienteCoreController.obterById(clienteId);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;

@@ -2,19 +2,16 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class ObterClienteUsecaseImpl implements ObterClienteUsecase {
 
-	@Autowired
 	private ClienteRepositoryGateway clienteRepositoryGateway;
 
 	@Override
