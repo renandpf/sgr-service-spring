@@ -1,7 +1,6 @@
 package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.controller;
 
 
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.controller.json.ClienteJson;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
