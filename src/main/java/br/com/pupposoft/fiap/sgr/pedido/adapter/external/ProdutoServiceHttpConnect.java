@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.pupposoft.fiap.sgr.pedido.adapter.external.json.ProdutoJson;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.ErrorToAccessProdutoServiceException;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.ProdutoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.ProdutoGateway;
 import br.com.pupposoft.fiap.starter.http.HttpConnectGateway;
 import br.com.pupposoft.fiap.starter.http.dto.HttpConnectDto;
 import br.com.pupposoft.fiap.starter.http.exception.HttpConnectorException;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class ProdutoServiceHttpConnectGateway implements ProdutoServiceGateway {
+public class ProdutoServiceHttpConnect implements ProdutoGateway {
 
 	@Value("${sgr.produto-service.url}")
 	private String baseUrl;

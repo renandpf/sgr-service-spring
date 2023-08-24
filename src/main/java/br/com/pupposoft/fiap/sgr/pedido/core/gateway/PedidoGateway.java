@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pedido.core.port;
+package br.com.pupposoft.fiap.sgr.pedido.core.gateway;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 
-public interface PedidoRepositoryGateway {
+public interface PedidoGateway {
     Long criar(PedidoDto pedido);
     void atualizarStatus(PedidoDto pedido);
     Optional<PedidoDto> obterPorId(Long pedidoId);

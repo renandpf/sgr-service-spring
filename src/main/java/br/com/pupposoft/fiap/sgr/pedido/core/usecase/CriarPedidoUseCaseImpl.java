@@ -17,9 +17,9 @@ import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.ProdutoNotFoundException;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.ClienteServiceGateway;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PedidoRepositoryGateway;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.ProdutoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.ClienteGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.ProdutoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,13 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 
 	@Autowired
-	private ClienteServiceGateway clienteServiceGateway;
+	private ClienteGateway clienteServiceGateway;
 	
 	@Autowired
-	private ProdutoServiceGateway produtoServiceGateway;
+	private ProdutoGateway produtoServiceGateway;
 	
 	@Autowired
-	private PedidoRepositoryGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoRepositoryGateway;
 	
 	@Override
 	public Long criar(PedidoDto pedidoDto) {

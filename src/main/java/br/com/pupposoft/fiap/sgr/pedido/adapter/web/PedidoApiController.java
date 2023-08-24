@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pedido.adapter.controller;
+package br.com.pupposoft.fiap.sgr.pedido.adapter.web;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.pupposoft.fiap.sgr.pedido.adapter.controller.json.ItemJson;
-import br.com.pupposoft.fiap.sgr.pedido.adapter.controller.json.PedidoJson;
+import br.com.pupposoft.fiap.sgr.pedido.adapter.web.json.ItemJson;
+import br.com.pupposoft.fiap.sgr.pedido.adapter.web.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("sgr/pedidos")
-public class PedidoController {
+public class PedidoApiController {
 
 	@Autowired
     private ObterPedidoUseCase obterPedidoUseCase;

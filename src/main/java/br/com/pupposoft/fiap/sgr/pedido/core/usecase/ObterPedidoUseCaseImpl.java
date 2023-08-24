@@ -12,8 +12,8 @@ import br.com.pupposoft.fiap.sgr.pedido.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.PagamentoNotFoundException;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.PedidoNotFoundException;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PagamentoServiceGateway;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PedidoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PagamentoGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ObterPedidoUseCaseImpl implements ObterPedidoUseCase {
 
 	@Autowired
-	private PagamentoServiceGateway pagamentoServiceGateway;
+	private PagamentoGateway pagamentoServiceGateway;
 	
 	@Autowired
-	private PedidoRepositoryGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoRepositoryGateway;
 	
 	@Override
 	public PedidoDto obterPorId(Long id) {

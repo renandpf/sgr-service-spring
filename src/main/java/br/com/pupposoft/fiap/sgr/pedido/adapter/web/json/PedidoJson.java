@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pedido.adapter.controller.json;
+package br.com.pupposoft.fiap.sgr.pedido.adapter.web.json;
 
 import java.time.LocalDate;
 import java.util.List;

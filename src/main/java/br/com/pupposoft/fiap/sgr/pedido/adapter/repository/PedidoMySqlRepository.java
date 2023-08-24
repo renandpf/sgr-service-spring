@@ -21,12 +21,12 @@ import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.ErrorToAccessRepositoryException;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PedidoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PedidoMySqlRepositoryGateway implements PedidoRepositoryGateway {
+public class PedidoMySqlRepository implements PedidoGateway {
 
 	@Autowired
 	private PedidoEntityRepository pedidoEntityRepository;

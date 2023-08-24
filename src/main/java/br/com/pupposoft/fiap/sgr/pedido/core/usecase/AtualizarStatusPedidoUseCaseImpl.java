@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PedidoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AtualizarStatusPedidoUseCaseImpl implements AtualizarStatusPedidoUseCase {
 
 	@Autowired
-	private PedidoRepositoryGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoRepositoryGateway;
 	
 	@Autowired
 	private ObterPedidoUseCase obterPedidoUseCase;

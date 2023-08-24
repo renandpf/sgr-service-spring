@@ -12,7 +12,7 @@ import br.com.pupposoft.fiap.sgr.pedido.adapter.external.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.ErrorToAccessProdutoServiceException;
-import br.com.pupposoft.fiap.sgr.pedido.core.port.PagamentoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.starter.http.HttpConnectGateway;
 import br.com.pupposoft.fiap.starter.http.dto.HttpConnectDto;
 import br.com.pupposoft.fiap.starter.http.exception.HttpConnectorException;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PagamentoServiceHttpConnectGateway implements PagamentoServiceGateway {
+public class PagamentoServiceHttpConnect implements PagamentoGateway {
 
 	@Value("${sgr.pagamento-service.url}")
 	private String baseUrl;
