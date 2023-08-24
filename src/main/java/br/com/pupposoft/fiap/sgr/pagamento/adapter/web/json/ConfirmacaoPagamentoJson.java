@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.controller.json;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

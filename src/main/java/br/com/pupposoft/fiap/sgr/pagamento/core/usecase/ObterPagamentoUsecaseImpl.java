@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PagamentoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ObterPagamentoUsecaseImpl implements ObterPagamentoUsecase {
 	
 	@Autowired
-	private PagamentoRepositoryGateway pagamentoRepositoryGateway;
+	private PagamentoGateway pagamentoRepositoryGateway;
 	
 	@Override
 	public PagamentoDto obterPorIdentificadorPagamento(String identificadorPagamento) {

@@ -18,9 +18,9 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoPa
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoExternoServiceGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoRepositoryGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PedidoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +30,13 @@ import lombok.extern.slf4j.Slf4j;
 public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 	@Autowired
-	private PedidoServiceGateway pedidoServiceGateway;
+	private PedidoGateway pedidoServiceGateway;
 	
 	@Autowired
-	private PagamentoExternoServiceGateway pagamentoExternoServiceGateway;
+	private PagamentoExternoGateway pagamentoExternoServiceGateway;
 	
 	@Autowired
-	private PagamentoRepositoryGateway pagamentoRepositoryGateway;
+	private PagamentoGateway pagamentoRepositoryGateway;
 
 	@Override
 	public EfetuarPagamentoReturnDto efetuar(EfetuarPagamentoParamDto dto) {

@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
 
 import java.util.Optional;
 
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway.json.PedidoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPedidoServiceException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PedidoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.starter.http.HttpConnectGateway;
 import br.com.pupposoft.fiap.starter.http.dto.HttpConnectDto;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PedidoServiceHttpConnectGateway implements PedidoServiceGateway {
+public class PedidoServiceHttpConnect implements PedidoGateway {
 
 	@Value("${sgr.pedido-service.url}")
 	private String baseUrl;

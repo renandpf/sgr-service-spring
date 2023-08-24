@@ -8,9 +8,9 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PagamentoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoExternoServiceGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoRepositoryGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PedidoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
@@ -21,11 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase {
 	
-	private PedidoServiceGateway pedidoServiceGateway;
+	private PedidoGateway pedidoServiceGateway;
 	
-	private PagamentoExternoServiceGateway pagamentoExternoServiceGateway;
+	private PagamentoExternoGateway pagamentoExternoServiceGateway;
 
-	private PagamentoRepositoryGateway pagamentoRepositoryGateway;
+	private PagamentoGateway pagamentoRepositoryGateway;
 	
 	@Override
     public void confirmar(String identificadorPagamento, String statusPagamento) {

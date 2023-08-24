@@ -1,17 +1,17 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
 
 import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoExternoServiceGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PagamentoMockExternalServiceHttpGateway implements PagamentoExternoServiceGateway {
+public class PagamentoMockExternalServiceHttp implements PagamentoExternoGateway {
 
 	@Override
 	public EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto dto) {

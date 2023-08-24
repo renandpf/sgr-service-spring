@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.controller;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.web;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.controller.json.ConfirmacaoPagamentoJson;
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.controller.json.PagamentoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.ConfirmacaoPagamentoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("sgr/pagamentos")
-public class PagamentoController {
+public class PagamentoApiController {
 	
 	@Autowired
     private EfetuarPagamentoUseCase efetuarPagamentoUseCase;

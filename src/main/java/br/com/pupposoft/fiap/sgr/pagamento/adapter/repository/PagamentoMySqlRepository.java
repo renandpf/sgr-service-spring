@@ -11,12 +11,12 @@ import br.com.pupposoft.fiap.sgr.config.database.pedido.entity.PedidoEntity;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessRepositoryException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PagamentoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class PagamentoMySqlRepository implements PagamentoRepositoryGateway {
+public class PagamentoMySqlRepository implements PagamentoGateway {
 
 	@Autowired
 	private PagamentoEntityRepository pagamentoRepository;
