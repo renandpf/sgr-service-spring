@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class PagamentoMySqlRepositoryGateway implements PagamentoRepositoryGateway {
+public class PagamentoMySqlRepository implements PagamentoRepositoryGateway {
 
 	@Autowired
 	private PagamentoEntityRepository pagamentoRepository;

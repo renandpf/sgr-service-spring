@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.external.json;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway.json;
 
 import java.time.LocalDate;
 

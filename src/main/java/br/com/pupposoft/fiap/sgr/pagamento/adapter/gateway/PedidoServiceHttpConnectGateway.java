@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.json.PedidoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway.json.PedidoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPedidoServiceException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.ports.PedidoServiceGateway;

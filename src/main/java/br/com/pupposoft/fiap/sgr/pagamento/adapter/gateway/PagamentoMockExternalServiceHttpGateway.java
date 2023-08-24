@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
+package br.com.pupposoft.fiap.sgr.pagamento.adapter.gateway;
 
 import org.springframework.stereotype.Component;
 
