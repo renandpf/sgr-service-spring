@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.CartaoCredito;
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.Pagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
@@ -23,20 +20,18 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
-	@Autowired
-	private PedidoGateway pedidoServiceGateway;
+	private PedidoGateway pedidoGateway;
 	
-	@Autowired
-	private PagamentoExternoGateway pagamentoExternoServiceGateway;
+	private PagamentoExternoGateway pagamentoExternoGateway;
 	
-	@Autowired
-	private PagamentoGateway pagamentoRepositoryGateway;
+	private PagamentoGateway pagamentoGateway;
 
 	@Override
 	public EfetuarPagamentoReturnDto efetuar(EfetuarPagamentoParamDto dto) {
@@ -52,7 +47,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         pedidoDto.setStatusId(Status.get(statusAguardandoConfirmacaoPagamento));
         
         EnviaPagamentoReturnDto responsePagamentoDto = 
-        		this.pagamentoExternoServiceGateway.enviarPagamento(
+        		this.pagamentoExternoGateway.enviarPagamento(
         				EnviaPagamentoExternoParamDto.builder()
         					.cartoesCredito(dto.getPagamento()
         					.getCartoesCredito())
@@ -68,9 +63,9 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         dto.getPagamento().setValor(pagamento.getValor());
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
-        Long idPagamento = this.pagamentoRepositoryGateway.criar(dto.getPagamento());
+        Long idPagamento = this.pagamentoGateway.criar(dto.getPagamento());
 
-        this.pedidoServiceGateway.alterarStatus(pedidoDto);
+        this.pedidoGateway.alterarStatus(pedidoDto);
 
         EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).build();
         log.trace("End returnDto={}", returnDto);
@@ -79,7 +74,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 	
 	private PedidoDto obtemPedidoVerificandoSeEleExiste(PagamentoDto pagamento) {
-		Optional<PedidoDto> pedidoOp = this.pedidoServiceGateway.obterPorId(pagamento.getPedido().getId());
+		Optional<PedidoDto> pedidoOp = this.pedidoGateway.obterPorId(pagamento.getPedido().getId());
 		if (pedidoOp.isEmpty()) {
 			log.warn("Pedido não encontrado. pagamento.pedido.id={}", pagamento.getPedido().getId());
 			throw new PedidoNaoEncontradoException();

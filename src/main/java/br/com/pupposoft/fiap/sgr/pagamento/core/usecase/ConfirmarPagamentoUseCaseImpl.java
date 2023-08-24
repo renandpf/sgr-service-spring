@@ -2,8 +2,6 @@ package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PagamentoNaoEncontradoException;
@@ -17,15 +15,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
 @AllArgsConstructor
 public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase {
 	
-	private PedidoGateway pedidoServiceGateway;
+	private PedidoGateway pedidoGateway;
 	
-	private PagamentoExternoGateway pagamentoExternoServiceGateway;
+	private PagamentoExternoGateway pagamentoExternoGateway;
 
-	private PagamentoGateway pagamentoRepositoryGateway;
+	private PagamentoGateway pagamentoGateway;
 	
 	@Override
     public void confirmar(String identificadorPagamento, String statusPagamento) {
@@ -34,7 +31,7 @@ public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase 
 
         PagamentoDto pagamentoDto = this.obtemPedidoPorIdentificadorPagamento(identificadorPagamento);
         PedidoDto pedidoDto = getPedidoById(pagamentoDto.getPedido().getId());
-        Status status = this.pagamentoExternoServiceGateway.mapStatus(statusPagamento);
+        Status status = this.pagamentoExternoGateway.mapStatus(statusPagamento);
         
         Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(status).build();
         pedido.setStatus(status);//Regras de negócio dentro do domain
@@ -44,14 +41,14 @@ public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase 
         		.statusId(Status.get(status))
         		.build();
 
-        this.pedidoServiceGateway.alterarStatus(pedidoDtoStatusPago);
+        this.pedidoGateway.alterarStatus(pedidoDtoStatusPago);
 
         log.trace("End");
     }
 
 
 	private PedidoDto getPedidoById(Long pedidoId) {
-        Optional<PedidoDto> pedidoDtoOp = pedidoServiceGateway.obterPorId(pedidoId);
+        Optional<PedidoDto> pedidoDtoOp = pedidoGateway.obterPorId(pedidoId);
         if(pedidoDtoOp.isEmpty()) {
         	log.warn("Pedido não encontrado. pedidoId={}", pedidoId);
         	throw new PedidoNaoEncontradoException();
@@ -62,7 +59,7 @@ public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase 
 
 
     private PagamentoDto obtemPedidoPorIdentificadorPagamento(String identificadorPagamento) {
-        Optional<PagamentoDto> pagamentoDtoOp = this.pagamentoRepositoryGateway.obterPorIdentificadorPagamento(identificadorPagamento);
+        Optional<PagamentoDto> pagamentoDtoOp = this.pagamentoGateway.obterPorIdentificadorPagamento(identificadorPagamento);
         if (pagamentoDtoOp.isEmpty()) {
             log.warn("Pagamento não encontrado. identificadorPagamento={}", identificadorPagamento);
             throw new PagamentoNaoEncontradoException();

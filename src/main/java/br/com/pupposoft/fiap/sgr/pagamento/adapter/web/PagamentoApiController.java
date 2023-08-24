@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.ConfirmacaoPagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.PagamentoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCase;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCase;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ObterPagamentoUsecase;
+import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,21 +31,15 @@ import lombok.extern.slf4j.Slf4j;
 public class PagamentoApiController {
 	
 	@Autowired
-    private EfetuarPagamentoUseCase efetuarPagamentoUseCase;
+    private PagamentoController pagamentoController;
 	
-	@Autowired
-    private ConfirmarPagamentoUseCase confirmarPagamentoUseCase;
-	
-	@Autowired
-    private ObterPagamentoUsecase obterPagamentoUseCase;
-
 	@PostMapping("efetuar")
 	@ResponseStatus(HttpStatus.CREATED)
     public Long efetuar(@RequestBody(required = true) PagamentoJson pagamentoJson) {
         log.trace("Start pagamentoJson={}", pagamentoJson);
         
         EfetuarPagamentoParamDto paramsDto = mapJsonToDto(pagamentoJson);
-        EfetuarPagamentoReturnDto returnDto = this.efetuarPagamentoUseCase.efetuar(paramsDto);
+        EfetuarPagamentoReturnDto returnDto = pagamentoController.efetuar(paramsDto);
         
         Long pagamentoId = returnDto.getPagamentoId();
         log.trace("End pagamentoId={}", pagamentoId);
@@ -60,14 +53,14 @@ public class PagamentoApiController {
 
         //TODO - alterar este método para NÃO receber o status. Na pratica o sistema deve ir buscar o status no sistema terceiro
         //FIXME: Esta chamada deve ser async
-        confirmarPagamentoUseCase.confirmar(confirmacaoPagamentoJson.getIdentificador(), confirmacaoPagamentoJson.getStatus());
+        pagamentoController.confirmar(confirmacaoPagamentoJson.getIdentificador(), Status.valueOf(confirmacaoPagamentoJson.getStatus()));
         log.trace("End");
     }
 
 	@GetMapping("identificador-pagamento-externo/{identificadorPagamentoExterno}")
 	public PagamentoJson obterByIdentificadorPagamento(@PathVariable String identificadorPagamentoExterno) {
 		log.trace("Start identificadorPagamento={}", identificadorPagamentoExterno);
-		PagamentoDto dto = obterPagamentoUseCase.obterPorIdentificadorPagamento(identificadorPagamentoExterno);
+		PagamentoDto dto = pagamentoController.obterByIdentificadorPagamento(identificadorPagamentoExterno);
 		PagamentoJson json = mapDtoToJson(dto);
 		log.trace("End json={}", json);
 		return json;
