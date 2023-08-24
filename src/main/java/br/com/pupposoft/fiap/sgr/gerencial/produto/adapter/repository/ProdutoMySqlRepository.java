@@ -12,12 +12,12 @@ import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ProdutoEnt
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ErrorToAccessRepositoryException;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.gateway.ProdutoGateway;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class ProdutoMySqlRepositoryGateway implements ProdutoRepositoryGateway {
+public class ProdutoMySqlRepository implements ProdutoGateway {
 
 	@Autowired
 	private ProdutoEntityRepository produtoEntityRepository;

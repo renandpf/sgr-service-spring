@@ -2,7 +2,7 @@ package br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.AlterarProdutoParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.AlterarProdutoReturnDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.gateway.ProdutoGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class AlterarProdutoUseCaseImpl implements AlterarProdutoUseCase {
 
-	private ProdutoRepositoryGateway produtoRepositoryGateway;
+	private ProdutoGateway produtoRepositoryGateway;
 	
 	@Override
 	public AlterarProdutoReturnDto alterar(AlterarProdutoParamsDto dto) {

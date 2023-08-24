@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.controller;
+package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.web;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.controller.json.ProdutoJson;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.controller.ProdutoCoreController;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.web.json.ProdutoJson;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.controller.ProdutoController;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("sgr/gerencial")
-public class ProdutoController {
+public class ProdutoApiController {
 	
 	@Autowired
-	private ProdutoCoreController produtoCoreController;
+	private ProdutoController produtoCoreController;
 	
 	@GetMapping("categorias/{categoria}/produtos")
 	public List<ProdutoJson> obterPorCategoria(@PathVariable Categoria categoria) {

@@ -1,6 +1,6 @@
 package br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase;
 
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.gateway.ProdutoGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ExcluirProdutoUseCaseImpl implements ExcluirProdutoUseCase {
 
-	private ProdutoRepositoryGateway produtoRepositoryGateway;
+	private ProdutoGateway produtoRepositoryGateway;
 	
 	@Override
 	public void excluir(Long id) {

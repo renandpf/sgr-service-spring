@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.controller.ProdutoCoreController;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.controller.ProdutoController;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.gateway.ProdutoGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.AlterarProdutoUseCase;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.AlterarProdutoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.CriarProdutoUseCase;
@@ -20,7 +20,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.ObterProdutoUseC
 public class GerencialProdutoDIConfiguration {
 
 	@Autowired
-	private ProdutoRepositoryGateway produtoRepositoryGateway;
+	private ProdutoGateway produtoRepositoryGateway;
 	
 	@Bean
 	public ObterProdutoUseCase obterProdutoUseCase() {
@@ -45,12 +45,12 @@ public class GerencialProdutoDIConfiguration {
 	@Bean
 	@Autowired
 	@DependsOn({"obterProdutoUseCase", "criarProdutoUseCase", "alterarProdutoUseCase", "excluirProdutoUseCase"})
-	public ProdutoCoreController produtoCoreController(
+	public ProdutoController produtoCoreController(
 			ObterProdutoUseCase obterProdutoUseCase, 
 			CriarProdutoUseCase criarProdutoUseCase, 
 			AlterarProdutoUseCase alterarProdutoUseCase, 
 			ExcluirProdutoUseCase excluirProdutoUseCase) {
 		
-		return new ProdutoCoreController(obterProdutoUseCase, criarProdutoUseCase, alterarProdutoUseCase, excluirProdutoUseCase);
+		return new ProdutoController(obterProdutoUseCase, criarProdutoUseCase, alterarProdutoUseCase, excluirProdutoUseCase);
 	}
 }

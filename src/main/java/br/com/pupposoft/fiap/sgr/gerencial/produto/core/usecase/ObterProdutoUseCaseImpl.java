@@ -6,7 +6,7 @@ import java.util.Optional;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception.ProdutoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.gateway.ProdutoGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ObterProdutoUseCaseImpl implements ObterProdutoUseCase {
 
-	private ProdutoRepositoryGateway produtoRepositoryGateway;
+	private ProdutoGateway produtoRepositoryGateway;
 	
 	@Override
 	public ProdutoDto obterPorId(Long id) {

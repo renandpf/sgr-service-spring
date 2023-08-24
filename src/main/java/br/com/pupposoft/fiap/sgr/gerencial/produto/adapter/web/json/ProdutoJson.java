@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.controller.json;
+package br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.web.json;
 
 import java.math.BigDecimal;
 
