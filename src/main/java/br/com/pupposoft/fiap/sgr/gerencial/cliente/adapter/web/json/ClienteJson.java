@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.controller.json;
+package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.web.json;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

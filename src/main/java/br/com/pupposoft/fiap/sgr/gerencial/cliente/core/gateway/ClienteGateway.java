@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports;
+package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.gateway;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarCliente
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
 
-public interface ClienteRepositoryGateway {
+public interface ClienteGateway {
 
 	Optional<ClienteDto> obterPorCpf(String cpf);
 

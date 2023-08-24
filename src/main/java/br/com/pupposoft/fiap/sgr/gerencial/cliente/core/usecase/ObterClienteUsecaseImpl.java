@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ClienteNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.gateway.ClienteGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ObterClienteUsecaseImpl implements ObterClienteUsecase {
 
-	private ClienteRepositoryGateway clienteRepositoryGateway;
+	private ClienteGateway clienteRepositoryGateway;
 
 	@Override
 	public ClienteDto obterPorId(Long id) {

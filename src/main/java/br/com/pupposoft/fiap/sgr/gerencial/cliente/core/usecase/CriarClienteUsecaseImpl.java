@@ -6,7 +6,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.gateway.ClienteGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class CriarClienteUsecaseImpl implements CriarClienteUsecase {
 	
-	private ClienteRepositoryGateway clienteRepositoryGateway;
+	private ClienteGateway clienteRepositoryGateway;
 
 	@Override
 	public CriarClienteReturnDto criar(CriarClienteParamsDto dto) {

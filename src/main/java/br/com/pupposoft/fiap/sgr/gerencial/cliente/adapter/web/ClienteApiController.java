@@ -1,4 +1,4 @@
-package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.controller;
+package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.controller.json.ClienteJson;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.controller.ClienteCoreController;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.web.json.ClienteJson;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.controller.ClienteController;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("sgr/gerencial")
-public class ClienteController {
+public class ClienteApiController {
 
 	@Autowired
-	private ClienteCoreController clienteCoreController;
+	private ClienteController clienteCoreController;
 	
 	@GetMapping("clientes/cpf/{cpf}")
 	public ClienteJson obterPorCpf(@PathVariable String cpf) {

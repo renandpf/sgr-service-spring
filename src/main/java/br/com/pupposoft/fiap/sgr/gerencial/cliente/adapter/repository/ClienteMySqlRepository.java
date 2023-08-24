@@ -13,14 +13,14 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarCliente
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteReturnDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ErrorToAccessRepositoryException;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.gateway.ClienteGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
 @Component
-public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
+public class ClienteMySqlRepository implements ClienteGateway {
 
 	@Autowired
 	private ClienteEntityRepository clienteEntityRepository; 

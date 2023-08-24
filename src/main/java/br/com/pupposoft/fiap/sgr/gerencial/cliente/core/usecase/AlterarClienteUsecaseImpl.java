@@ -7,7 +7,7 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteReturnDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.exception.ClienteNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
+import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.gateway.ClienteGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class AlterarClienteUsecaseImpl implements AlterarClienteUsecase {
 	
-	private ClienteRepositoryGateway clienteRepositoryGateway;
+	private ClienteGateway clienteRepositoryGateway;
 
 	public AlterarClienteReturnDto alterar(AlterarClienteParamsDto paramsDto) {
 		log.trace("Start paramsDto={}", paramsDto);
