@@ -24,12 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ClienteApiController {
 
 	@Autowired
-	private ClienteController clienteCoreController;
+	private ClienteController clienteController;
 	
 	@GetMapping("clientes/cpf/{cpf}")
 	public ClienteJson obterPorCpf(@PathVariable String cpf) {
 		log.trace("Start cpf={}", cpf);
-		ClienteDto clienteDto = clienteCoreController.obterPorCpf(cpf);
+		ClienteDto clienteDto = clienteController.obterPorCpf(cpf);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
@@ -38,7 +38,7 @@ public class ClienteApiController {
 	@GetMapping("clientes/email/{email}")
 	public ClienteJson obterPorEmail(@PathVariable String email) {
 		log.trace("Start email={}", email);
-		ClienteDto clienteDto = clienteCoreController.obterPorEmail(email);
+		ClienteDto clienteDto = clienteController.obterPorEmail(email);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;
@@ -48,7 +48,7 @@ public class ClienteApiController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long criarCliente(@RequestBody(required = true) ClienteJson cliente) {
 		log.trace("Start cliente={}", cliente);
-		Long clienteId = clienteCoreController.criar(mapJsonToDto(null, cliente));
+		Long clienteId = clienteController.criar(mapJsonToDto(null, cliente));
 		log.trace("End clienteId={}", clienteId);
 		return clienteId;
 	}
@@ -56,7 +56,7 @@ public class ClienteApiController {
 	@PutMapping("clientes/{id}")
 	public void alterarCliente(@RequestBody(required = true) ClienteJson clienteJson, @PathVariable Long id){
 		log.trace("Start clienteJson={}, id={}", clienteJson, id);
-		clienteCoreController.alterar(mapJsonToDto(id, clienteJson));
+		clienteController.alterar(mapJsonToDto(id, clienteJson));
 		log.trace("End");
 	}
 
@@ -64,7 +64,7 @@ public class ClienteApiController {
 	@GetMapping("clientes/{clienteId}")
 	public ClienteJson obterById(@PathVariable Long clienteId) {
 		log.trace("Start clienteId={}", clienteId);
-		ClienteDto clienteDto = clienteCoreController.obterById(clienteId);
+		ClienteDto clienteDto = clienteController.obterById(clienteId);
 		ClienteJson clienteJson = mapDtoToJson(clienteDto);
 		log.trace("End clienteJson={}", clienteJson);
 		return clienteJson;

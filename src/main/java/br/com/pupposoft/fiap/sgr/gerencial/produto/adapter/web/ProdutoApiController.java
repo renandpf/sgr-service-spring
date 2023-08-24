@@ -28,12 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProdutoApiController {
 	
 	@Autowired
-	private ProdutoController produtoCoreController;
+	private ProdutoController produtoController;
 	
 	@GetMapping("categorias/{categoria}/produtos")
 	public List<ProdutoJson> obterPorCategoria(@PathVariable Categoria categoria) {
 		log.trace("Start categoria={}", categoria);
-		List<ProdutoDto> produtos = produtoCoreController.obterPorCategoria(categoria);
+		List<ProdutoDto> produtos = produtoController.obterPorCategoria(categoria);
 		List<ProdutoJson> produtosJson = produtos.stream().map(this::mapDtoToJson).toList();
 		log.trace("End produtosJson={}", produtosJson);
 		return produtosJson;
@@ -42,7 +42,7 @@ public class ProdutoApiController {
 	@GetMapping("produtos/{id}")
 	public ProdutoJson obterById(@PathVariable Long id) {
 		log.trace("Start id={}", id);
-		ProdutoDto produtoDto = produtoCoreController.obterById(id);
+		ProdutoDto produtoDto = produtoController.obterById(id);
 		ProdutoJson produtoJson = mapDtoToJson(produtoDto);
 		log.trace("End produtoJson={}", produtoJson);
 		return produtoJson;
@@ -52,7 +52,7 @@ public class ProdutoApiController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long criar(@RequestBody(required = true) ProdutoJson produtoJson) {
 		log.trace("Start produtoJson={}", produtoJson);
-		final Long id = produtoCoreController.criar(mapJsonToDto(null, produtoJson));
+		final Long id = produtoController.criar(mapJsonToDto(null, produtoJson));
 		log.trace("End id={}", id);
 		return id;
 	}
@@ -60,14 +60,14 @@ public class ProdutoApiController {
 	@PutMapping("produtos/{id}")
 	public void alterar(@PathVariable Long id, @RequestBody(required = true) ProdutoJson produtoJson){
 		log.trace("Start id={}, produtoJson={}", id, produtoJson);
-		produtoCoreController.alterar(mapJsonToDto(id, produtoJson));
+		produtoController.alterar(mapJsonToDto(id, produtoJson));
 		log.trace("End");
 	}
 
 	@DeleteMapping("produtos/{id}")
 	public void excluir(@PathVariable Long id) {
 		log.trace("Start id={}", id);
-		produtoCoreController.excluir(id);
+		produtoController.excluir(id);
 		log.trace("End");
 	}
 	

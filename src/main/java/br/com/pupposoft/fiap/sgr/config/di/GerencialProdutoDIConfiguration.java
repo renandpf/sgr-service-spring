@@ -45,7 +45,7 @@ public class GerencialProdutoDIConfiguration {
 	@Bean
 	@Autowired
 	@DependsOn({"obterProdutoUseCase", "criarProdutoUseCase", "alterarProdutoUseCase", "excluirProdutoUseCase"})
-	public ProdutoController produtoCoreController(
+	public ProdutoController produtoController(
 			ObterProdutoUseCase obterProdutoUseCase, 
 			CriarProdutoUseCase criarProdutoUseCase, 
 			AlterarProdutoUseCase alterarProdutoUseCase, 
