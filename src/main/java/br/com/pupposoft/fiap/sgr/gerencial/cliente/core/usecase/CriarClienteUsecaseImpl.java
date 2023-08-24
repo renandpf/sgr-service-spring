@@ -2,8 +2,6 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.CriarClienteParamsDto;
@@ -16,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class CriarClienteUsecaseImpl implements CriarClienteUsecase {
 	
-	@Autowired
 	private ClienteRepositoryGateway clienteRepositoryGateway;
 
 	@Override
 	public CriarClienteReturnDto criar(CriarClienteParamsDto dto) {
+		log.trace("Start dto={}", dto);
         Cliente clienteReq = this.mapDtoToDomain(dto.getCliente());
 
         clienteReq.validar();
@@ -34,6 +32,7 @@ public class CriarClienteUsecaseImpl implements CriarClienteUsecase {
 
         CriarClienteReturnDto returnDto = this.clienteRepositoryGateway.criar(dto);
 
+        log.trace("End returnDto={}", returnDto);
         return returnDto;
 	}
 	

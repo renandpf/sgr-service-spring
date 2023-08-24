@@ -2,6 +2,9 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.repository;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ClienteEntity;
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ClienteEntityRepository;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
@@ -16,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
+@Component
 public class ClienteMySqlRepositoryGateway implements ClienteRepositoryGateway {
 
+	@Autowired
 	private ClienteEntityRepository clienteEntityRepository; 
 
 	@Override

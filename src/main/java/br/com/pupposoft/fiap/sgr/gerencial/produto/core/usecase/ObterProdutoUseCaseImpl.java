@@ -3,20 +3,17 @@ package br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.exception.ProdutoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class ObterProdutoUseCaseImpl implements ObterProdutoUseCase {
 
-	@Autowired
 	private ProdutoRepositoryGateway produtoRepositoryGateway;
 	
 	@Override

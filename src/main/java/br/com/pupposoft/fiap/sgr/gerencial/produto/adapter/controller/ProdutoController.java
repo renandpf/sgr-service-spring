@@ -16,15 +16,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pupposoft.fiap.sgr.gerencial.produto.adapter.controller.json.ProdutoJson;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.controller.ProdutoCoreController;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.ProdutoDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.AlterarProdutoParamsDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.CriarProdutoParamsDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.dto.flow.CriarProdutoReturnDto;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.AlterarProdutoUseCase;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.CriarProdutoUseCase;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.ExcluirProdutoUseCase;
-import br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase.ObterProdutoUseCase;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,21 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ProdutoController {
 	
 	@Autowired
-	private ObterProdutoUseCase obterProdutoUseCase;
+	private ProdutoCoreController produtoCoreController;
 	
-	@Autowired
-	private CriarProdutoUseCase criarProdutoUseCase;
-	
-	@Autowired
-	private AlterarProdutoUseCase alterarProdutoUseCase; 
-	
-	@Autowired
-	private ExcluirProdutoUseCase excluirProdutoUseCase; 
-
 	@GetMapping("categorias/{categoria}/produtos")
 	public List<ProdutoJson> obterPorCategoria(@PathVariable Categoria categoria) {
 		log.trace("Start categoria={}", categoria);
-		List<ProdutoDto> produtos = this.obterProdutoUseCase.obterPorCategoria(categoria);
+		List<ProdutoDto> produtos = produtoCoreController.obterPorCategoria(categoria);
 		List<ProdutoJson> produtosJson = produtos.stream().map(this::mapDtoToJson).toList();
 		log.trace("End produtosJson={}", produtosJson);
 		return produtosJson;
@@ -57,7 +42,7 @@ public class ProdutoController {
 	@GetMapping("produtos/{id}")
 	public ProdutoJson obterById(@PathVariable Long id) {
 		log.trace("Start id={}", id);
-		ProdutoDto produtoDto = this.obterProdutoUseCase.obterPorId(id);
+		ProdutoDto produtoDto = produtoCoreController.obterById(id);
 		ProdutoJson produtoJson = mapDtoToJson(produtoDto);
 		log.trace("End produtoJson={}", produtoJson);
 		return produtoJson;
@@ -67,10 +52,7 @@ public class ProdutoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Long criar(@RequestBody(required = true) ProdutoJson produtoJson) {
 		log.trace("Start produtoJson={}", produtoJson);
-		CriarProdutoReturnDto returnDto = 
-				this.criarProdutoUseCase.criar(CriarProdutoParamsDto.builder()
-						.produto(mapJsonToDto(null, produtoJson)).build());
-		Long id = returnDto.getId();
+		final Long id = produtoCoreController.criar(mapJsonToDto(null, produtoJson));
 		log.trace("End id={}", id);
 		return id;
 	}
@@ -78,14 +60,14 @@ public class ProdutoController {
 	@PutMapping("produtos/{id}")
 	public void alterar(@PathVariable Long id, @RequestBody(required = true) ProdutoJson produtoJson){
 		log.trace("Start id={}, produtoJson={}", id, produtoJson);
-		this.alterarProdutoUseCase.alterar(AlterarProdutoParamsDto.builder().produto(mapJsonToDto(id, produtoJson)).build());
+		produtoCoreController.alterar(mapJsonToDto(id, produtoJson));
 		log.trace("End");
 	}
 
 	@DeleteMapping("produtos/{id}")
 	public void excluir(@PathVariable Long id) {
 		log.trace("Start id={}", id);
-		this.excluirProdutoUseCase.excluir(id);
+		produtoCoreController.excluir(id);
 		log.trace("End");
 	}
 	

@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ClienteEntityRepository;
-import br.com.pupposoft.fiap.sgr.gerencial.cliente.adapter.repository.ClienteMySqlRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.controller.ClienteCoreController;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.ports.ClienteRepositoryGateway;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.AlterarClienteUsecase;
@@ -17,35 +15,23 @@ import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.ObterClienteUsec
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase.ObterClienteUsecaseImpl;
 
 @Configuration
-public class GerencialDependencyInjectionConfiguration {
+public class GerencialClienteDIConfiguration {
 
 	@Autowired
-	private ClienteEntityRepository clienteEntityRepository; 
+	private ClienteRepositoryGateway clienteRepositoryGateway;
 	
 	@Bean
-	@DependsOn({"clienteEntityRepository"})
-	public ClienteRepositoryGateway clienteRepositoryGateway() {
-		return new ClienteMySqlRepositoryGateway(clienteEntityRepository);
-	}
-	
-	@Bean
-	@Autowired
-	@DependsOn({"clienteRepositoryGateway"})
-	public ObterClienteUsecase obterClienteUsecase(ClienteRepositoryGateway clienteRepositoryGateway) {
+	public ObterClienteUsecase obterClienteUsecase() {
 		return new ObterClienteUsecaseImpl(clienteRepositoryGateway);
 	}
 	
 	@Bean
-	@Autowired
-	@DependsOn({"clienteRepositoryGateway"})
-	public CriarClienteUsecase criarClienteUsecase(ClienteRepositoryGateway clienteRepositoryGateway) {
+	public CriarClienteUsecase criarClienteUsecase() {
 		return new CriarClienteUsecaseImpl(clienteRepositoryGateway);
 	}
 
 	@Bean
-	@Autowired
-	@DependsOn({"clienteRepositoryGateway"})
-	public AlterarClienteUsecase alterarClienteUsecase(ClienteRepositoryGateway clienteRepositoryGateway) {
+	public AlterarClienteUsecase alterarClienteUsecase() {
 		return new AlterarClienteUsecaseImpl(clienteRepositoryGateway);
 	}
 	

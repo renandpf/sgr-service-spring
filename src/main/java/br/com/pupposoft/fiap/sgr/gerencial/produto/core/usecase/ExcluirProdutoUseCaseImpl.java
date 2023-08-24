@@ -1,16 +1,13 @@
 package br.com.pupposoft.fiap.sgr.gerencial.produto.core.usecase;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.ports.ProdutoRepositoryGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class ExcluirProdutoUseCaseImpl implements ExcluirProdutoUseCase {
 
-	@Autowired
 	private ProdutoRepositoryGateway produtoRepositoryGateway;
 	
 	@Override

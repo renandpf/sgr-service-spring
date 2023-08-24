@@ -2,8 +2,6 @@ package br.com.pupposoft.fiap.sgr.gerencial.cliente.core.usecase;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.dto.flows.AlterarClienteParamsDto;
@@ -17,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class AlterarClienteUsecaseImpl implements AlterarClienteUsecase {
 	
-	@Autowired
 	private ClienteRepositoryGateway clienteRepositoryGateway;
 
 	public AlterarClienteReturnDto alterar(AlterarClienteParamsDto paramsDto) {
