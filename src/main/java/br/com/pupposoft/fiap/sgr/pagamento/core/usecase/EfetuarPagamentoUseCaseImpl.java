@@ -41,12 +41,35 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
         PedidoDto pedidoDto = this.obtemPedidoVerificandoSeEleExiste(dto.getPagamento());
         
-        final Status statusAguardandoConfirmacaoPagamento = Status.AGUARDANDO_CONFIRMACAO_PAGAMENTO;
-        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
-        pedido.setStatus(statusAguardandoConfirmacaoPagamento);
-        pedidoDto.setStatusId(Status.get(statusAguardandoConfirmacaoPagamento));
+        setStatusDoPedido(pedidoDto);
         
-        EnviaPagamentoReturnDto responsePagamentoDto = 
+        enviaPagamentoSistemaExterno(dto, pedidoDto);
+
+        setValorTotalPagamento(dto);
+        
+        //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
+        Long idPagamento = this.pagamentoGateway.criar(dto.getPagamento());
+
+        pedidoGateway.alterarStatus(pedidoDto);
+
+        EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).build();
+        log.trace("End returnDto={}", returnDto);
+        return returnDto;
+	}
+
+
+	private void setValorTotalPagamento(EfetuarPagamentoParamDto dto) {
+		Pagamento pagamento = Pagamento.builder()
+        		.pedido(Pedido.builder().id(dto.getPagamento().getPedido().getId()).build())
+        		.cartoesCredito(dto.getPagamento().getCartoesCredito().stream().map(this::mapCartaoCreditoDtoToCartaoCreditoDomain).toList())
+        		.build();
+        
+        dto.getPagamento().setValor(pagamento.getValor());
+	}
+
+
+	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto) {
+		EnviaPagamentoReturnDto responsePagamentoDto = 
         		this.pagamentoExternoGateway.enviarPagamento(
         				EnviaPagamentoExternoParamDto.builder()
         					.cartoesCredito(dto.getPagamento()
@@ -54,22 +77,14 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         				.build());
         dto.getPagamento().setIdentificadorPagamentoExterno(responsePagamentoDto.getIdentificadorPagamento());
         dto.getPagamento().setPedido(pedidoDto);
+	}
 
-        Pagamento pagamento = Pagamento.builder()
-        		.pedido(Pedido.builder().id(dto.getPagamento().getPedido().getId()).build())
-        		.cartoesCredito(dto.getPagamento().getCartoesCredito().stream().map(this::mapCcDtoToCcDomain).toList())
-        		.build();
-        
-        dto.getPagamento().setValor(pagamento.getValor());
-        
-        //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
-        Long idPagamento = this.pagamentoGateway.criar(dto.getPagamento());
 
-        this.pedidoGateway.alterarStatus(pedidoDto);
-
-        EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).build();
-        log.trace("End returnDto={}", returnDto);
-        return returnDto;
+	private void setStatusDoPedido(PedidoDto pedidoDto) {
+		final Status statusAguardandoConfirmacaoPagamento = Status.AGUARDANDO_CONFIRMACAO_PAGAMENTO;
+        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
+        pedido.setStatus(statusAguardandoConfirmacaoPagamento);
+        pedidoDto.setStatusId(Status.get(statusAguardandoConfirmacaoPagamento));
 	}
 
 	
@@ -99,7 +114,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 	}
 
 	
-	private CartaoCredito mapCcDtoToCcDomain(CartaoCreditoDto dto) {
+	private CartaoCredito mapCartaoCreditoDtoToCartaoCreditoDomain(CartaoCreditoDto dto) {
 		return CartaoCredito.builder()
 				.cpf(dto.getCpf())
 				.cvv(dto.getCvv())
