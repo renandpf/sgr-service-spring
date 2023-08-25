@@ -4,9 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
@@ -14,23 +11,22 @@ import br.com.pupposoft.fiap.sgr.pedido.core.exception.PagamentoNotFoundExceptio
 import br.com.pupposoft.fiap.sgr.pedido.core.exception.PedidoNotFoundException;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class ObterPedidoUseCaseImpl implements ObterPedidoUseCase {
 
-	@Autowired
-	private PagamentoGateway pagamentoServiceGateway;
+	private PagamentoGateway pagamentoGateway;
 	
-	@Autowired
-	private PedidoGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoGateway;
 	
 	@Override
 	public PedidoDto obterPorId(Long id) {
         log.trace("Start id={}", id);
 
-        Optional<PedidoDto> pedidoOp = this.pedidoRepositoryGateway.obterPorId(id);
+        Optional<PedidoDto> pedidoOp = this.pedidoGateway.obterPorId(id);
         if (pedidoOp.isEmpty()) {
             log.warn("Pedido não encontrado. id={}", id);
             throw new PedidoNotFoundException();
@@ -44,7 +40,7 @@ public class ObterPedidoUseCaseImpl implements ObterPedidoUseCase {
 	@Override
 	public List<PedidoDto> obterEmAndamento() {
         log.trace("Start");
-        List<PedidoDto> pedidos = this.pedidoRepositoryGateway.obterPorStatus(Arrays.asList(
+        List<PedidoDto> pedidos = this.pedidoGateway.obterPorStatus(Arrays.asList(
         		Status.PAGO, 
         		Status.EM_PREPARACAO));
         log.trace("End pedidos={}", pedidos);
@@ -54,7 +50,7 @@ public class ObterPedidoUseCaseImpl implements ObterPedidoUseCase {
 	@Override
 	public PedidoDto obterPorIdentificadorPagamento(String identificadorPagamento) {
         log.trace("Start identificadorPagamento={}", identificadorPagamento);
-        Optional<PagamentoDto> pagamentoOp = this.pagamentoServiceGateway.obterPorIdentificadorPagamento(identificadorPagamento);
+        Optional<PagamentoDto> pagamentoOp = this.pagamentoGateway.obterPorIdentificadorPagamento(identificadorPagamento);
 
         if (pagamentoOp.isEmpty()) {
             log.warn("Pagamento não encontrado com identificadorPagamento: {}", identificadorPagamento);

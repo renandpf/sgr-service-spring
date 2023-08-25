@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Produto;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
@@ -20,20 +17,18 @@ import br.com.pupposoft.fiap.sgr.pedido.core.exception.ProdutoNotFoundException;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.ProdutoGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 
-	@Autowired
-	private ClienteGateway clienteServiceGateway;
+	private ClienteGateway clienteGateway;
 	
-	@Autowired
-	private ProdutoGateway produtoServiceGateway;
+	private ProdutoGateway produtoGateway;
 	
-	@Autowired
-	private PedidoGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoGateway;
 	
 	@Override
 	public Long criar(PedidoDto pedidoDto) {
@@ -45,7 +40,7 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 
 	    pedido.setStatus(Status.RECEBIDO);
 
-	    Long pedidoId = this.pedidoRepositoryGateway.criar(mapDomainToDto(pedido));
+	    Long pedidoId = this.pedidoGateway.criar(mapDomainToDto(pedido));
 	    log.trace("End pedidoId={}", pedidoId);
 	    return pedidoId;
 	}
@@ -66,7 +61,7 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 
 	
 	  private void verificaRemoveClienteInexistente(Pedido pedido) {
-		  Optional<ClienteDto> clienteDtoOp = clienteServiceGateway.obterPorId(pedido.getCliente().getId());
+		  Optional<ClienteDto> clienteDtoOp = clienteGateway.obterPorId(pedido.getCliente().getId());
 		  if(clienteDtoOp.isEmpty()) {
 			  pedido.removerCliente();
 		  }
@@ -77,7 +72,7 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 		  	.getItens().stream()
 		  	.map(Item::getProduto)
 		  	.forEach(produto -> {
-		  		Optional<ProdutoDto> produtoOp = produtoServiceGateway.obterPorId(produto.getId());
+		  		Optional<ProdutoDto> produtoOp = produtoGateway.obterPorId(produto.getId());
 		  		produtoOp.orElseThrow(() -> new ProdutoNotFoundException());
 		  	});
 	  }

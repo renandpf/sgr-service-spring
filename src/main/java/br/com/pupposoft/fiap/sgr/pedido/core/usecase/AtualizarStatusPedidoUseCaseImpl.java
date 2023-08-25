@@ -1,22 +1,18 @@
 package br.com.pupposoft.fiap.sgr.pedido.core.usecase;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.gateway.PedidoGateway;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+@AllArgsConstructor
 public class AtualizarStatusPedidoUseCaseImpl implements AtualizarStatusPedidoUseCase {
 
-	@Autowired
-	private PedidoGateway pedidoRepositoryGateway;
+	private PedidoGateway pedidoGateway;
 	
-	@Autowired
 	private ObterPedidoUseCase obterPedidoUseCase;
 	
 	@Override
@@ -28,7 +24,7 @@ public class AtualizarStatusPedidoUseCaseImpl implements AtualizarStatusPedidoUs
         Pedido pedido = Pedido.builder().id(pedidoId).status(Status.get(pedidoDto.getStatusId())).build();
         pedido.setStatus(status);
         
-        this.pedidoRepositoryGateway.atualizarStatus(PedidoDto.builder().id(pedidoId).statusId(Status.get(pedido.getStatus())).build());
+        this.pedidoGateway.atualizarStatus(PedidoDto.builder().id(pedidoId).statusId(Status.get(pedido.getStatus())).build());
         log.trace("End");
 	}
 	

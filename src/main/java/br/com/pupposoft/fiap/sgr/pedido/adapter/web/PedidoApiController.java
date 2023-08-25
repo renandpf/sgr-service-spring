@@ -17,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pupposoft.fiap.sgr.pedido.adapter.web.json.ItemJson;
 import br.com.pupposoft.fiap.sgr.pedido.adapter.web.json.PedidoJson;
+import br.com.pupposoft.fiap.sgr.pedido.core.controller.PedidoController;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ProdutoDto;
-import br.com.pupposoft.fiap.sgr.pedido.core.usecase.AtualizarStatusPedidoUseCase;
-import br.com.pupposoft.fiap.sgr.pedido.core.usecase.CriarPedidoUseCase;
-import br.com.pupposoft.fiap.sgr.pedido.core.usecase.ObterPedidoUseCase;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,19 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 public class PedidoApiController {
 
 	@Autowired
-    private ObterPedidoUseCase obterPedidoUseCase;
-	
-	@Autowired
-    private CriarPedidoUseCase criarPedidoUseCase;
-
-	@Autowired
-    private AtualizarStatusPedidoUseCase atualizarStatusPedidoUseCase;
-	
+    private PedidoController pedidoController;
 	
     @GetMapping("andamento")
     public List<PedidoJson> obterEmAndamento() {
         log.info("Start");
-        List<PedidoDto> pedidosDto = obterPedidoUseCase.obterEmAndamento();
+        List<PedidoDto> pedidosDto = pedidoController.obterEmAndamento();
         List<PedidoJson> pedidosJson = pedidosDto.stream().map(this::mapDtoToJson).toList();
         log.trace("End pedidosJson={}", pedidosJson);
         return pedidosJson;
@@ -55,7 +46,7 @@ public class PedidoApiController {
     @GetMapping("{pedidoId}")
     public PedidoJson obterPorId(@PathVariable Long pedidoId) {
         log.info("Start pedidoId={}", pedidoId);
-        PedidoDto pedidoDto = obterPedidoUseCase.obterPorId(pedidoId);
+        PedidoDto pedidoDto = pedidoController.obterPorId(pedidoId);
         PedidoJson pedidoJson = mapDtoToJson(pedidoDto);
         log.trace("End pedidoJson={}", pedidoJson);
         return pedidoJson;
@@ -66,7 +57,7 @@ public class PedidoApiController {
     public Long criar(@RequestBody(required = true) PedidoJson pedidoJson) {
         log.info("Start pedidoJson={}", pedidoJson);
         PedidoDto pedidoDto = mapJsonToDto(null, pedidoJson);
-        Long pedidoId = this.criarPedidoUseCase.criar(pedidoDto);
+        Long pedidoId = pedidoController.criar(pedidoDto);
         log.trace("End pedidoId={}", pedidoId);
         return pedidoId;
     }
@@ -74,14 +65,14 @@ public class PedidoApiController {
     @PatchMapping("{id}/status")
     public void atualizarStatus(@PathVariable Long id, @RequestBody(required = true) PedidoJson pedidoJson) {
         log.info("Start id={}, pedidoJson={}", id, pedidoJson);
-        this.atualizarStatusPedidoUseCase.atualizarStatus(id, pedidoJson.getStatus());
+        pedidoController.atualizarStatus(id, pedidoJson.getStatus());
         log.trace("End");
     }
     
     @GetMapping("/pagamentos/{idPagamento}")
     public PedidoJson obterPedidosPorIdentificadorPagamento(@PathVariable String idPagamento) {
         log.trace("Start identificadorPagamento={}", idPagamento);
-        PedidoDto pagamentoDto = this.obterPedidoUseCase.obterPorIdentificadorPagamento(idPagamento);
+        PedidoDto pagamentoDto = pedidoController.obterPorIdentificadorPagamento(idPagamento);
         PedidoJson pedidoJson = mapDtoToJson(pagamentoDto);
         log.trace("End pedidoJson={}", pedidoJson);
         return pedidoJson;
