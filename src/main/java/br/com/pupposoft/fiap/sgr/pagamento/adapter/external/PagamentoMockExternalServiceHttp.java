@@ -1,5 +1,7 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
@@ -20,7 +22,9 @@ public class PagamentoMockExternalServiceHttp implements PagamentoExternoGateway
 
             log.warn("### MOCK ###");
             final EnviaPagamentoReturnDto returnDto = 
-            		EnviaPagamentoReturnDto.builder().identificadorPagamento("identificiadorPagamentoMock").build();
+            		EnviaPagamentoReturnDto.builder()
+            		.identificadorPagamento(UUID.randomUUID().toString())
+            		.build();
 
             log.trace("End returnDto={}", returnDto);
 
