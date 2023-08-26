@@ -3,6 +3,7 @@ package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomLong;
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -26,6 +27,8 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDt
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
@@ -78,6 +81,25 @@ public class EfetuarPagamentoUseCaseUnitTest {
 		assertEquals(new BigDecimal("10"), paramsDto.getPagamento().getValor());
 	}
 
+	@Test
+	void shouldPedidoNaoEncontradoException() {
+		
+		final Long pedidoId = getRandomLong();
+		
+		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
+		
+		Optional<PedidoDto> pedidoOp = Optional.empty();
+		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
+		
+		assertThrows(PedidoNaoEncontradoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+	}
+	
+	@Test
+	void shouldCamposObrigatoriosNaoPreechidoException() {
+		EfetuarPagamentoParamDto paramsDto = EfetuarPagamentoParamDto.builder().pagamento(PagamentoDto.builder().build()).build();
+		assertThrows(CamposObrigatoriosNaoPreechidoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+	}
+	
 	private EfetuarPagamentoParamDto createParams(Long pedidoId) {
 		PagamentoDto pagamentoDto = PagamentoDto.builder()
 				.pedido(PedidoDto.builder().id(pedidoId).build())
