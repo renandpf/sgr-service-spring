@@ -15,9 +15,9 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoPa
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
@@ -29,26 +29,26 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 	private PedidoGateway pedidoGateway;
 	
-	private PlataformaPagamentoGateway pagamentoExternoGateway;
+	private PlataformaPagamentoFactory plataformaPagamentoFactory;
 	
 	private PagamentoGateway pagamentoGateway;
-
+	
 	@Override
-	public EfetuarPagamentoReturnDto efetuar(EfetuarPagamentoParamDto dto) {
-        log.trace("Start dto={}", dto);
+	public EfetuarPagamentoReturnDto efetuar(EfetuarPagamentoParamDto paramsDto) {
+        log.trace("Start dto={}", paramsDto);
 
-        this.validaCamposObrigatorios(dto.getPagamento());
+        validaCamposObrigatorios(paramsDto.getPagamento());
 
-        PedidoDto pedidoDto = this.obtemPedidoVerificandoSeEleExiste(dto.getPagamento());
+        PedidoDto pedidoDto = this.obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento());
         
         setStatusDoPedido(pedidoDto);
         
-        enviaPagamentoSistemaExterno(dto, pedidoDto);
+        enviaPagamentoSistemaExterno(paramsDto, pedidoDto);
 
-        setValorTotalPagamento(dto);
+        setValorTotalPagamento(paramsDto);
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
-        Long idPagamento = this.pagamentoGateway.criar(dto.getPagamento());
+        Long idPagamento = this.pagamentoGateway.criar(paramsDto.getPagamento());
 
         pedidoGateway.alterarStatus(pedidoDto);
 
@@ -69,8 +69,10 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 
 	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto) {
+		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
+		
 		EnviaPagamentoReturnDto responsePagamentoDto = 
-        		this.pagamentoExternoGateway.enviarPagamento(
+        		plataformaPagamentoGateway.enviarPagamento(
         				EnviaPagamentoExternoParamDto.builder()
         					.cartoesCredito(dto.getPagamento()
         					.getCartoesCredito())
@@ -89,7 +91,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 	
 	private PedidoDto obtemPedidoVerificandoSeEleExiste(PagamentoDto pagamento) {
-		Optional<PedidoDto> pedidoOp = this.pedidoGateway.obterPorId(pagamento.getPedido().getId());
+		Optional<PedidoDto> pedidoOp = pedidoGateway.obterPorId(pagamento.getPedido().getId());
 		if (pedidoOp.isEmpty()) {
 			log.warn("Pedido não encontrado. pagamento.pedido.id={}", pagamento.getPedido().getId());
 			throw new PedidoNaoEncontradoException();

@@ -1,5 +1,7 @@
 package br.com.pupposoft.fiap.sgr.config.di;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +12,14 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ObterPagamentoUsecase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ObterPagamentoUsecaseImpl;
+import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.PlataformaPagamentoFactory;
 
 @Configuration
 public class PagamentoDIConfiguration {
@@ -29,10 +33,23 @@ public class PagamentoDIConfiguration {
 
 	@Autowired
 	private PagamentoGateway pagamentoGateway;
+	
+	@Autowired
+	private PlataformaPagamentoConfigGateway plataformaPagamentoConfigGateway;
+	
+	@Autowired
+	private List<PlataformaPagamentoGateway> plataformaPagamentoGatewayList;
 
 	@Bean
-	public EfetuarPagamentoUseCase efetuarPagamentoUseCase() {
-		return new EfetuarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoGateway, pagamentoGateway);
+	public PlataformaPagamentoFactory plataformaPagamentoFactory() {
+		return new PlataformaPagamentoFactory(plataformaPagamentoConfigGateway, plataformaPagamentoGatewayList);
+	}
+	
+	@Bean
+	@Autowired
+	@DependsOn("plataformaPagamentoFactory")
+	public EfetuarPagamentoUseCase efetuarPagamentoUseCase(PlataformaPagamentoFactory plataformaPagamentoFactory) {
+		return new EfetuarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoFactory, pagamentoGateway);
 	}
 
 	@Bean
