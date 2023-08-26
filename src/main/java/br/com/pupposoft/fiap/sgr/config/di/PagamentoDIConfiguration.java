@@ -1,6 +1,7 @@
 package br.com.pupposoft.fiap.sgr.config.di;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -23,19 +24,20 @@ public class PagamentoDIConfiguration {
 	private PedidoGateway pedidoGateway;
 	
 	@Autowired
-	private PlataformaPagamentoGateway pagamentoExternoGateway;
+	@Qualifier("plataformaPagamentoMockGateway")
+	private PlataformaPagamentoGateway plataformaPagamentoGateway;
 
 	@Autowired
 	private PagamentoGateway pagamentoGateway;
 
 	@Bean
 	public EfetuarPagamentoUseCase efetuarPagamentoUseCase() {
-		return new EfetuarPagamentoUseCaseImpl(pedidoGateway, pagamentoExternoGateway, pagamentoGateway);
+		return new EfetuarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoGateway, pagamentoGateway);
 	}
 
 	@Bean
 	public ConfirmarPagamentoUseCase confirmarPagamentoUseCase() {
-		return new ConfirmarPagamentoUseCaseImpl(pedidoGateway, pagamentoExternoGateway, pagamentoGateway);
+		return new ConfirmarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoGateway, pagamentoGateway);
 	}
 	
 	@Bean
