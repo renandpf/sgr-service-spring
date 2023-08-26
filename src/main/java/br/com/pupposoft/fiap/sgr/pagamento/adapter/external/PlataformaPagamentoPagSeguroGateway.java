@@ -4,20 +4,20 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamentoExterna;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PagamentoExternalHttpPagSeguro extends PagamentoExternoGateway {
+public class PlataformaPagamentoPagSeguroGateway extends PlataformaPagamentoGateway {
 
-	public PagamentoExternalHttpPagSeguro() {
-		plataformaPagamentoExterna = PlataformaPagamentoExterna.PAG_SEGURO;
+	public PlataformaPagamentoPagSeguroGateway() {
+		plataformaPagamentoExterna = PlataformaPagamento.PAG_SEGURO;
 	}
 	
 	@Override

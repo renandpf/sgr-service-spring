@@ -15,7 +15,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoPa
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
@@ -29,7 +29,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 	private PedidoGateway pedidoGateway;
 	
-	private PagamentoExternoGateway pagamentoExternoGateway;
+	private PlataformaPagamentoGateway pagamentoExternoGateway;
 	
 	private PagamentoGateway pagamentoGateway;
 

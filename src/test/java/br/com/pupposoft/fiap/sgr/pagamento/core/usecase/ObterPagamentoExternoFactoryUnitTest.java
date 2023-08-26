@@ -15,41 +15,44 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PagamentoExternalHttpMercadoPago;
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PagamentoExternalHttpMock;
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PagamentoExternalHttpPagSeguro;
-import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamentoExterna;
-import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PagamentoExternoConfigParamsDto;
-import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PagamentoExternoConfigReturnDto;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoConfigGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoMercadoPagoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoMockGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoPagSeguroGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigParamsDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 
 @ExtendWith(MockitoExtension.class)
 public class ObterPagamentoExternoFactoryUnitTest {
 
 	@InjectMocks
-	private ObterPagamentoExternoFactory obterPagamentoExternoFactory;
+	private PlataformaPagamentoFactory plataformaPagamentoFactory;
 	
 	@Mock
-	private PagamentoExternoConfigGateway pagamentoExternoConfigGateway;
+	private PlataformaPagamentoConfigGateway plataformaPagamentoConfigGateway;
 	
 	@BeforeEach
 	void init() {
-		List<PagamentoExternoGateway> plataformasPagamentoList = 
-				Arrays.asList(new PagamentoExternalHttpMercadoPago(), new PagamentoExternalHttpMock(), new PagamentoExternalHttpPagSeguro());
-		setField(obterPagamentoExternoFactory, "pagamentoExternoGatewayList", plataformasPagamentoList);
+		List<PlataformaPagamentoGateway> plataformasPagamentoList = 
+				Arrays.asList(
+						new PlataformaPagamentoMercadoPagoGateway(), 
+						new PlataformaPagamentoMockGateway(), 
+						new PlataformaPagamentoPagSeguroGateway());
+		setField(plataformaPagamentoFactory, "plataformaPagamentoGatewayList", plataformasPagamentoList);
 	}
 	
 	@Test
 	void shouldMercadoPago() {
 		
-		final PlataformaPagamentoExterna plataformaPagamentoExterna = PlataformaPagamentoExterna.MERCADO_PAGO;
-		PagamentoExternoConfigReturnDto returnDto = 
-				PagamentoExternoConfigReturnDto.builder().plataformaPagamentoExterna(plataformaPagamentoExterna).build();
-		doReturn(returnDto).when(pagamentoExternoConfigGateway).obter(any(PagamentoExternoConfigParamsDto.class));
+		final PlataformaPagamento plataformaPagamento = PlataformaPagamento.MERCADO_PAGO;
+		PlataformaPagamentoConfigReturnDto returnDto = 
+				PlataformaPagamentoConfigReturnDto.builder().plataformaPagamento(plataformaPagamento).build();
+		doReturn(returnDto).when(plataformaPagamentoConfigGateway).obter(any(PlataformaPagamentoConfigParamsDto.class));
 		
-		PagamentoExternoGateway pagamentoExternoGateway = obterPagamentoExternoFactory.obter();
+		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
 		
-		assertTrue(pagamentoExternoGateway instanceof PagamentoExternalHttpMercadoPago);
+		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoMercadoPagoGateway);
 	}
 }

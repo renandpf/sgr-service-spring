@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoExternoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCase;
@@ -23,7 +23,7 @@ public class PagamentoDIConfiguration {
 	private PedidoGateway pedidoGateway;
 	
 	@Autowired
-	private PagamentoExternoGateway pagamentoExternoGateway;
+	private PlataformaPagamentoGateway pagamentoExternoGateway;
 
 	@Autowired
 	private PagamentoGateway pagamentoGateway;
