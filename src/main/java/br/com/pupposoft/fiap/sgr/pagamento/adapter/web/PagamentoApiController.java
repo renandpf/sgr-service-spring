@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.ConfirmacaoPagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
@@ -46,16 +47,35 @@ public class PagamentoApiController {
         return pagamentoId;
     }
 
-	@PostMapping("confirmar")
+	@PostMapping("notificacoes/{plataformaPagamento}")
 	@ResponseStatus(HttpStatus.CREATED)
-    public void confirmar(@RequestBody(required = true)  ConfirmacaoPagamentoJson confirmacaoPagamentoJson) {
-        log.trace("Start confirmacaoPagamentoJson={}", confirmacaoPagamentoJson);
+    public void notificacoes(@PathVariable String plataformaPagamento, @RequestBody(required = true) ConfirmacaoPagamentoJson confirmacaoPagamentoJson) {
+        log.trace("Start plataformaPagamento={}, confirmacaoPagamentoJson={}", plataformaPagamento, confirmacaoPagamentoJson);
 
-        //TODO - alterar este método para NÃO receber o status. Na pratica o sistema deve ir buscar o status no sistema terceiro
-        //FIXME: Esta chamada deve ser async
-        pagamentoController.confirmar(confirmacaoPagamentoJson.getIdentificador(), Status.valueOf(confirmacaoPagamentoJson.getStatus()));
+		/*
+		 * 
+		 "description": ".....",
+		 "merchant_order": 4945357007,
+		 "payment_id": 23064274473
+		 * 
+		 */
+
+        
+        PlataformaPagamento plataformaPagamentoDomain = mapPlataformaTerceiro(plataformaPagamento);
+        
+        pagamentoController.notificacoes(plataformaPagamentoDomain, confirmacaoPagamentoJson.getIdentificador());
         log.trace("End");
     }
+
+	private PlataformaPagamento mapPlataformaTerceiro(String plataformaPagamento) {
+		PlataformaPagamento plataformaPagamentoDomain = PlataformaPagamento.MOCK;
+        if(plataformaPagamento.equals("mercado-pago")) {
+        	plataformaPagamentoDomain = PlataformaPagamento.MERCADO_PAGO;
+        } else if(plataformaPagamento.equals("pag-seguro")) {
+        	plataformaPagamentoDomain = PlataformaPagamento.PAG_SEGURO;
+        }
+		return plataformaPagamentoDomain;
+	}
 
 	@GetMapping("identificador-pagamento-externo/{identificadorPagamentoExterno}")
 	public PagamentoJson obterByIdentificadorPagamento(@PathVariable String identificadorPagamentoExterno) {

@@ -24,9 +24,16 @@ public class PlataformaPagamentoFactory {
 		log.trace("Start");
 		PlataformaPagamentoConfigReturnDto returnDto = plataformaPagamentoConfigGateway.obter(PlataformaPagamentoConfigParamsDto.builder().build());
 		
-		PlataformaPagamento ppe = returnDto.getPlataformaPagamento();
+		PlataformaPagamentoGateway plataformaPagamentoGateway = obter(returnDto.getPlataformaPagamento());
 		
-		Optional<PlataformaPagamentoGateway> plataformaPagamentoGatewayOp = plataformaPagamentoGatewayList.stream().filter(pp -> pp.isElegivel(ppe)).findAny();
+		log.trace("End plataformaPagamentoGateway={}", plataformaPagamentoGateway);
+		return plataformaPagamentoGateway;
+	}
+
+	public PlataformaPagamentoGateway obter(PlataformaPagamento plataformaPagamento) {
+		log.trace("Start plataformaPagamento={}", plataformaPagamento);
+		
+		Optional<PlataformaPagamentoGateway> plataformaPagamentoGatewayOp = plataformaPagamentoGatewayList.stream().filter(pp -> pp.isElegivel(plataformaPagamento)).findAny();
 		
 		if(plataformaPagamentoGatewayOp.isEmpty()) {
 			log.warn("Plataforma de pagamento não encontrada. Verifique a configuração do sistema");
@@ -38,5 +45,4 @@ public class PlataformaPagamentoFactory {
 		log.trace("End plataformaPagamentoGateway={}", plataformaPagamentoGateway);
 		return plataformaPagamentoGateway;
 	}
-	
 }

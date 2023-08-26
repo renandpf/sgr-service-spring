@@ -9,7 +9,7 @@ public abstract class PlataformaPagamentoGateway {
 	public PlataformaPagamento plataformaPagamentoExterna;
 	
 	public abstract EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto dto);
-	public abstract Status mapStatus(String statusPagamento);
+	public abstract Status obtemStatus(String statusPagamento);
 
 	public boolean isElegivel(PlataformaPagamento plataformaPagamentoExterna) {
 		return plataformaPagamentoExterna.equals(this.plataformaPagamentoExterna);

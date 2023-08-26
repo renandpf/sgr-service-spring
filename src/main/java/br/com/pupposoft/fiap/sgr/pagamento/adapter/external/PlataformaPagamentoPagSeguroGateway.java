@@ -44,7 +44,7 @@ public class PlataformaPagamentoPagSeguroGateway extends PlataformaPagamentoGate
 	}
 
 	@Override
-	public Status mapStatus(String statusPagamento) {
+	public Status obtemStatus(String statusPagamento) {
 		log.trace("Start statusPagamento={}", statusPagamento);
 		Status statusPedido = Status.PAGAMENTO_INVALIDO;
         if (statusPagamento == "pago_sucesso") {

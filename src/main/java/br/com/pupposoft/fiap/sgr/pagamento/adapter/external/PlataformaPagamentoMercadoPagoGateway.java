@@ -26,6 +26,7 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
             log.trace("Start dto={}", dto);
 
             //TODO: IMPLEMENTAR
+            //https://www.mercadopago.com.br/developers/pt/reference/payments/_payments/post
             
             log.warn("### MOCK ###");
             final EnviaPagamentoReturnDto returnDto = 
@@ -44,7 +45,16 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
 	}
 
 	@Override
-	public Status mapStatus(String statusPagamento) {
+	public Status obtemStatus(String statusPagamento) {
+		
+		//TODO
+		//Base da API: https://api.mercadopago.com
+		//https://api.mercadopago.com/v1/payments/[ID]
+		
+		//Autenticar
+		//curl -H ‘Authorization: Bearer <ENV_ACCESS_TOKEN>’ https://api.mercadopago.com/V1/payments
+
+		
 		log.trace("Start statusPagamento={}", statusPagamento);
 		Status statusPedido = Status.PAGAMENTO_INVALIDO;
         if (statusPagamento == "pago_sucesso") {

@@ -2,11 +2,11 @@ package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
 import java.util.Optional;
 
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PagamentoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
@@ -16,29 +16,30 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-public class ConfirmarPagamentoUseCaseImpl implements ConfirmarPagamentoUseCase {
+public class ConfirmarPagamentoUseCaseImpl implements AtualizarStatusPagamentoUseCase {
 	
 	private PedidoGateway pedidoGateway;
 	
-	private PlataformaPagamentoGateway pagamentoExternoGateway;
-
+	private PlataformaPagamentoFactory plataformaPagamentoFactory;
+	
 	private PagamentoGateway pagamentoGateway;
 	
 	@Override
-    public void confirmar(String identificadorPagamento, String statusPagamento) {
-		//TODO - alterar este método para NÃO receber o status. Na pratica o sistema deve ir buscar o status no sistema terceiro (e não receber)
-        log.trace("Start identificadorPagamento={}, statusPagamento={}", identificadorPagamento, statusPagamento);
+    public void atualizar(PlataformaPagamento plataformaPagamento, String identificadorPagamento) {
+		log.trace("Start plataformaPagamento={}, identificadorPagamento={}", plataformaPagamento, identificadorPagamento);
+		
 
-        PagamentoDto pagamentoDto = this.obtemPedidoPorIdentificadorPagamento(identificadorPagamento);
+        PagamentoDto pagamentoDto = obtemPedidoPorIdentificadorPagamento(identificadorPagamento);
         PedidoDto pedidoDto = getPedidoById(pagamentoDto.getPedido().getId());
-        Status status = this.pagamentoExternoGateway.mapStatus(statusPagamento);
         
-        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(status).build();
-        pedido.setStatus(status);//Regras de negócio dentro do domain
+        Status newStatus = plataformaPagamentoFactory.obter(plataformaPagamento).obtemStatus(identificadorPagamento);
+        
+        Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
+        pedido.setStatus(newStatus);//Aplica as regras de negócio que estão dentro do domain
 
         PedidoDto pedidoDtoStatusPago = PedidoDto.builder()
         		.id(pedido.getId())
-        		.statusId(Status.get(status))
+        		.statusId(Status.get(newStatus))
         		.build();
 
         this.pedidoGateway.alterarStatus(pedidoDtoStatusPago);

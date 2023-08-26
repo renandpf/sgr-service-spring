@@ -3,17 +3,16 @@ package br.com.pupposoft.fiap.sgr.config.di;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCase;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.AtualizarStatusPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCaseImpl;
@@ -27,10 +26,6 @@ public class PagamentoDIConfiguration {
 	@Autowired
 	private PedidoGateway pedidoGateway;
 	
-	@Autowired
-	@Qualifier("plataformaPagamentoMockGateway")
-	private PlataformaPagamentoGateway plataformaPagamentoGateway;
-
 	@Autowired
 	private PagamentoGateway pagamentoGateway;
 	
@@ -53,8 +48,10 @@ public class PagamentoDIConfiguration {
 	}
 
 	@Bean
-	public ConfirmarPagamentoUseCase confirmarPagamentoUseCase() {
-		return new ConfirmarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoGateway, pagamentoGateway);
+	@Autowired
+	@DependsOn("plataformaPagamentoFactory")
+	public AtualizarStatusPagamentoUseCase confirmarPagamentoUseCase(PlataformaPagamentoFactory plataformaPagamentoFactory) {
+		return new ConfirmarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoFactory, pagamentoGateway);
 	}
 	
 	@Bean
@@ -67,7 +64,7 @@ public class PagamentoDIConfiguration {
 	@DependsOn({"efetuarPagamentoUseCase", "confirmarPagamentoUseCase", "obterPagamentoUsecase"})
 	public PagamentoController pagamentoController(
 			EfetuarPagamentoUseCase efetuarPagamentoUseCase, 
-			ConfirmarPagamentoUseCase confirmarPagamentoUseCase, 
+			AtualizarStatusPagamentoUseCase confirmarPagamentoUseCase, 
 			ObterPagamentoUsecase obterPagamentoUsecase) {
 		
 		return new PagamentoController(efetuarPagamentoUseCase, confirmarPagamentoUseCase, obterPagamentoUsecase);

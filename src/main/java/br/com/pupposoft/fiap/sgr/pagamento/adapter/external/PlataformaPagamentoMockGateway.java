@@ -42,7 +42,7 @@ public class PlataformaPagamentoMockGateway extends PlataformaPagamentoGateway {
 	}
 
 	@Override
-	public Status mapStatus(String statusPagamento) {
+	public Status obtemStatus(String statusPagamento) {
 		log.trace("Start statusPagamento={}", statusPagamento);
 		log.warn("### MOCK ###");
 		Status statusPedido = Status.PAGAMENTO_INVALIDO;

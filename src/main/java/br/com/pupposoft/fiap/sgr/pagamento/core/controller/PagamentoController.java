@@ -1,12 +1,12 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.controller;
 
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCase;
+import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.AtualizarStatusPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ObterPagamentoUsecase;
-import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ public class PagamentoController {
 	
     private EfetuarPagamentoUseCase efetuarPagamentoUseCase;
 	
-    private ConfirmarPagamentoUseCase confirmarPagamentoUseCase;
+    private AtualizarStatusPagamentoUseCase atualizarStatusPagamentoUseCase;
 	
     private ObterPagamentoUsecase obterPagamentoUseCase;
 
@@ -27,12 +27,11 @@ public class PagamentoController {
         return returnDto;
     }
 
-    public void confirmar(String identificador, Status status) {
-        log.trace("Start identificador={}, status={}", identificador, status);
+    public void notificacoes(PlataformaPagamento plataformaPagamento, String identificadorPagamento) {
+        log.trace("Start plataformaPagamento={}, identificadorPagamento={}", plataformaPagamento, identificadorPagamento);
 
-        //TODO - alterar este método para NÃO receber o status. Na pratica o sistema deve ir buscar o status no sistema terceiro
-        //FIXME: Esta chamada deve ser async
-        confirmarPagamentoUseCase.confirmar(identificador, status.name());//FIXME: status -> passar o enum
+        atualizarStatusPagamentoUseCase.atualizar(plataformaPagamento, identificadorPagamento);
+        
         log.trace("End");
     }
 

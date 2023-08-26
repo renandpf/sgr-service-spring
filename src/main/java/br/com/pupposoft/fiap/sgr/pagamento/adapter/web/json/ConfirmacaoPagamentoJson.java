@@ -9,5 +9,4 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ConfirmacaoPagamentoJson {
     private String identificador;
-    private String status;
 }
