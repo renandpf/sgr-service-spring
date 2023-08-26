@@ -16,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PlataformaPagamentoMockGateway extends PlataformaPagamentoGateway {
 
+	public PlataformaPagamentoMockGateway() {
+		plataformaPagamentoExterna = PlataformaPagamento.MOCK;
+	}
+	
 	@Override
 	public EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto dto) {
         try {
@@ -48,10 +52,4 @@ public class PlataformaPagamentoMockGateway extends PlataformaPagamentoGateway {
         log.trace("End statusPedido={}", statusPedido);
         return statusPedido;	
       }
-
-	@Override
-	public boolean isElegivel(PlataformaPagamento plataformaPagamentoExterna) {
-		log.warn("### MOCK ###");
-		return this.plataformaPagamentoExterna == null;
-	}
 }

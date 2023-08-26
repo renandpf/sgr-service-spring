@@ -55,4 +55,45 @@ public class ObterPagamentoExternoFactoryUnitTest {
 		
 		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoMercadoPagoGateway);
 	}
+	
+	@Test
+	void shouldPagSeguro() {
+		
+		final PlataformaPagamento plataformaPagamento = PlataformaPagamento.PAG_SEGURO;
+		PlataformaPagamentoConfigReturnDto returnDto = 
+				PlataformaPagamentoConfigReturnDto.builder().plataformaPagamento(plataformaPagamento).build();
+		doReturn(returnDto).when(plataformaPagamentoConfigGateway).obter(any(PlataformaPagamentoConfigParamsDto.class));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
+		
+		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoPagSeguroGateway);
+	}
+	
+	@Test
+	void shouldMock() {
+		
+		final PlataformaPagamento plataformaPagamento = PlataformaPagamento.MOCK;
+		PlataformaPagamentoConfigReturnDto returnDto = 
+				PlataformaPagamentoConfigReturnDto.builder().plataformaPagamento(plataformaPagamento).build();
+		doReturn(returnDto).when(plataformaPagamentoConfigGateway).obter(any(PlataformaPagamentoConfigParamsDto.class));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
+		
+		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoMockGateway);
+	}
+	
+	@Test
+	void shouldPlataformaPagamentoGatewayNotFoundException() {
+		
+		setField(plataformaPagamentoFactory, "plataformaPagamentoGatewayList", Arrays.asList());
+		
+		final PlataformaPagamento plataformaPagamento = PlataformaPagamento.MOCK;
+		PlataformaPagamentoConfigReturnDto returnDto = 
+				PlataformaPagamentoConfigReturnDto.builder().plataformaPagamento(plataformaPagamento).build();
+		doReturn(returnDto).when(plataformaPagamentoConfigGateway).obter(any(PlataformaPagamentoConfigParamsDto.class));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
+		
+		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoMockGateway);
+	}
 }
