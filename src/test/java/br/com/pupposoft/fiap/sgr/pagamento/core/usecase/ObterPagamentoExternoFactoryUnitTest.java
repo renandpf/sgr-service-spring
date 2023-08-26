@@ -1,6 +1,7 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -21,6 +22,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoP
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigParamsDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PlataformaPagamentoGatewayNotFoundException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 
@@ -92,8 +94,8 @@ public class ObterPagamentoExternoFactoryUnitTest {
 				PlataformaPagamentoConfigReturnDto.builder().plataformaPagamento(plataformaPagamento).build();
 		doReturn(returnDto).when(plataformaPagamentoConfigGateway).obter(any(PlataformaPagamentoConfigParamsDto.class));
 		
-		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
-		
-		assertTrue(plataformaPagamentoGateway instanceof PlataformaPagamentoMockGateway);
+		assertThrows(PlataformaPagamentoGatewayNotFoundException.class, () -> plataformaPagamentoFactory.obter());
 	}
+	
+	
 }

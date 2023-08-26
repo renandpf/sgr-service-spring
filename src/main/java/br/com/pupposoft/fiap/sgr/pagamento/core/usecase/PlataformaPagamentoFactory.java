@@ -6,6 +6,7 @@ import java.util.Optional;
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigParamsDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PlataformaPagamentoGatewayNotFoundException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,8 @@ public class PlataformaPagamentoFactory {
 		Optional<PlataformaPagamentoGateway> plataformaPagamentoGatewayOp = plataformaPagamentoGatewayList.stream().filter(pp -> pp.isElegivel(ppe)).findAny();
 		
 		if(plataformaPagamentoGatewayOp.isEmpty()) {
-			log.warn("Plataforma de Pagamento Gateway não encontrada");
-			//TODO: LANÇAR EXCEÇÃO
+			log.warn("Plataforma de pagamento não encontrada. Verifique a configuração do sistema");
+			throw new PlataformaPagamentoGatewayNotFoundException();
 		}
 		
 		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoGatewayOp.get();
