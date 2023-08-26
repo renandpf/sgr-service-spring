@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamentoExterna;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
@@ -13,14 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class PagamentoMockExternalServiceHttp implements PagamentoExternoGateway {
+public class PagamentoExternalHttpMock extends PagamentoExternoGateway {
 
 	@Override
 	public EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto dto) {
         try {
             log.trace("Start dto={}", dto);
-
             log.warn("### MOCK ###");
+
             final EnviaPagamentoReturnDto returnDto = 
             		EnviaPagamentoReturnDto.builder()
             		.identificadorPagamento(UUID.randomUUID().toString())
@@ -39,6 +40,7 @@ public class PagamentoMockExternalServiceHttp implements PagamentoExternoGateway
 	@Override
 	public Status mapStatus(String statusPagamento) {
 		log.trace("Start statusPagamento={}", statusPagamento);
+		log.warn("### MOCK ###");
 		Status statusPedido = Status.PAGAMENTO_INVALIDO;
         if (statusPagamento == "pago_sucesso") {
             statusPedido = Status.PAGO;
@@ -47,4 +49,9 @@ public class PagamentoMockExternalServiceHttp implements PagamentoExternoGateway
         return statusPedido;	
       }
 
+	@Override
+	public boolean isElegivel(PlataformaPagamentoExterna plataformaPagamentoExterna) {
+		log.warn("### MOCK ###");
+		return this.plataformaPagamentoExterna == null;
+	}
 }
