@@ -22,7 +22,6 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnDto;
-import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
