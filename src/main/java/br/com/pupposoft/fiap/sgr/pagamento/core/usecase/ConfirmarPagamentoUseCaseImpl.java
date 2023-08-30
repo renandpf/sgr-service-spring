@@ -28,7 +28,6 @@ public class ConfirmarPagamentoUseCaseImpl implements AtualizarStatusPagamentoUs
     public void atualizar(PlataformaPagamento plataformaPagamento, String identificadorPagamento) {
 		log.trace("Start plataformaPagamento={}, identificadorPagamento={}", plataformaPagamento, identificadorPagamento);
 		
-
         PagamentoDto pagamentoDto = obtemPedidoPorIdentificadorPagamento(identificadorPagamento);
         PedidoDto pedidoDto = getPedidoById(pagamentoDto.getPedido().getId());
         

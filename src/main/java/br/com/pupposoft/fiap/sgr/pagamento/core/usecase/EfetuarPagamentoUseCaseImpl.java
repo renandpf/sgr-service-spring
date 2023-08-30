@@ -17,7 +17,6 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoP
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
-import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
@@ -69,14 +68,15 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 
 	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto) {
-		PlataformaPagamentoGateway plataformaPagamentoGateway = plataformaPagamentoFactory.obter();
 		
-		EnviaPagamentoReturnDto responsePagamentoDto = 
-        		plataformaPagamentoGateway.enviarPagamento(
-        				EnviaPagamentoExternoParamDto.builder()
-        					.cartoesCredito(dto.getPagamento()
-        					.getCartoesCredito())
-        				.build());
+		EnviaPagamentoExternoParamDto enviaPagamentoExternoParamDto = 
+				EnviaPagamentoExternoParamDto.builder()
+					.cartoesCredito(dto.getPagamento()
+					.getCartoesCredito())
+				.build();
+		
+		EnviaPagamentoReturnDto responsePagamentoDto = plataformaPagamentoFactory.obter().enviarPagamento(enviaPagamentoExternoParamDto);
+		
         dto.getPagamento().setIdentificadorPagamentoExterno(responsePagamentoDto.getIdentificadorPagamento());
         dto.getPagamento().setPedido(pedidoDto);
 	}
