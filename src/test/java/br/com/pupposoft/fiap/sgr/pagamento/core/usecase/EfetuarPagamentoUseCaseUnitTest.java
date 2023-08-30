@@ -34,7 +34,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 
 @ExtendWith(MockitoExtension.class)
-public class EfetuarPagamentoUseCaseUnitTest {
+class EfetuarPagamentoUseCaseUnitTest {
 	
 	@Mock
 	private PedidoGateway pedidoGateway;

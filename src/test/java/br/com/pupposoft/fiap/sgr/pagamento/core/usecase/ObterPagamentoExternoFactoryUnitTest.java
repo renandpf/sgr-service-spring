@@ -16,9 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoMercadoPagoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoMockGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.PlataformaPagamentoPagSeguroGateway;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.mercadopago.PlataformaPagamentoMercadoPagoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigParamsDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.PlataformaPagamentoConfigReturnDto;
@@ -27,7 +27,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfi
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 
 @ExtendWith(MockitoExtension.class)
-public class ObterPagamentoExternoFactoryUnitTest {
+class ObterPagamentoExternoFactoryUnitTest {
 
 	@InjectMocks
 	private PlataformaPagamentoFactory plataformaPagamentoFactory;
