@@ -8,10 +8,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 import java.util.List;
@@ -27,6 +29,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.mercadopago.json.Req
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.ModoPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.starter.http.HttpConnect;
 
@@ -42,7 +45,6 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		final String accessToken = getRandomString();
 		final String path = "/v1/payments";
 		
-		//stubFor(post("/v1/payments").willReturn(ok(responseBodyStr)));
 		stubFor(post(path).willReturn(okJson(responseBodyStr)));
 		
 		PlataformaPagamentoGateway plataformaPagamentoGateway = new PlataformaPagamentoMercadoPagoGateway();
@@ -83,5 +85,32 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		
 		String authorizationToken = allServeEvents.get(0).getRequest().getHeader("Authorization");
 		assertEquals("Bearer " + accessToken, authorizationToken); 
+	}
+	
+	@Test
+	void enviarPagamentoWithError(WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
+		
+		final String accessToken = getRandomString();
+		final String path = "/v1/payments";
+		
+		stubFor(post(path).willReturn(serverError()));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = new PlataformaPagamentoMercadoPagoGateway();
+		setField(plataformaPagamentoGateway, "baseUrl", wmRuntimeInfo.getHttpBaseUrl());
+		setField(plataformaPagamentoGateway, "accessToken", accessToken);
+		setField(plataformaPagamentoGateway, "httpConnectGateway", new HttpConnect());
+		setField(plataformaPagamentoGateway, "objectMapper", new ObjectMapper());
+		
+		EnviaPagamentoExternoParamDto paramsDto = EnviaPagamentoExternoParamDto.builder()
+				.nomeProduto(getRandomString())
+				.nomeCliente(getRandomString())
+				.sobrenomeCliente(getRandomString())
+				.emailCliente(getRandomString())
+				.parcelas(getRandomInteger())
+				.valor(getRandomDouble())
+				.modoPagamento(ModoPagamento.PIX)
+				.build();
+		
+		assertThrows(ErrorToAccessPagamentoServicoExternoException.class, () -> plataformaPagamentoGateway.enviarPagamento(paramsDto));
 	}
 }
