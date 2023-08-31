@@ -65,6 +65,7 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
             		.paymentMethodId(paramsDto.getModoPagamento().name())
             		//.token(null)
             		.transactionAmount(paramsDto.getValor())
+            		.issuerId("SGR")
             		.build();
             
             Map<String, String> headers = new HashMap<>();

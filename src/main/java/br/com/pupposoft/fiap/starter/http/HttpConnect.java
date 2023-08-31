@@ -56,6 +56,8 @@ public class HttpConnect implements HttpConnectGateway {
 				url = url.concat("?").concat(dto.getUrlParameters());
 			} 
 			
+			//HttpHeaders a = new HttpHeaders();
+			
 			final WebClient webClient = WebClient.create();
 			
 			String response = 
@@ -63,6 +65,7 @@ public class HttpConnect implements HttpConnectGateway {
 					.uri(url)
 					.body(Mono.just(dto.getRequestBody()), dto.getRequestBody().getClass())
 					.header("Content-Type", "application/json")
+					.header("Authorization", dto.getHeaders().get("Authorization"))
 					.retrieve()
 					.bodyToMono(String.class)
 					.block();
