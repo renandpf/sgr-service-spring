@@ -44,29 +44,14 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
 	
 	@Override
 	public EnviaPagamentoReturnDto enviarPagamento(EnviaPagamentoExternoParamDto paramsDto) {
+		//https://www.mercadopago.com.br/developers/pt/reference/payments/_payments/post
         try {
             log.trace("Start paramsDto={}", paramsDto);
 
             final String urlPath = "/v1/payments";
             final String url = baseUrl + urlPath;
             
-            
-            
-            PayerJson payer = PayerJson.builder()
-            		.email(paramsDto.getEmailCliente())
-            		.firstName(paramsDto.getNomeCliente())
-            		.lastName(paramsDto.getSobrenomeCliente())
-            		.build();
-            
-            RequestBodyJson rBody = RequestBodyJson.builder()
-            		.description(paramsDto.getNomeProduto())
-            		.installments(paramsDto.getParcelas())
-            		.payer(payer)
-            		.paymentMethodId(paramsDto.getModoPagamento().name())
-            		//.token(null)
-            		.transactionAmount(paramsDto.getValor())
-            		.issuerId("SGR")
-            		.build();
+            RequestBodyJson rBody = createRequestBody(paramsDto);
             
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + this.accessToken);
@@ -100,22 +85,57 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
 	}
 
 	@Override
-	public Status obtemStatus(String statusPagamento) {
-		
-		//TODO
-		//Base da API: https://api.mercadopago.com
-		//https://api.mercadopago.com/v1/payments/[ID]
-		
-		//Autenticar
-		//curl -H ‘Authorization: Bearer <ENV_ACCESS_TOKEN>’ https://api.mercadopago.com/V1/payments
+	public Status obtemStatus(String identificadorPagamento) {
+		//https://www.mercadopago.com.br/developers/pt/reference/payments/_payments_id/get
+		try {
+			log.trace("Start identificadorPagamento={}", identificadorPagamento);
+            final String urlPath = "/v1/payments";
+            final String url = baseUrl + urlPath + "/" + identificadorPagamento;
+            
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Authorization", "Bearer " + this.accessToken);
+            
+            HttpConnectDto httpConnectDto = HttpConnectDto.builder()
+            .url(url)
+            .headers(headers)
+            .build();
+            
+            log.info("Request api data={}", httpConnectDto);
+            String responseBodyStr = httpConnectGateway.get(httpConnectDto);
+            log.info("response={}", responseBodyStr);
+            
+            ResponseBody statusJson = objectMapper.readValue(responseBodyStr, ResponseBody.class);
 
-		
-		log.trace("Start statusPagamento={}", statusPagamento);
-		Status statusPedido = Status.PAGAMENTO_INVALIDO;
-        if (statusPagamento == "pago_sucesso") {
-            statusPedido = Status.PAGO;
+            Status status = statusJson.mapDomainStatus();
+			
+			log.trace("End status={}", status);
+			return status;	
+			
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ErrorToAccessPagamentoServicoExternoException();
         }
-        log.trace("End statusPedido={}", statusPedido);
-        return statusPedido;	
+		
+		
       }
+	
+	private RequestBodyJson createRequestBody(EnviaPagamentoExternoParamDto paramsDto) {
+		PayerJson payer = PayerJson.builder()
+				.email(paramsDto.getEmailCliente())
+				.firstName(paramsDto.getNomeCliente())
+				.lastName(paramsDto.getSobrenomeCliente())
+				.build();
+		
+		RequestBodyJson rBody = RequestBodyJson.builder()
+				.description(paramsDto.getNomeProduto())
+				.installments(paramsDto.getParcelas())
+				.payer(payer)
+				.paymentMethodId(paramsDto.getModoPagamento().name())
+				//.token(null)
+				.transactionAmount(paramsDto.getValor())
+				.issuerId("SGR")
+				.build();
+		return rBody;
+	}
+	
 }

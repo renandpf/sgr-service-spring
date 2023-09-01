@@ -94,6 +94,8 @@ public class HttpConnect implements HttpConnectGateway {
 			ResponseSpec responseSpec = 
 					webClient.get()
 					.uri(url)
+					.header("Content-Type", "application/json")
+					.header("Authorization", dto.getHeaders().get("Authorization"))
 					.retrieve();
 			
 			String response = responseSpec.bodyToMono(String.class).block();

@@ -4,7 +4,9 @@ import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomDo
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomInteger;
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomString;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
@@ -31,6 +33,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoPa
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPagamentoServicoExternoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.starter.http.HttpConnect;
 
 @WireMockTest
@@ -68,6 +71,7 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		assertEquals(idPagamentoExterno+"", returnDto.getIdentificadorPagamento());
 		
 		verify(postRequestedFor(urlEqualTo(path)).withHeader("Content-Type", equalTo("application/json")));
+		verify(postRequestedFor(urlEqualTo(path)).withHeader("Authorization", equalTo("Bearer " + accessToken)));
 		
 		List<ServeEvent> allServeEvents = getAllServeEvents();
 		assertEquals(1, allServeEvents.size());
@@ -82,9 +86,6 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		assertEquals(paramsDto.getValor(), requestBody.getTransactionAmount());
 		assertEquals(paramsDto.getModoPagamento().name(), requestBody.getPaymentMethodId());
 		assertEquals("SGR", requestBody.getIssuerId());
-		
-		String authorizationToken = allServeEvents.get(0).getRequest().getHeader("Authorization");
-		assertEquals("Bearer " + accessToken, authorizationToken); 
 	}
 	
 	@Test
@@ -113,4 +114,50 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		
 		assertThrows(ErrorToAccessPagamentoServicoExternoException.class, () -> plataformaPagamentoGateway.enviarPagamento(paramsDto));
 	}
+	
+	@Test
+	void obtemStatusWithSucess(WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
+		
+		final Integer idPagamentoExterno = getRandomInteger();
+		final String responseBodyStr = 
+				"{\n"
+				+ "  \"id\": 1,\n"
+				+ "  \"status\": \"approved\""
+				+ "}";
+		final String accessToken = getRandomString();
+		final String path = "/v1/payments" + "/" + idPagamentoExterno;
+		
+		stubFor(get(path).willReturn(okJson(responseBodyStr)));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = new PlataformaPagamentoMercadoPagoGateway();
+		setField(plataformaPagamentoGateway, "baseUrl", wmRuntimeInfo.getHttpBaseUrl());
+		setField(plataformaPagamentoGateway, "accessToken", accessToken);
+		setField(plataformaPagamentoGateway, "httpConnectGateway", new HttpConnect());
+		setField(plataformaPagamentoGateway, "objectMapper", new ObjectMapper());
+		
+		Status statusReturned = plataformaPagamentoGateway.obtemStatus(idPagamentoExterno + "");
+		
+		assertEquals(Status.PAGO, statusReturned);
+		
+		verify(getRequestedFor(urlEqualTo(path)).withHeader("Content-Type", equalTo("application/json")));
+		verify(getRequestedFor(urlEqualTo(path)).withHeader("Authorization", equalTo("Bearer " + accessToken)));
+	}
+	
+	@Test
+	void obtemStatusWithError(WireMockRuntimeInfo wmRuntimeInfo) throws Exception {
+		final Integer idPagamentoExterno = getRandomInteger();
+		final String accessToken = getRandomString();
+		final String path = "/v1/payments" + "/" + idPagamentoExterno;
+		
+		stubFor(get(path).willReturn(serverError()));
+		
+		PlataformaPagamentoGateway plataformaPagamentoGateway = new PlataformaPagamentoMercadoPagoGateway();
+		setField(plataformaPagamentoGateway, "baseUrl", wmRuntimeInfo.getHttpBaseUrl());
+		setField(plataformaPagamentoGateway, "accessToken", accessToken);
+		setField(plataformaPagamentoGateway, "httpConnectGateway", new HttpConnect());
+		setField(plataformaPagamentoGateway, "objectMapper", new ObjectMapper());
+		
+		assertThrows(ErrorToAccessPagamentoServicoExternoException.class, () -> plataformaPagamentoGateway.obtemStatus(idPagamentoExterno + ""));
+	}
+	
 }
