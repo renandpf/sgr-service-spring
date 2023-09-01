@@ -26,7 +26,7 @@ public class PagamentoMySqlRepository implements PlataformaPagamentoConfigGatewa
 	public PlataformaPagamentoConfigReturnDto obter(PlataformaPagamentoConfigParamsDto paramsDto) {
 		try {
 			log.trace("Start paramsDto={}", paramsDto);
-			Optional<PlataformaPagamentoEntity> plataformaPagamentoEntityOp = plataformaPagamentoEntityRepository.findByStatus(StatusPlataformaPagamento.ATIVO).stream().findAny();
+			Optional<PlataformaPagamentoEntity> plataformaPagamentoEntityOp = plataformaPagamentoEntityRepository.findByStatus((long) StatusPlataformaPagamento.ATIVO.ordinal()).stream().findAny();
 			
 			PlataformaPagamento plataformaPagamento = PlataformaPagamento.MOCK;
 			
