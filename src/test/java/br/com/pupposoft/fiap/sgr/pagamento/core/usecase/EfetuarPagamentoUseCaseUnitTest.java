@@ -1,6 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
-import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomDouble;
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomLong;
 import static br.com.pupposoft.fiap.test.databuilder.DataBuilderBase.getRandomString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,6 +9,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.ModoPagamento;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.ClienteDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
@@ -61,10 +63,19 @@ class EfetuarPagamentoUseCaseUnitTest {
 		final Long pagamentoId = getRandomLong();
 		final Long clienteId = getRandomLong();
 		final String pagamentoExternoId = getRandomString();
+		final Double valorTotalPedido = 26.2D;//O valor é calculado e setado dentro do usecase
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
 		
-		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(getRandomDouble()).build());
+		List<ItemDto> itensDto = Arrays.asList(
+				ItemDto.builder().id(getRandomLong()).quantidade(3L).valorUnitario(5D).build(),
+				ItemDto.builder().id(getRandomLong()).quantidade(4L).valorUnitario(2.8D).build());
+		PedidoDto pedidoDto = PedidoDto.builder().id(pedidoId).clienteId(clienteId)
+				.statusId(0L)
+				.valor(null)//O valor é calculado e setado dentro do usecase
+				.itens(itensDto)
+				.build();
+		Optional<PedidoDto> pedidoOp = Optional.of(pedidoDto);
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 
 		ClienteDto clienteDto = ClienteDto.builder().id(clienteId).nome(getRandomString()).cpf(getRandomString()).email(getRandomString()).build();
@@ -83,7 +94,8 @@ class EfetuarPagamentoUseCaseUnitTest {
 		assertEquals(pagamentoId, returnDto.getPagamentoId());
 		assertEquals(pagamentoExternoId, returnDto.getPagamentoExternoId());
 
-		assertEquals(pedidoOp.get().getValor(), paramsDto.getPagamento().getValor());
+		assertEquals(valorTotalPedido, pedidoOp.get().getValor());
+		assertEquals(valorTotalPedido, paramsDto.getPagamento().getValor());
 		
 		ArgumentCaptor<EnviaPagamentoExternoParamDto> enviaPagamentoExternoParamDtoAC = ArgumentCaptor.forClass(EnviaPagamentoExternoParamDto.class); 
 		verify(plataformaPagamentoGatewayMock).enviarPagamento(enviaPagamentoExternoParamDtoAC.capture());
@@ -96,7 +108,7 @@ class EfetuarPagamentoUseCaseUnitTest {
 		assertEquals("", enviaPagamentoExternoParamDtoSent.getSobrenomeCliente());
 		assertEquals("Combo de lanches", enviaPagamentoExternoParamDtoSent.getNomeProduto());
 		assertEquals(1, enviaPagamentoExternoParamDtoSent.getParcelas());
-		assertEquals(pedidoOp.get().getValor() , enviaPagamentoExternoParamDtoSent.getValor());
+		assertEquals(valorTotalPedido, enviaPagamentoExternoParamDtoSent.getValor());
 
 		verify(pagamentoGateway).criar(paramsDto.getPagamento());
 	}

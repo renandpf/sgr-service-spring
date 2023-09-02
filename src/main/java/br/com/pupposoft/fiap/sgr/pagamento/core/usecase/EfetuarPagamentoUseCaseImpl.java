@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoExc
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
+import br.com.pupposoft.fiap.sgr.pedido.core.domain.Item;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
@@ -47,9 +49,9 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         
         setStatusDoPedido(pedidoDto);
         
-        String pagamentoExternoId = enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
+        calcularAtribuirValorPagamento(paramsDto, pedidoDto);
         
-        paramsDto.getPagamento().setValor(pedidoDto.getValor());
+        String pagamentoExternoId = enviaPagamentoSistemaExterno(paramsDto, pedidoDto.getValor(), clienteDto);
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
         Long idPagamento = this.pagamentoGateway.criar(paramsDto.getPagamento());
@@ -61,7 +63,27 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         return returnDto;
 	}
 
-	private String enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
+	private void calcularAtribuirValorPagamento(EfetuarPagamentoParamDto paramsDto, PedidoDto pedidoDto) {
+		List<Item> itens = pedidoDto.getItens().stream().map(i -> Item.builder()
+        		.id(i.getId())
+        		.valorUnitario(new BigDecimal(i.getValorUnitario()))
+        		.quantidade(i.getQuantidade())
+        		.build()).toList();
+        
+        Pedido pedido = Pedido.builder()
+        		.id(pedidoDto.getId())
+        		.itens(itens)
+        		.build();
+        
+        BigDecimal valorTotal = pedido.getValorTotal();
+        
+        pedidoDto.setValor(valorTotal.doubleValue());
+        
+        paramsDto.getPagamento().setValor(valorTotal.doubleValue());
+	}
+
+	//TODO: Método candidato a ser usecase 
+	private String enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, Double valor, ClienteDto clienteDto) {
 		
 		EnviaPagamentoExternoParamDto enviaPagamentoExternoParamDto = 
 				EnviaPagamentoExternoParamDto.builder()
@@ -70,14 +92,13 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 				.sobrenomeCliente("")
 				.emailCliente(clienteDto.getEmail())
 				.parcelas(1)
-				.valor(pedidoDto.getValor())
+				.valor(valor)
 				.modoPagamento(ModoPagamento.valueOf(dto.getPagamento().getFormaPagamento()))
 				.build();
 		
 		EnviaPagamentoReturnDto responsePagamentoDto = plataformaPagamentoFactory.obter().enviarPagamento(enviaPagamentoExternoParamDto);
 		
         dto.getPagamento().setPagamentoExternoId(responsePagamentoDto.getPagamentoExternoId());
-        dto.getPagamento().setPedido(pedidoDto);
         
         return responsePagamentoDto.getPagamentoExternoId();
 	}

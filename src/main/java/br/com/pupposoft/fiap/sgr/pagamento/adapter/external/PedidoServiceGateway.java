@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.external;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.external.json.PedidoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.ItemDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ErrorToAccessPedidoServiceException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
@@ -94,11 +96,23 @@ public class PedidoServiceGateway implements PedidoGateway {
 	}
 	
 	private PedidoDto mapJsonToDto(PedidoJson pedidoJson) {
+		
+		List<ItemDto> itensDto = pedidoJson.getItens().stream()
+			.map(i -> ItemDto.builder()
+					.id(i.getId())
+					.quantidade(i.getQuantidade())
+					.produtoId(i.getProdutoId())
+					.produtoNome(i.getProdutoNome())
+					.valorUnitario(i.getValorUnitario())
+					.build())
+		.toList();
+		
 		PedidoDto pedidoDto = PedidoDto.builder()
 				.id(pedidoJson.getId())
 				.statusId(Status.get(pedidoJson.getStatus()))
-				//.valor(pedidoJson.getV)
+				.itens(itensDto)
 				.build();
+		
 		return pedidoDto;
 	}
 

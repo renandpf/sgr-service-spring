@@ -1,6 +1,7 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.external.json;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class PedidoJson {
     private LocalDate dataCadastro;
     private LocalDate dataConclusao;
     private Long clienteId;
+    private List<ItemJson> itens;
 }
