@@ -14,7 +14,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoConfigGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PlataformaPagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.AtualizarStatusPagamentoUseCase;
-import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ConfirmarPagamentoUseCaseImpl;
+import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.AtualizarPedidoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCase;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.EfetuarPagamentoUseCaseImpl;
 import br.com.pupposoft.fiap.sgr.pagamento.core.usecase.ObterPagamentoUsecase;
@@ -55,7 +55,7 @@ public class PagamentoDIConfiguration {
 	@Autowired
 	@DependsOn("plataformaPagamentoFactory")
 	public AtualizarStatusPagamentoUseCase confirmarPagamentoUseCase(PlataformaPagamentoFactory plataformaPagamentoFactory) {
-		return new ConfirmarPagamentoUseCaseImpl(pedidoGateway, plataformaPagamentoFactory, pagamentoGateway);
+		return new AtualizarPedidoUseCaseImpl(pedidoGateway, plataformaPagamentoFactory, pagamentoGateway);
 	}
 	
 	@Bean

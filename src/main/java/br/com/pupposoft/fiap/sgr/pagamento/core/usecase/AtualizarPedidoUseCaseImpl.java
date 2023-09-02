@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-public class ConfirmarPagamentoUseCaseImpl implements AtualizarStatusPagamentoUseCase {
+public class AtualizarPedidoUseCaseImpl implements AtualizarStatusPagamentoUseCase {
 	
 	private PedidoGateway pedidoGateway;
 	
