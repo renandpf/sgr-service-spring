@@ -84,8 +84,8 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		assertEquals(paramsDto.getEmailCliente(), requestBody.getPayer().getEmail());
 		assertEquals(paramsDto.getParcelas(), requestBody.getInstallments());
 		assertEquals(paramsDto.getValor(), requestBody.getTransactionAmount());
-		assertEquals(paramsDto.getModoPagamento().name(), requestBody.getPaymentMethodId());
-		assertEquals("SGR", requestBody.getIssuerId());
+		assertEquals(paramsDto.getModoPagamento().name().toLowerCase(), requestBody.getPaymentMethodId());
+		assertEquals("0", requestBody.getIssuerId());
 	}
 	
 	@Test

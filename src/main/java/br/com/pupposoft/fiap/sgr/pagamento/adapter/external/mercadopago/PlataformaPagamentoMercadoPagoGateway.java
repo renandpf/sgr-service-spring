@@ -128,10 +128,10 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
 				.description(paramsDto.getNomeProduto())
 				.installments(paramsDto.getParcelas())
 				.payer(payer)
-				.paymentMethodId(paramsDto.getModoPagamento().name())
+				.paymentMethodId(paramsDto.getModoPagamento().name().toLowerCase())
 				//.token(null)
 				.transactionAmount(paramsDto.getValor())
-				.issuerId("SGR")
+				.issuerId("0")
 				.build();
 		return rBody;
 	}
