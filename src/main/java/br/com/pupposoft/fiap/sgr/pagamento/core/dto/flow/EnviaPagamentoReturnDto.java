@@ -8,6 +8,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class EnviaPagamentoReturnDto {
-	public String identificadorPagamento;
+	public String pagamentoExternoId;
 
 }

@@ -28,7 +28,7 @@ public class PlataformaPagamentoMockGateway extends PlataformaPagamentoGateway {
 
             final EnviaPagamentoReturnDto returnDto = 
             		EnviaPagamentoReturnDto.builder()
-            		.identificadorPagamento(UUID.randomUUID().toString())
+            		.pagamentoExternoId(UUID.randomUUID().toString())
             		.build();
 
             log.trace("End returnDto={}", returnDto);

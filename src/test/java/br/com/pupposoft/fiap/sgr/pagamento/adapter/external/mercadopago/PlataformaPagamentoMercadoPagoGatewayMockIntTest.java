@@ -68,7 +68,7 @@ class PlataformaPagamentoMercadoPagoGatewayMockIntTest {
 		
 		EnviaPagamentoReturnDto returnDto = plataformaPagamentoGateway.enviarPagamento(paramsDto);
 		
-		assertEquals(idPagamentoExterno+"", returnDto.getIdentificadorPagamento());
+		assertEquals(idPagamentoExterno+"", returnDto.getPagamentoExternoId());
 		
 		verify(postRequestedFor(urlEqualTo(path)).withHeader("Content-Type", equalTo("application/json")));
 		verify(postRequestedFor(urlEqualTo(path)).withHeader("Authorization", equalTo("Bearer " + accessToken)));

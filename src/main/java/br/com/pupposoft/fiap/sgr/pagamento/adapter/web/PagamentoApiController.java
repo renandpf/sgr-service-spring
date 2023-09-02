@@ -32,15 +32,19 @@ public class PagamentoApiController {
 	
 	@PostMapping("efetuar")
 	@ResponseStatus(HttpStatus.CREATED)
-    public Long efetuar(@RequestBody(required = true) PagamentoJson pagamentoJson) {
+    public PagamentoJson efetuar(@RequestBody(required = true) PagamentoJson pagamentoJson) {
         log.trace("Start pagamentoJson={}", pagamentoJson);
         
         EfetuarPagamentoParamDto paramsDto = mapJsonToDto(pagamentoJson);
         EfetuarPagamentoReturnDto returnDto = pagamentoController.efetuar(paramsDto);
         
         Long pagamentoId = returnDto.getPagamentoId();
-        log.trace("End pagamentoId={}", pagamentoId);
-        return pagamentoId;
+        String pagamentoExternoId = returnDto.getPagamentoExternoId();
+        
+        PagamentoJson pagamentoCreated = PagamentoJson.builder().id(pagamentoId).pagamentoExternoId(pagamentoExternoId).build();
+        
+        log.trace("End pagamentoCreated={}", pagamentoCreated);
+        return pagamentoCreated;
     }
 
 	@PostMapping("notificacoes/{plataformaPagamento}")
@@ -63,16 +67,6 @@ public class PagamentoApiController {
         log.trace("End");
     }
 
-	private PlataformaPagamento mapPlataformaTerceiro(String plataformaPagamento) {
-		PlataformaPagamento plataformaPagamentoDomain = PlataformaPagamento.MOCK;
-        if(plataformaPagamento.equals("mercado-pago")) {
-        	plataformaPagamentoDomain = PlataformaPagamento.MERCADO_PAGO;
-        } else if(plataformaPagamento.equals("pag-seguro")) {
-        	plataformaPagamentoDomain = PlataformaPagamento.PAG_SEGURO;
-        }
-		return plataformaPagamentoDomain;
-	}
-
 	@GetMapping("identificador-pagamento-externo/{identificadorPagamentoExterno}")
 	public PagamentoJson obterByIdentificadorPagamento(@PathVariable String identificadorPagamentoExterno) {
 		log.trace("Start identificadorPagamento={}", identificadorPagamentoExterno);
@@ -85,7 +79,7 @@ public class PagamentoApiController {
 	private PagamentoJson mapDtoToJson(PagamentoDto dto) {
 		PagamentoJson json = PagamentoJson.builder()
 				.id(dto.getId())
-				.identificadorPagamento(dto.getIdentificadorPagamentoExterno())
+				.pagamentoExternoId(dto.getPagamentoExternoId())
 				.pedidoId(dto.getPedido().getId())
 				.build();
 		return json;
@@ -98,11 +92,22 @@ public class PagamentoApiController {
         		.builder()
         		.id(pagamentoJson.getId())
         		.pedido(PedidoDto.builder().id(pagamentoJson.getPedidoId()).build())
-        		.identificadorPagamentoExterno(pagamentoJson.getIdentificadorPagamento())
+        		.pagamentoExternoId(pagamentoJson.getPagamentoExternoId())
         		.formaPagamento(pagamentoJson.getFormaPagamento())
         		.build())
         .build();
 		return paramsDto;
+	}
+	
+	//TODO: tende a crescer. Ideal ser um factory
+	private PlataformaPagamento mapPlataformaTerceiro(String plataformaPagamento) {
+		PlataformaPagamento plataformaPagamentoDomain = PlataformaPagamento.MOCK;
+        if(plataformaPagamento.equals("mercado-pago")) {
+        	plataformaPagamentoDomain = PlataformaPagamento.MERCADO_PAGO;
+        } else if(plataformaPagamento.equals("pag-seguro")) {
+        	plataformaPagamentoDomain = PlataformaPagamento.PAG_SEGURO;
+        }
+		return plataformaPagamentoDomain;
 	}
 
 }

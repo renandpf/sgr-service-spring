@@ -20,5 +20,5 @@ public class PagamentoDto {
     private PedidoDto pedido;
 
     @Setter
-    private String identificadorPagamentoExterno;
+    private String pagamentoExternoId;
 }

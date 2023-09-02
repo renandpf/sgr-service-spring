@@ -27,7 +27,7 @@ public class PlataformaPagamentoConfigMySqlRepository implements PagamentoGatewa
 			log.trace("Start pagamento={}", pagamentoDto);
 
 			PagamentoEntity pagamentoEntity = PagamentoEntity.builder()
-					.identificadorPagamentoExterno(pagamentoDto.getIdentificadorPagamentoExterno())
+					.identificadorPagamentoExterno(pagamentoDto.getPagamentoExternoId())
 					.valor(pagamentoDto.getValor())
 					.pedido(PedidoEntity.builder().id(pagamentoDto.getPedido().getId()).build())
 					.build();
@@ -45,17 +45,17 @@ public class PlataformaPagamentoConfigMySqlRepository implements PagamentoGatewa
 	}
 
 	@Override
-	public Optional<PagamentoDto> obterPorIdentificadorPagamento(String identificadorPagamento) {
+	public Optional<PagamentoDto> obterPorIdentificadorPagamento(String pagamentoExternoId) {
 		try {
-			log.trace("Start identificadorPagamento={}", identificadorPagamento);
+			log.trace("Start pagamentoExternoId={}", pagamentoExternoId);
 
 
-			Optional<PagamentoEntity> pagamentoEntityOp = pagamentoRepository.findByIdentificadorPagamentoExterno(identificadorPagamento);
+			Optional<PagamentoEntity> pagamentoEntityOp = pagamentoRepository.findByIdentificadorPagamentoExterno(pagamentoExternoId);
 
 			Optional<PagamentoDto> pagamentoDtoOp = Optional.empty();
 			if(pagamentoEntityOp.isPresent()) {
 				PagamentoEntity pagamentoEntity = pagamentoEntityOp.get();
-				PagamentoDto pagamentoDto = mapEntityToDto(identificadorPagamento, pagamentoEntity);
+				PagamentoDto pagamentoDto = mapEntityToDto(pagamentoExternoId, pagamentoEntity);
 				pagamentoDtoOp = Optional.of(pagamentoDto);
 			}
 
@@ -68,10 +68,10 @@ public class PlataformaPagamentoConfigMySqlRepository implements PagamentoGatewa
 		}	
 	}
 
-	private PagamentoDto mapEntityToDto(String identificadorPagamento, PagamentoEntity pagamentoEntity) {
+	private PagamentoDto mapEntityToDto(String pagamentoExternoId, PagamentoEntity pagamentoEntity) {
 		PagamentoDto pagamentoDto = PagamentoDto.builder()
 				.id(pagamentoEntity.getId())
-				.identificadorPagamentoExterno(identificadorPagamento)
+				.pagamentoExternoId(pagamentoExternoId)
 				.pedido(PedidoDto.builder().id(pagamentoEntity.getPedido().getId()).build())
 				.build();
 		return pagamentoDto;

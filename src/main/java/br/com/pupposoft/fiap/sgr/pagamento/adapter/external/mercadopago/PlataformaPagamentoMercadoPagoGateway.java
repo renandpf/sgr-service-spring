@@ -71,7 +71,7 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
             
             final EnviaPagamentoReturnDto returnDto = 
             		EnviaPagamentoReturnDto.builder()
-            		.identificadorPagamento(readValue.getId()+"")
+            		.pagamentoExternoId(readValue.getId()+"")
             		.build();
 
             log.trace("End returnDto={}", returnDto);

@@ -62,7 +62,7 @@ class EfetuarPagamentoUseCaseUnitTest {
 		final Long pedidoId = getRandomLong();
 		final Long pagamentoId = getRandomLong();
 		final Long clienteId = getRandomLong();
-		final String identificadorPagamentoExterno = getRandomString();
+		final String pagamentoExternoId = getRandomString();
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
 		
@@ -76,14 +76,14 @@ class EfetuarPagamentoUseCaseUnitTest {
 		PlataformaPagamentoGateway plataformaPagamentoGatewayMock = Mockito.mock(PlataformaPagamentoGateway.class);
 		doReturn(plataformaPagamentoGatewayMock).when(plataformaPagamentoFactory).obter();
 		
-		EnviaPagamentoReturnDto enviaPagamentoReturnDto = EnviaPagamentoReturnDto.builder().identificadorPagamento(identificadorPagamentoExterno).build();
+		EnviaPagamentoReturnDto enviaPagamentoReturnDto = EnviaPagamentoReturnDto.builder().pagamentoExternoId(pagamentoExternoId).build();
 		doReturn(enviaPagamentoReturnDto).when(plataformaPagamentoGatewayMock).enviarPagamento(any(EnviaPagamentoExternoParamDto.class));
 		doReturn(pagamentoId).when(pagamentoGateway).criar(paramsDto.getPagamento());
 		
 		EfetuarPagamentoReturnDto returnDto = efetuarPagamentoUseCase.efetuar(paramsDto);
 		
 		assertEquals(pagamentoId, returnDto.getPagamentoId());
-		assertEquals(identificadorPagamentoExterno, returnDto.getPagamentoExternoId());
+		assertEquals(pagamentoExternoId, returnDto.getPagamentoExternoId());
 		
 		ArgumentCaptor<EnviaPagamentoExternoParamDto> enviaPagamentoExternoParamDtoAC = ArgumentCaptor.forClass(EnviaPagamentoExternoParamDto.class); 
 		verify(plataformaPagamentoGatewayMock).enviarPagamento(enviaPagamentoExternoParamDtoAC.capture());

@@ -87,10 +87,10 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 		
 		EnviaPagamentoReturnDto responsePagamentoDto = plataformaPagamentoFactory.obter().enviarPagamento(enviaPagamentoExternoParamDto);
 		
-        dto.getPagamento().setIdentificadorPagamentoExterno(responsePagamentoDto.getIdentificadorPagamento());
+        dto.getPagamento().setPagamentoExternoId(responsePagamentoDto.getPagamentoExternoId());
         dto.getPagamento().setPedido(pedidoDto);
         
-        return responsePagamentoDto.getIdentificadorPagamento();
+        return responsePagamentoDto.getPagamentoExternoId();
 	}
 
 
