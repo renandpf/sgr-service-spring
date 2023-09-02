@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.dto;
 
-import java.math.BigDecimal;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +12,8 @@ public class PagamentoDto {
     private Long id;
     private String formaPagamento;
 
-    private BigDecimal valor;
+    @Setter
+    private Double valor;
     
     @Setter
     private PedidoDto pedido;

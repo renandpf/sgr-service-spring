@@ -11,6 +11,7 @@ import lombok.ToString;
 public class PedidoDto {
     private Long id;
     private Long clienteId;
+    
     private Double valor;
     
     @Setter

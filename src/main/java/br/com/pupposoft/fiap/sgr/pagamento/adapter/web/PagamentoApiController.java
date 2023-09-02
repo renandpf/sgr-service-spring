@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.web;
 
-import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -96,13 +94,12 @@ public class PagamentoApiController {
         		.pedido(PedidoDto.builder().id(pagamentoJson.getPedidoId()).build())
         		.pagamentoExternoId(pagamentoJson.getPagamentoExternoId())
         		.formaPagamento(pagamentoJson.getForma())
-        		.valor(new BigDecimal(pagamentoJson.getValor()))
         		.build())
         .build();
 		return paramsDto;
 	}
 	
-	//TODO: tende a crescer. Ideal ser um factory
+	//TODO: tende a crescer. Ideal ser um factory ou Map
 	private PlataformaPagamento mapPlataformaTerceiro(String plataformaPagamento) {
 		PlataformaPagamento plataformaPagamentoDomain = PlataformaPagamento.MOCK;
         if(plataformaPagamento.equals("mercado-pago")) {

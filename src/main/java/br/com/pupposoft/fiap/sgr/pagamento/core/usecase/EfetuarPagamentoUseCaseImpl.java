@@ -1,6 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,6 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ValorPagamentoInvalidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
@@ -45,13 +43,13 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
         PedidoDto pedidoDto = obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento().getPedido().getId());
 
-        verificaValorPagamento(paramsDto, pedidoDto);
-        
         ClienteDto clienteDto = obtemClienteVerificandoSeEleExiste(pedidoDto.getClienteId());
         
         setStatusDoPedido(pedidoDto);
         
         String pagamentoExternoId = enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
+        
+        paramsDto.getPagamento().setValor(pedidoDto.getValor());
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
         Long idPagamento = this.pagamentoGateway.criar(paramsDto.getPagamento());
@@ -63,15 +61,6 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         return returnDto;
 	}
 
-	private void verificaValorPagamento(EfetuarPagamentoParamDto paramsDto, PedidoDto pedidoDto) {
-		BigDecimal valorEsperado = new BigDecimal(pedidoDto.getValor());
-        BigDecimal valorRecebido = paramsDto.getPagamento().getValor();
-        if(!valorRecebido.equals(valorEsperado)) {
-        	log.warn("Valor do pagamento diferente do pedido");
-        	throw new ValorPagamentoInvalidoException();
-        }
-	}
-
 	private String enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
 		
 		EnviaPagamentoExternoParamDto enviaPagamentoExternoParamDto = 
@@ -81,7 +70,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 				.sobrenomeCliente("")
 				.emailCliente(clienteDto.getEmail())
 				.parcelas(1)
-				.valor(dto.getPagamento().getValor().doubleValue())
+				.valor(pedidoDto.getValor())
 				.modoPagamento(ModoPagamento.valueOf(dto.getPagamento().getFormaPagamento()))
 				.build();
 		
@@ -97,7 +86,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 	private void setStatusDoPedido(PedidoDto pedidoDto) {
 		final Status statusAguardandoConfirmacaoPagamento = Status.AGUARDANDO_CONFIRMACAO_PAGAMENTO;
         Pedido pedido = Pedido.builder().id(pedidoDto.getId()).status(Status.get(pedidoDto.getStatusId())).build();
-        pedido.setStatus(statusAguardandoConfirmacaoPagamento);
+        pedido.setStatus(statusAguardandoConfirmacaoPagamento);//Regras dentro do domain
         pedidoDto.setStatusId(Status.get(statusAguardandoConfirmacaoPagamento));
 	}
 
@@ -133,10 +122,6 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
 		if (pagamentoDto.getFormaPagamento() == null) {
 			mensagens.add("Meio de pagamento não informado");
-		}
-
-		if (pagamentoDto.getValor() == null) {
-			mensagens.add("Valor de pagamento não informado");
 		}
 		
 		if (!mensagens.isEmpty()) {

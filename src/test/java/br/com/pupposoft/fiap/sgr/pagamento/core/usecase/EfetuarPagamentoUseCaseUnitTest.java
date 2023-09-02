@@ -10,7 +10,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
-import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ValorPagamentoInvalidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
@@ -66,7 +64,7 @@ class EfetuarPagamentoUseCaseUnitTest {
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
 		
-		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(paramsDto.getPagamento().getValor().doubleValue()).build());
+		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(getRandomDouble()).build());
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 
 		ClienteDto clienteDto = ClienteDto.builder().id(clienteId).nome(getRandomString()).cpf(getRandomString()).email(getRandomString()).build();
@@ -84,6 +82,8 @@ class EfetuarPagamentoUseCaseUnitTest {
 		
 		assertEquals(pagamentoId, returnDto.getPagamentoId());
 		assertEquals(pagamentoExternoId, returnDto.getPagamentoExternoId());
+
+		assertEquals(pedidoOp.get().getValor(), paramsDto.getPagamento().getValor());
 		
 		ArgumentCaptor<EnviaPagamentoExternoParamDto> enviaPagamentoExternoParamDtoAC = ArgumentCaptor.forClass(EnviaPagamentoExternoParamDto.class); 
 		verify(plataformaPagamentoGatewayMock).enviarPagamento(enviaPagamentoExternoParamDtoAC.capture());
@@ -96,30 +96,11 @@ class EfetuarPagamentoUseCaseUnitTest {
 		assertEquals("", enviaPagamentoExternoParamDtoSent.getSobrenomeCliente());
 		assertEquals("Combo de lanches", enviaPagamentoExternoParamDtoSent.getNomeProduto());
 		assertEquals(1, enviaPagamentoExternoParamDtoSent.getParcelas());
-		assertEquals(paramsDto.getPagamento().getValor().doubleValue() , enviaPagamentoExternoParamDtoSent.getValor());
+		assertEquals(pedidoOp.get().getValor() , enviaPagamentoExternoParamDtoSent.getValor());
 
 		verify(pagamentoGateway).criar(paramsDto.getPagamento());
 	}
 
-	@Test
-	void shouldValorPagamentoInvalido() {
-		
-		final Long pedidoId = getRandomLong();
-		final Long clienteId = getRandomLong();
-		
-		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
-		
-		//Pedido com valor diferente do pedido!
-		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(getRandomDouble()).build());
-		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
-
-		
-		assertThrows(ValorPagamentoInvalidoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
-		
-		verify(pagamentoGateway, never()).criar(paramsDto.getPagamento());
-		verify(plataformaPagamentoFactory, never()).obter();
-	}
-	
 	@Test
 	void shouldPedidoNaoEncontradoException() {
 		
@@ -143,7 +124,7 @@ class EfetuarPagamentoUseCaseUnitTest {
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
 
-		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(paramsDto.getPagamento().getValor().doubleValue()).build());
+		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).build());
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 		
 		Optional<ClienteDto> clienteOp = Optional.empty();
@@ -163,7 +144,6 @@ class EfetuarPagamentoUseCaseUnitTest {
 		PagamentoDto pagamentoDto = PagamentoDto.builder()
 				.pedido(PedidoDto.builder().id(pedidoId).build())
 				.formaPagamento("PIX")
-				.valor(new BigDecimal(getRandomDouble()))
 				.build();
 		EfetuarPagamentoParamDto paramsDto = EfetuarPagamentoParamDto.builder()
 				.pagamento(pagamentoDto)
