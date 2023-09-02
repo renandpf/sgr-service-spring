@@ -51,14 +51,14 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         
         setStatusDoPedido(pedidoDto);
         
-        enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
+        String pagamentoExternoId = enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
         Long idPagamento = this.pagamentoGateway.criar(paramsDto.getPagamento());
 
         pedidoGateway.alterarStatus(pedidoDto);
 
-        EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).build();
+        EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).pagamentoExternoId(pagamentoExternoId).build();
         log.trace("End returnDto={}", returnDto);
         return returnDto;
 	}
@@ -72,7 +72,7 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         }
 	}
 
-	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
+	private String enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
 		
 		EnviaPagamentoExternoParamDto enviaPagamentoExternoParamDto = 
 				EnviaPagamentoExternoParamDto.builder()
@@ -89,6 +89,8 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 		
         dto.getPagamento().setIdentificadorPagamentoExterno(responsePagamentoDto.getIdentificadorPagamento());
         dto.getPagamento().setPedido(pedidoDto);
+        
+        return responsePagamentoDto.getIdentificadorPagamento();
 	}
 
 
