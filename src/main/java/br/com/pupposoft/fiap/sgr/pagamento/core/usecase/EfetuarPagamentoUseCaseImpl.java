@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.usecase;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ValorPagamentoInvalidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
@@ -42,12 +44,18 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         validaCamposObrigatorios(paramsDto.getPagamento());
 
         PedidoDto pedidoDto = obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento().getPedido().getId());
+
+        BigDecimal valorEsperado = new BigDecimal(pedidoDto.getValor());
+        BigDecimal valorRecebido = paramsDto.getPagamento().getValor();
+        if(!valorRecebido.equals(valorEsperado)) {
+        	log.warn("Valor do pagamento diferente do pedido");
+        	throw new ValorPagamentoInvalidoException();
+        }
         
         ClienteDto clienteDto = obtemClienteVerificandoSeEleExiste(pedidoDto.getClienteId());
         
         setStatusDoPedido(pedidoDto);
         
-        //FIXME: validar o valor recebido x valor do pagamento.
         
         enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
         

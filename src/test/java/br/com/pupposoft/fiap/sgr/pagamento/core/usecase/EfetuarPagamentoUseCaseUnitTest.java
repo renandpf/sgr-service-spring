@@ -31,6 +31,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ValorPagamentoInvalidoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
@@ -63,7 +64,7 @@ class EfetuarPagamentoUseCaseUnitTest {
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
 		
-		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).build());
+		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(paramsDto.getPagamento().getValor().doubleValue()).build());
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 
 		ClienteDto clienteDto = ClienteDto.builder().id(clienteId).nome(getRandomString()).cpf(getRandomString()).email(getRandomString()).build();
@@ -98,6 +99,22 @@ class EfetuarPagamentoUseCaseUnitTest {
 	}
 
 	@Test
+	void shouldValorPagamentoInvalido() {
+		
+		final Long pedidoId = getRandomLong();
+		final Long clienteId = getRandomLong();
+		
+		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
+		
+		//Pedido com valor diferente do pedido!
+		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(getRandomDouble()).build());
+		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
+
+		
+		assertThrows(ValorPagamentoInvalidoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+	}
+	
+	@Test
 	void shouldPedidoNaoEncontradoException() {
 		
 		final Long pedidoId = getRandomLong();
@@ -115,10 +132,11 @@ class EfetuarPagamentoUseCaseUnitTest {
 		
 		final Long pedidoId = getRandomLong();
 		final Long clienteId = getRandomLong();
-
-		doReturn(Optional.of(PedidoDto.builder().clienteId(clienteId).build())).when(pedidoGateway).obterPorId(pedidoId);
 		
 		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
+
+		Optional<PedidoDto> pedidoOp = Optional.of(PedidoDto.builder().id(pedidoId).clienteId(clienteId).statusId(0L).valor(paramsDto.getPagamento().getValor().doubleValue()).build());
+		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 		
 		Optional<ClienteDto> clienteOp = Optional.empty();
 		doReturn(clienteOp).when(clienteGateway).obterPorId(clienteId);
