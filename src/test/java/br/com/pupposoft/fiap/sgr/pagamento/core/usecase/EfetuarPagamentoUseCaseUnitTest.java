@@ -29,6 +29,7 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnD
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
@@ -107,6 +108,22 @@ class EfetuarPagamentoUseCaseUnitTest {
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 		
 		assertThrows(PedidoNaoEncontradoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+	}
+	
+	@Test
+	void shouldClienteNaoEncontradoException() {
+		
+		final Long pedidoId = getRandomLong();
+		final Long clienteId = getRandomLong();
+
+		doReturn(Optional.of(PedidoDto.builder().clienteId(clienteId).build())).when(pedidoGateway).obterPorId(pedidoId);
+		
+		EfetuarPagamentoParamDto paramsDto = createParams(pedidoId);
+		
+		Optional<ClienteDto> clienteOp = Optional.empty();
+		doReturn(clienteOp).when(clienteGateway).obterPorId(clienteId);
+		
+		assertThrows(ClienteNaoEncontradoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
 	}
 	
 	@Test
