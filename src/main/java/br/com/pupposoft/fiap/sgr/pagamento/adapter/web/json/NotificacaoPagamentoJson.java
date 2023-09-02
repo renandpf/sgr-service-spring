@@ -7,6 +7,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-public class ConfirmacaoPagamentoJson {
+public class NotificacaoPagamentoJson {
     private String identificador;
 }

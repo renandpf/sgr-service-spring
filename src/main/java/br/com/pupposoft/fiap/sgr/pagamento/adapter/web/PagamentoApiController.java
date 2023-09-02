@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.ConfirmacaoPagamentoJson;
+import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.NotificacaoPagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
@@ -49,8 +49,8 @@ public class PagamentoApiController {
 
 	@PostMapping("notificacoes/{plataformaPagamento}")
 	@ResponseStatus(HttpStatus.CREATED)
-    public void notificacoes(@PathVariable String plataformaPagamento, @RequestBody(required = true) ConfirmacaoPagamentoJson confirmacaoPagamentoJson) {
-        log.trace("Start plataformaPagamento={}, confirmacaoPagamentoJson={}", plataformaPagamento, confirmacaoPagamentoJson);
+    public void notificacoes(@PathVariable String plataformaPagamento, @RequestBody(required = true) NotificacaoPagamentoJson notificacaoPagamentoJson) {
+        log.trace("Start plataformaPagamento={}, notificacaoPagamentoJson={}", plataformaPagamento, notificacaoPagamentoJson);
 
 		/*
 		 * 
@@ -63,7 +63,7 @@ public class PagamentoApiController {
         
         PlataformaPagamento plataformaPagamentoDomain = mapPlataformaTerceiro(plataformaPagamento);
         
-        pagamentoController.notificacoes(plataformaPagamentoDomain, confirmacaoPagamentoJson.getIdentificador());
+        pagamentoController.notificacoes(plataformaPagamentoDomain, notificacaoPagamentoJson.getIdentificador());
         log.trace("End");
     }
 
