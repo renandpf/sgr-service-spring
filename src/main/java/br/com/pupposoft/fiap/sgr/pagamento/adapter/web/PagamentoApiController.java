@@ -1,5 +1,7 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.web;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -93,7 +95,8 @@ public class PagamentoApiController {
         		.id(pagamentoJson.getId())
         		.pedido(PedidoDto.builder().id(pagamentoJson.getPedidoId()).build())
         		.pagamentoExternoId(pagamentoJson.getPagamentoExternoId())
-        		.formaPagamento(pagamentoJson.getFormaPagamento())
+        		.formaPagamento(pagamentoJson.getForma())
+        		.valor(new BigDecimal(pagamentoJson.getValor()))
         		.build())
         .build();
 		return paramsDto;

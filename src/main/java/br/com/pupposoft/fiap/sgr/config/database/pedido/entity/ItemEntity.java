@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.config.database.pedido.entity;
 
-import java.math.BigDecimal;
-
 import br.com.pupposoft.fiap.sgr.config.database.gerencial.entity.ProdutoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +26,7 @@ public class ItemEntity {
 	private Long id;
 	
 	private Long quantidade;
-	private BigDecimal valor;
+	private Double valorUnitario;
 
 	@ManyToOne()
 	@JoinColumn(name = "produtoId")

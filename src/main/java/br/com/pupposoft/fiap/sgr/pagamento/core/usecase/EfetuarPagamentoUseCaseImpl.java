@@ -135,6 +135,10 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 			mensagens.add("Meio de pagamento não informado");
 		}
 
+		if (pagamentoDto.getValor() == null) {
+			mensagens.add("Valor de pagamento não informado");
+		}
+		
 		if (!mensagens.isEmpty()) {
 			throw new CamposObrigatoriosNaoPreechidoException(mensagens.stream().reduce("", (a,b) -> a + ", " + b ));
 		}

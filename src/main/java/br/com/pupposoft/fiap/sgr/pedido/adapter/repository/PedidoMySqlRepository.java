@@ -1,6 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pedido.adapter.repository;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -169,7 +168,7 @@ public class PedidoMySqlRepository implements PedidoGateway {
 				return ItemEntity.builder()
 						.id(i.getId())
 						.quantidade(i.getQuantidade())
-						.valor(BigDecimal.ZERO)//FIXME: pegar o valor do produto atual
+						.valorUnitario(i.getValorUnitario().doubleValue())
 						.produto(ProdutoEntity.builder().id(i.getProduto().getId()).build())
 						.build();
 			}).toList();

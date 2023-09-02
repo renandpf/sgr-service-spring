@@ -15,6 +15,6 @@ public class PagamentoJson {
 	private Long id;
 	private String pagamentoExternoId;
     private Long pedidoId;
-    private String formaPagamento;
-    private Double valorPagamento;
+    private String forma;
+    private Double valor;
 }

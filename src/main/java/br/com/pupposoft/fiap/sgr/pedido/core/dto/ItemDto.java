@@ -12,4 +12,5 @@ public class ItemDto {
 	  private Long quantidade;
 	  private ProdutoDto produto;
 	  private PedidoDto pedido;
+	  private Double valorUnitario;
 }

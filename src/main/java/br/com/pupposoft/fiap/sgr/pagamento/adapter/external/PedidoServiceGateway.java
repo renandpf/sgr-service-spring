@@ -97,6 +97,7 @@ public class PedidoServiceGateway implements PedidoGateway {
 		PedidoDto pedidoDto = PedidoDto.builder()
 				.id(pedidoJson.getId())
 				.statusId(Status.get(pedidoJson.getStatus()))
+				//.valor(pedidoJson.getV)
 				.build();
 		return pedidoDto;
 	}

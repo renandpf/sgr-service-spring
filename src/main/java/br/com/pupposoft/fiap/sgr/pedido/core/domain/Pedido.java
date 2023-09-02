@@ -1,5 +1,6 @@
 package br.com.pupposoft.fiap.sgr.pedido.core.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,12 +28,8 @@ public class Pedido {
         return this.cliente != null;
     }
     
-    public boolean contemItens() {
-    	return itens != null && !itens.isEmpty();
-    }
-    
 	public void setStatus(Status status) {
-		//IMPLEMENTAR
+		//TODO: IMPLEMENTAR
 		
 		this.status = status;
 	}
@@ -44,42 +41,11 @@ public class Pedido {
         return status;
     }
 
-    public Long getTempoEsperaEmSegundos() {
-    	//Implementar
-    	return null;
-    }
-
     public void removerCliente() {
         cliente = null;
     }
 
-//    public Pedido(PedidoDto pedidoDto) {
-//
-//        Cliente cliente = null;
-//        if (pedidoDto.getC) {
-//            cliente = new Cliente(pedidoDto.cliente.id);
-//        }
-//
-//        const pedido = new Pedido(
-//          pedidoDto.id,
-//          cliente,
-//          pedidoDto.observacao,
-//          pedidoDto.status,
-//          pedidoDto.dataCadastro,
-//          pedidoDto.dataConclusao
-//        );
-//
-//        pedido.itens = pedidoDto.itens?.map(i => {
-//            return new PedidoItem(
-//              i.id,
-//              pedido,
-//              new Produto(i.produto.id),
-//              i.quantidade,
-//              i.valorUnitario
-//            );
-//        });
-//
-//        return pedido;
-//    }
-
+    public BigDecimal getValorTotal() {
+    	return itens.stream().map(Item::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

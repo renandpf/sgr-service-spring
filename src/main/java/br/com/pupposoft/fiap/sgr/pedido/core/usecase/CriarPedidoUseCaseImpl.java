@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import br.com.pupposoft.fiap.sgr.gerencial.cliente.core.domain.Cliente;
+import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Categoria;
 import br.com.pupposoft.fiap.sgr.gerencial.produto.core.domain.Produto;
-import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Item;
+import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Status;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.pedido.core.dto.ItemDto;
@@ -36,9 +37,9 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 	    Pedido pedido = mapDtoToDomain(pedidoDto);
 
 	    this.verificaRemoveClienteInexistente(pedido);
-	    this.verificaExistenciaProduto(pedido);
+	    this.carregaProdutosIntoPedido(pedido);
 
-	    pedido.setStatus(Status.RECEBIDO);
+	    pedido.setStatus(Status.RECEBIDO);//Execução de regras dentro do domain
 
 	    Long pedidoId = this.pedidoGateway.criar(mapDomainToDto(pedido));
 	    log.trace("End pedidoId={}", pedidoId);
@@ -67,24 +68,35 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 		  }
 	  }
 
-	  private void verificaExistenciaProduto(Pedido pedido) {
-		  pedido
-		  	.getItens().stream()
-		  	.map(Item::getProduto)
-		  	.forEach(produto -> {
-		  		Optional<ProdutoDto> produtoOp = produtoGateway.obterPorId(produto.getId());
-		  		produtoOp.orElseThrow(() -> new ProdutoNotFoundException());
+	  private void carregaProdutosIntoPedido(Pedido pedido) {
+		  pedido.getItens().forEach(i -> {
+		  		Produto produto = i.getProduto();
+			  	Optional<ProdutoDto> produtoOp = produtoGateway.obterPorId(produto.getId());
+		  		ProdutoDto pDto = produtoOp.orElseThrow(() -> new ProdutoNotFoundException());
+		  		
+		  		i.setProduto(Produto.builder()
+	  			.id(pDto.getId())
+	  			.nome(pDto.getNome())
+	  			.descricao(pDto.getDescricao())
+	  			.categoria(Categoria.valueOf(pDto.getCategoria()))
+	  			.valor(pDto.getValor()).build());
 		  	});
 	  }
 	  
 	  private PedidoDto mapDomainToDto(Pedido pedido) {
-		  
+
 		  final ClienteDto cliente = pedido.temCliente() ? ClienteDto.builder().id(pedido.getCliente().getId()).build() : null;
-		  final List<ItemDto> itens = pedido.getItens().stream().map(i -> ItemDto.builder()
+		  final List<ItemDto> itens = pedido
+				  .getItens()
+				  .stream()
+				  .map(i -> ItemDto.builder()
 						  .produto(ProdutoDto.builder().id(i.getProduto().getId()).build())
-						  .quantidade(i.getQuantidade()).build())
+						  .quantidade(i.getQuantidade())
+						  .valorUnitario(i.getProduto().getValor().doubleValue())
+						  .build())
+
 				  .toList();
-		  
+
 		  return PedidoDto.builder()
 				  .id(pedido.getId())
 				  .observacao(pedido.getObservacao())
@@ -92,6 +104,7 @@ public class CriarPedidoUseCaseImpl implements CriarPedidoUseCase {
 				  .dataCadastro(pedido.getDataCadastro())
 				  .cliente(cliente)
 				  .itens(itens)
+
 				  .build();
 	  }
 }
