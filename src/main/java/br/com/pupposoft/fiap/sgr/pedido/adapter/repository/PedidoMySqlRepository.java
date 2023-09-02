@@ -134,6 +134,7 @@ public class PedidoMySqlRepository implements PedidoGateway {
 								.id(ie.getProduto().getId())
 								.nome(ie.getProduto().getNome())
 								.build())
+						.valorUnitario(ie.getValorUnitario())
 				.build())
 			.toList();
 		

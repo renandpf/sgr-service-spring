@@ -89,7 +89,9 @@ public class PedidoApiController {
 		.itens(dto.getItens().stream().map(i -> ItemJson.builder()
 				.id(i.getId())
 				.produtoId(i.getProduto().getId())
+				.produtoNome(i.getProduto().getNome())
 				.quantidade(i.getQuantidade())
+				.valorUnitario(i.getValorUnitario())
 				.build()).toList())
 		.clienteId(dto.hasCliente() ? dto.getCliente().getId() : null)
 		
