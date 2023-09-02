@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.pupposoft.fiap.sgr.pagamento.core.domain.CartaoCredito;
-import br.com.pupposoft.fiap.sgr.pagamento.core.domain.Pagamento;
-import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.ModoPagamento;
+import br.com.pupposoft.fiap.sgr.pagamento.core.dto.ClienteDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
@@ -14,7 +13,9 @@ import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoReturnD
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoExternoParamDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EnviaPagamentoReturnDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.CamposObrigatoriosNaoPreechidoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.exception.ClienteNaoEncontradoException;
 import br.com.pupposoft.fiap.sgr.pagamento.core.exception.PedidoNaoEncontradoException;
+import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.ClienteGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PagamentoGateway;
 import br.com.pupposoft.fiap.sgr.pagamento.core.gateway.PedidoGateway;
 import br.com.pupposoft.fiap.sgr.pedido.core.domain.Pedido;
@@ -32,19 +33,23 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 	
 	private PagamentoGateway pagamentoGateway;
 	
+	private ClienteGateway clienteGateway;
+	
 	@Override
 	public EfetuarPagamentoReturnDto efetuar(EfetuarPagamentoParamDto paramsDto) {
         log.trace("Start dto={}", paramsDto);
 
         validaCamposObrigatorios(paramsDto.getPagamento());
 
-        PedidoDto pedidoDto = this.obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento());
+        PedidoDto pedidoDto = obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento().getPedido().getId());
+        
+        ClienteDto clienteDto = obtemClienteVerificandoSeEleExiste(pedidoDto.getClienteId());
         
         setStatusDoPedido(pedidoDto);
         
-        enviaPagamentoSistemaExterno(paramsDto, pedidoDto);
-
-        setValorTotalPagamento(paramsDto);
+        //FIXME: validar o valor recebido x valor do pagamento.
+        
+        enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
         
         //TODO: deve ocorrer rollback em caso de falha no passo de alterarStatus do serviço
         Long idPagamento = this.pagamentoGateway.criar(paramsDto.getPagamento());
@@ -56,23 +61,17 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         return returnDto;
 	}
 
-
-	private void setValorTotalPagamento(EfetuarPagamentoParamDto dto) {
-		Pagamento pagamento = Pagamento.builder()
-        		.pedido(Pedido.builder().id(dto.getPagamento().getPedido().getId()).build())
-        		.cartoesCredito(dto.getPagamento().getCartoesCredito().stream().map(this::mapCartaoCreditoDtoToCartaoCreditoDomain).toList())
-        		.build();
-        
-        dto.getPagamento().setValor(pagamento.getValor());
-	}
-
-
-	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto) {
+	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
 		
 		EnviaPagamentoExternoParamDto enviaPagamentoExternoParamDto = 
 				EnviaPagamentoExternoParamDto.builder()
-					.cartoesCredito(dto.getPagamento()
-					.getCartoesCredito())
+				.nomeProduto("Combo de lanches")
+				.nomeCliente(clienteDto.getNome())
+				.sobrenomeCliente("")
+				.emailCliente(clienteDto.getEmail())
+				.parcelas(1)
+				.valor(dto.getPagamento().getValor().doubleValue())
+				.modoPagamento(ModoPagamento.valueOf(dto.getPagamento().getFormaPagamento()))
 				.build();
 		
 		EnviaPagamentoReturnDto responsePagamentoDto = plataformaPagamentoFactory.obter().enviarPagamento(enviaPagamentoExternoParamDto);
@@ -90,23 +89,36 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 	}
 
 	
-	private PedidoDto obtemPedidoVerificandoSeEleExiste(PagamentoDto pagamento) {
-		Optional<PedidoDto> pedidoOp = pedidoGateway.obterPorId(pagamento.getPedido().getId());
+	//TODO: Método candidato a ser usecase 
+	private PedidoDto obtemPedidoVerificandoSeEleExiste(Long pedidoId) {
+		Optional<PedidoDto> pedidoOp = pedidoGateway.obterPorId(pedidoId);
 		if (pedidoOp.isEmpty()) {
-			log.warn("Pedido não encontrado. pagamento.pedido.id={}", pagamento.getPedido().getId());
+			log.warn("Pedido não encontrado. pedidoId={}", pedidoId);
 			throw new PedidoNaoEncontradoException();
 		}
 
 		return pedidoOp.get();
 	}
 
+	//TODO: Método candidato a ser usecase 
+	private ClienteDto obtemClienteVerificandoSeEleExiste(Long clienteId) {
+		Optional<ClienteDto> clienteOp = clienteGateway.obterPorId(clienteId);
+		if (clienteOp.isEmpty()) {
+			log.warn("Cliente não encontrado. clienteId={}", clienteId);
+			throw new ClienteNaoEncontradoException();
+		}
+
+		return clienteOp.get();
+	}
+
+	
 	private void validaCamposObrigatorios(PagamentoDto pagamentoDto) {
 		final List<String>  mensagens = new ArrayList<>();
 		if (pagamentoDto.getPedido() == null) {
 			mensagens.add("Identificador do pedido (pedido id)");
 		}
 
-		if (!pagamentoDto.haveCartaoCredito() ) {
+		if (pagamentoDto.getFormaPagamento() == null) {
 			mensagens.add("Meio de pagamento não informado");
 		}
 
@@ -114,16 +126,4 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 			throw new CamposObrigatoriosNaoPreechidoException(mensagens.stream().reduce("", (a,b) -> a + ", " + b ));
 		}
 	}
-
-	
-	private CartaoCredito mapCartaoCreditoDtoToCartaoCreditoDomain(CartaoCreditoDto dto) {
-		return CartaoCredito.builder()
-				.cpf(dto.getCpf())
-				.cvv(dto.getCvv())
-				.nome(dto.getNome())
-				.numero(dto.getNumero())
-				.valor(dto.getValor())
-				.build();
-	}
-
 }

@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.web;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +15,6 @@ import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.ConfirmacaoPagamento
 import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json.PagamentoJson;
 import br.com.pupposoft.fiap.sgr.pagamento.core.controller.PagamentoController;
 import br.com.pupposoft.fiap.sgr.pagamento.core.domain.PlataformaPagamento;
-import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PagamentoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.PedidoDto;
 import br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow.EfetuarPagamentoParamDto;
@@ -95,15 +92,6 @@ public class PagamentoApiController {
 	}
 	
 	private EfetuarPagamentoParamDto mapJsonToDto(PagamentoJson pagamentoJson) {
-		List<CartaoCreditoDto> ccDtoList = pagamentoJson.getCartoesCreditos().stream().map(ccJson -> {
-        	return CartaoCreditoDto.builder()
-        			.cpf(ccJson.getCpf())
-        			.nome(ccJson.getNome())
-        			.numero(ccJson.getNumero())
-        			.cvv(ccJson.getCvv())
-        			.valor(ccJson.getValor())
-        			.build();
-        }).toList();
         
         EfetuarPagamentoParamDto paramsDto = EfetuarPagamentoParamDto.builder()
         .pagamento(PagamentoDto
@@ -111,7 +99,7 @@ public class PagamentoApiController {
         		.id(pagamentoJson.getId())
         		.pedido(PedidoDto.builder().id(pagamentoJson.getPedidoId()).build())
         		.identificadorPagamentoExterno(pagamentoJson.getIdentificadorPagamento())
-        		.cartoesCredito(ccDtoList)
+        		.formaPagamento(pagamentoJson.getFormaPagamento())
         		.build())
         .build();
 		return paramsDto;

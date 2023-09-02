@@ -115,8 +115,6 @@ public class PlataformaPagamentoMercadoPagoGateway extends PlataformaPagamentoGa
             log.error(e.getMessage(), e);
             throw new ErrorToAccessPagamentoServicoExternoException();
         }
-		
-		
       }
 	
 	private RequestBodyJson createRequestBody(EnviaPagamentoExternoParamDto paramsDto) {

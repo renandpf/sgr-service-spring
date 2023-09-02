@@ -10,6 +10,8 @@ import lombok.ToString;
 @ToString
 public class PedidoDto {
     private Long id;
+    private Long clienteId;
+    private Double valor;
     
     @Setter
     private Long statusId;

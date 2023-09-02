@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.adapter.web.json;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,5 +15,6 @@ public class PagamentoJson {
 	private Long id;
 	private String identificadorPagamento;
     private Long pedidoId;
-    private List<CartaoCreditoJson> cartoesCreditos;
+    private String formaPagamento;
+    private Double valorPagamento;
 }
