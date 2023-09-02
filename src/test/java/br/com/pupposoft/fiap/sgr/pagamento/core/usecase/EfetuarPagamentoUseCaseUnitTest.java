@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
@@ -112,6 +113,9 @@ class EfetuarPagamentoUseCaseUnitTest {
 
 		
 		assertThrows(ValorPagamentoInvalidoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+		
+		verify(pagamentoGateway, never()).criar(paramsDto.getPagamento());
+		verify(plataformaPagamentoFactory, never()).obter();
 	}
 	
 	@Test
@@ -125,6 +129,8 @@ class EfetuarPagamentoUseCaseUnitTest {
 		doReturn(pedidoOp).when(pedidoGateway).obterPorId(pedidoId);
 		
 		assertThrows(PedidoNaoEncontradoException.class, () -> efetuarPagamentoUseCase.efetuar(paramsDto));
+		
+		verify(pagamentoGateway, never()).criar(paramsDto.getPagamento());
 	}
 	
 	@Test

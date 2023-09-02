@@ -45,17 +45,11 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
 
         PedidoDto pedidoDto = obtemPedidoVerificandoSeEleExiste(paramsDto.getPagamento().getPedido().getId());
 
-        BigDecimal valorEsperado = new BigDecimal(pedidoDto.getValor());
-        BigDecimal valorRecebido = paramsDto.getPagamento().getValor();
-        if(!valorRecebido.equals(valorEsperado)) {
-        	log.warn("Valor do pagamento diferente do pedido");
-        	throw new ValorPagamentoInvalidoException();
-        }
+        verificaValorPagamento(paramsDto, pedidoDto);
         
         ClienteDto clienteDto = obtemClienteVerificandoSeEleExiste(pedidoDto.getClienteId());
         
         setStatusDoPedido(pedidoDto);
-        
         
         enviaPagamentoSistemaExterno(paramsDto, pedidoDto, clienteDto);
         
@@ -67,6 +61,15 @@ public class EfetuarPagamentoUseCaseImpl implements EfetuarPagamentoUseCase {
         EfetuarPagamentoReturnDto returnDto = EfetuarPagamentoReturnDto.builder().pagamentoId(idPagamento).build();
         log.trace("End returnDto={}", returnDto);
         return returnDto;
+	}
+
+	private void verificaValorPagamento(EfetuarPagamentoParamDto paramsDto, PedidoDto pedidoDto) {
+		BigDecimal valorEsperado = new BigDecimal(pedidoDto.getValor());
+        BigDecimal valorRecebido = paramsDto.getPagamento().getValor();
+        if(!valorRecebido.equals(valorEsperado)) {
+        	log.warn("Valor do pagamento diferente do pedido");
+        	throw new ValorPagamentoInvalidoException();
+        }
 	}
 
 	private void enviaPagamentoSistemaExterno(EfetuarPagamentoParamDto dto, PedidoDto pedidoDto, ClienteDto clienteDto) {
