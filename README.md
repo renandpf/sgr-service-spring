@@ -37,17 +37,27 @@ Cada módulo do sistema seguem a mesma estrutura. Essa estrutura visa separa as 
     - **usecase** *(contêm as classes que representam o processamento, jornada ou fluxo a ser executada por uma entrada (ex: controller). Um usecase utiliza-se de dados contidos nos DTOs para montar objetos de negócio (domain/entidade) e assim realizar processamentos até salvar dados no repositorio e/ou retornar o processamento para o serviço cliente)*
 
 
+**TESTES AUTOMATIZADOS**
+
+Foram criados diversos testes unitários e testes de componente. Tais testes encontram-se no diretório 'test'.
+* JUnit
+* Mockito
+* Wiremock
+* Spring Test
+
 **BANCO DE DADOS**
 
 O banco de dados do sistema está no respositório git: https://github.com/renandpf/sgr-database-mysql
 
 **DOCKER: GERAR BUILD**
 
+```
 docker build -t renandpf/sgr-service-spring:2.0.0 .
 
 docker tag renandpf/sgr-service-spring:2.0.0 renandpf/sgr-service-spring:2.0.0
 
 docker push renandpf/sgr-service-spring:2.0.0
+```
 
 **MINIKUBE**
 
@@ -57,13 +67,15 @@ Para subir o minikube:
 
 *minikube start*
 
-**KUBERNECT**
+**KUBERNETES**
 
 Para execução do projeto usando K8S, deve seguir os passos abaixo. 
+
 NOTA: foi utilizado o minikube para testes
+
 NOTA: recomendado que o banco de dados deve estar up. Deve rodar nesta ordem
 
-
+```
 kubectl apply -f sgr-service-spring-cm.yaml
 
 kubectl apply -f sgr-service-spring-secrets.yaml
@@ -75,3 +87,6 @@ kubectl apply -f sgr-service-spring-deploy.yaml
 kubectl apply -f sgr-service-spring-metrics.yaml
 
 kubectl apply -f sgr-service-spring-hpa.yaml
+```
+
+**API - ENDPOINTS**
