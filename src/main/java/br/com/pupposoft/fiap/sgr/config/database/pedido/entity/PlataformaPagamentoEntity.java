@@ -17,6 +17,6 @@ import lombok.NoArgsConstructor;
 public class PlataformaPagamentoEntity {
 	@Id
 	private Long id;
+	private String code;
 	private Long status;
-
 }

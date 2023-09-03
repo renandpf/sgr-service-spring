@@ -34,8 +34,7 @@ public class PlataformaPagamentoConfigMySqlRepository implements PlataformaPagam
 				log.warn("Nenhuma plataforma de pagamento ativa! Verifique as configurações (## UTILIZANDO MOCK ##)");
 				//TODO: Deveria lançar exceção 
 			} else {
-				PlataformaPagamento[] values = PlataformaPagamento.values();
-				plataformaPagamento = values[plataformaPagamentoEntityOp.get().getId().intValue()];
+				plataformaPagamento = PlataformaPagamento.valueOf(plataformaPagamentoEntityOp.get().getCode());
 			}
 			
 			PlataformaPagamentoConfigReturnDto returnDto = PlataformaPagamentoConfigReturnDto.builder()

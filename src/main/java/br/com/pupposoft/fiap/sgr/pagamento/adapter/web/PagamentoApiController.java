@@ -48,19 +48,9 @@ public class PagamentoApiController {
     }
 
 	@PostMapping("notificacoes/{plataformaPagamento}")
-	@ResponseStatus(HttpStatus.CREATED)
     public void notificacoes(@PathVariable String plataformaPagamento, @RequestBody(required = true) NotificacaoPagamentoJson notificacaoPagamentoJson) {
         log.trace("Start plataformaPagamento={}, notificacaoPagamentoJson={}", plataformaPagamento, notificacaoPagamentoJson);
 
-		/*
-		 * 
-		 "description": ".....",
-		 "merchant_order": 4945357007,
-		 "payment_id": 23064274473
-		 * 
-		 */
-
-        
         PlataformaPagamento plataformaPagamentoDomain = mapPlataformaTerceiro(plataformaPagamento);
         
         pagamentoController.notificacoes(plataformaPagamentoDomain, notificacaoPagamentoJson.getIdentificador());
