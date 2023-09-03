@@ -91,10 +91,11 @@ kubectl apply -f sgr-service-spring-hpa.yaml
 
 **API - ENDPOINTS**
 
-PRODUTO
+Obter produto pelo id
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/produtos/10'
 ```
+Criar produto
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/produtos' \
 --header 'Content-Type: application/json' \
@@ -104,6 +105,7 @@ curl --location 'http://localhost:8080/sgr/gerencial/produtos' \
     "categoria": "LANCHE"
 }'
 ```
+Alterar produto
 ```
 curl --location --request PUT 'http://localhost:8080/sgr/gerencial/produtos/10' \
 --header 'Content-Type: application/json' \
@@ -113,9 +115,11 @@ curl --location --request PUT 'http://localhost:8080/sgr/gerencial/produtos/10' 
     "categoria": "LANCHE"
 }'
 ```
+Deletar produto
 ```
 curl --location --request DELETE 'http://localhost:8080/sgr/gerencial/produtos/8'
 ```
+Obter produto por categoria
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/categorias/LANCHE/produtos'
 ```
