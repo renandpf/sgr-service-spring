@@ -2,28 +2,24 @@
 
 Este projeto faz parte da entrega do curso de arquitetura da FIAP
 
-SISTEMA DE GESTÃO DE REFEIÇÃO
+**SISTEMA DE GESTÃO DE REFEIÇÃO**
 
 Trata-se de um sistema de gerenciamento de pedidos. O sistema gere produtos, cliente e pedidos.
 Este sistema é o backend e expõe serviços a serem consumidos por um front-end (ou outro serviço) 
 
-TECNOLOGIAS
+**TECNOLOGIAS**
 
 Neste sistema foram utlizadas as tecnologias:
 * Java 18
 * Spring Boot
+* Docker
+* Kubernect
 
-GERAR BUILD
-
-docker build -t renandpf/sgr-service-spring:1.0.0 .
-docker tag renandpf/sgr-service-spring:1.0.0 renandpf/sgr-service-spring:1.0.0
-docker push renandpf/sgr-service-spring:1.0.0
-
-MÓDULOS
+**MÓDULOS**
 
 O sistema oi dividido em 3 módulos: Gerencial, Pagamento e Pedido. A intergação entre esses sistemas ocorre via HTTP. Foi seguido essa estratêgia pensando em futuramente separar esses serviços.
 
-ARQUITETURA
+**ARQUITETURA**
 
 O projeto foi desenvolvido usando Arquitetura Limpa.
 
@@ -41,13 +37,41 @@ Cada módulo do sistema seguem a mesma estrutura. Essa estrutura visa separa as 
     - **usecase** *(contêm as classes que representam o processamento, jornada ou fluxo a ser executada por uma entrada (ex: controller). Um usecase utiliza-se de dados contidos nos DTOs para montar objetos de negócio (domain/entidade) e assim realizar processamentos até salvar dados no repositorio e/ou retornar o processamento para o serviço cliente)*
 
 
-SUBIR MINIKUBE
-minikube start
+**BANCO DE DADOS**
 
-SUBIR APP (PS: recomendado que o banco de dados deve estar up. Deve rodar nesta ordem)
+O banco de dados do sistema está no respositório git: https://github.com/renandpf/sgr-database-mysql
+
+**DOCKER: GERAR BUILD**
+
+docker build -t renandpf/sgr-service-spring:2.0.0 .
+
+docker tag renandpf/sgr-service-spring:2.0.0 renandpf/sgr-service-spring:2.0.0
+
+docker push renandpf/sgr-service-spring:2.0.0
+
+**MINIKUBE**
+
+Foi utilizado o minikube para prover serviços K8S
+
+Para subir o minikube:
+
+*minikube start*
+
+**KUBERNECT**
+
+Para execução do projeto usando K8S, deve seguir os passos abaixo. 
+NOTA: foi utilizado o minikube para testes
+NOTA: recomendado que o banco de dados deve estar up. Deve rodar nesta ordem
+
+
 kubectl apply -f sgr-service-spring-cm.yaml
+
 kubectl apply -f sgr-service-spring-secrets.yaml
+
 kubectl apply -f sgr-service-spring-svc.yaml
+
 kubectl apply -f sgr-service-spring-deploy.yaml
+
 kubectl apply -f sgr-service-spring-metrics.yaml
+
 kubectl apply -f sgr-service-spring-hpa.yaml
