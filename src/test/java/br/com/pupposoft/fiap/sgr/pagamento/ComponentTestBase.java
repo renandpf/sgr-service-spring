@@ -7,7 +7,6 @@ import br.com.pupposoft.fiap.sgr.config.database.gerencial.repository.ProdutoEnt
 import br.com.pupposoft.fiap.sgr.config.database.pagamento.repository.PagamentoEntityRepository;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.ItemEntityRepository;
 import br.com.pupposoft.fiap.sgr.config.database.pedido.repository.PedidoEntityRepository;
-import br.com.pupposoft.fiap.sgr.pagamento.adapter.web.PagamentoApiController;
 
 public abstract class ComponentTestBase {
 
@@ -26,11 +25,8 @@ public abstract class ComponentTestBase {
 	@Autowired
 	protected ItemEntityRepository itemEntityRepository;
 	
-	@Autowired
-	protected PagamentoApiController pagamentoApiController;
-
 	protected void cleanAllDatabase() {
-		//TODO: implementar
+		pagamentoEntityRepository.deleteAll();
 	}
 	
 }
