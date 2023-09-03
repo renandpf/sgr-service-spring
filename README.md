@@ -90,3 +90,32 @@ kubectl apply -f sgr-service-spring-hpa.yaml
 ```
 
 **API - ENDPOINTS**
+
+PRODUTO
+```
+curl --location 'http://localhost:8080/sgr/gerencial/produtos/10'
+```
+```
+curl --location 'http://localhost:8080/sgr/gerencial/produtos' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nome": "any name",
+    "valor": 500,
+    "categoria": "LANCHE"
+}'
+```
+```
+curl --location --request PUT 'http://localhost:8080/sgr/gerencial/produtos/10' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nome": "any name - ALTERADOaaaaaaaa",
+    "valor": 1,
+    "categoria": "LANCHE"
+}'
+```
+```
+curl --location --request DELETE 'http://localhost:8080/sgr/gerencial/produtos/8'
+```
+```
+curl --location 'http://localhost:8080/sgr/gerencial/categorias/LANCHE/produtos'
+```
