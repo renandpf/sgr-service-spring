@@ -12,6 +12,7 @@ Este sistema é o backend e expõe serviços a serem consumidos por um front-end
 Neste sistema foram utlizadas as tecnologias:
 * Java 18
 * Spring Boot
+* Maven
 * Docker
 * Kubernect
 
@@ -53,6 +54,13 @@ O banco de dados do sistema está no respositório git: https://github.com/renan
 O sistema está preparado para trabalhar com o mercado pago (somente com PIX).
 
 No entanto, o sistema está preparado para operar com mais de uma plataforma de pagamento (mercado pago, etc). Para tal foi utilizado SOLID e Factory. No caso de querer adicionar uma nova plataforma, poucas alterações serão necessárias.
+
+**MAVEN: Build do projeto**
+
+Executar o comando:
+```
+mvn clean install
+```
 
 **DOCKER: GERAR BUILD**
 
