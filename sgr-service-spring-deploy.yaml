@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: sgr-service-spring
-          image: renandpf/sgr-service-spring:1.0.0
+          image: renandpf/sgr-service-spring:2.0.0
           ports:
             - containerPort: 8080
           livenessProbe:
