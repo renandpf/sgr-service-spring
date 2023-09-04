@@ -101,6 +101,8 @@ kubectl apply -f sgr-service-spring-metrics.yaml
 kubectl apply -f sgr-service-spring-hpa.yaml
 ```
 
+# DETALHAMENTO DA API
+
 **PRODUTO - API - ENDPOINTS**
 
 Obter produto pelo id
@@ -135,8 +137,6 @@ Obter produto por categoria
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/categorias/LANCHE/produtos'
 ```
-
-# DETALHAMENTO DA API
 
 **CLIENTE - API - ENDPOINTS**
 
