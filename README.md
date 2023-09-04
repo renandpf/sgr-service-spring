@@ -215,3 +215,29 @@ curl --location --request PATCH 'http://localhost:8080/sgr/pedidos/4/status' \
   "status": "PAGAMENTO_INVALIDO"
 }'
 ```
+
+**PAGAMENTO - API - ENDPOINTS**
+
+Efetual pagamento
+```
+curl --location 'http://localhost:8080/sgr/pagamentos/efetuar' \
+--header 'Content-Type: application/json' \
+--data '{
+  "pedidoId": 4,
+  "forma": "PIX"
+}'
+```
+
+Notificar pagamento (chamado pela plataforma de pagamento)
+```
+curl --location 'http://localhost:8080/sgr/pagamentos/notificacoes/mercado-pago' \
+--header 'Content-Type: application/json' \
+--data '{
+    "identificador": "1317607491"
+}'
+```
+
+Obter pagamento pelo identificador de pagamento externo (plataforma de pagamento)
+```
+curl --location 'http://localhost:8080/sgr/pagamentos/identificador-pagamento-externo/identificiadorPagamentoMock'
+```
