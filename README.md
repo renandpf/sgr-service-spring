@@ -53,9 +53,11 @@ O banco de dados do sistema está no respositório git: https://github.com/renan
 
 ```
 docker build -t renandpf/sgr-service-spring:2.0.0 .
-
+```
+```
 docker tag renandpf/sgr-service-spring:2.0.0 renandpf/sgr-service-spring:2.0.0
-
+```
+```
 docker push renandpf/sgr-service-spring:2.0.0
 ```
 
@@ -77,19 +79,24 @@ NOTA: recomendado que o banco de dados deve estar up. Deve rodar nesta ordem
 
 ```
 kubectl apply -f sgr-service-spring-cm.yaml
-
+```
+```
 kubectl apply -f sgr-service-spring-secrets.yaml
-
+```
+```
 kubectl apply -f sgr-service-spring-svc.yaml
-
+```
+```
 kubectl apply -f sgr-service-spring-deploy.yaml
-
+```
+```
 kubectl apply -f sgr-service-spring-metrics.yaml
-
+```
+```
 kubectl apply -f sgr-service-spring-hpa.yaml
 ```
 
-**API - ENDPOINTS**
+**PRODUTO - API - ENDPOINTS**
 
 Obter produto pelo id
 ```
@@ -122,4 +129,89 @@ curl --location --request DELETE 'http://localhost:8080/sgr/gerencial/produtos/8
 Obter produto por categoria
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/categorias/LANCHE/produtos'
+```
+
+**CLIENTE - API - ENDPOINTS**
+
+Obter cliente por id
+```
+curl --location 'http://localhost:8080/sgr/gerencial/clientes/2'
+```
+
+Cadastrar Cliente
+```
+curl --location 'http://localhost:8080/sgr/gerencial/clientes' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nome": "any name",
+    "cpf": "123123",
+    "email": "anymail.com"
+}'
+```
+
+Obter cliente por CPF
+```
+curl --location 'http://localhost:8080/sgr/gerencial/clientes/cpf/123123'
+```
+
+Obter Cliente por email
+```
+curl --location 'http://localhost:8080/sgr/gerencial/clientes/email/anymail.com'
+```
+
+Alterar cliente
+```
+curl --location --request PUT 'http://localhost:8080/sgr/gerencial/clientes/2' \
+--header 'Content-Type: application/json' \
+--data '{
+    "nome": "any nameaaaa",
+    "cpf": "123123",
+    "email": "anymail.com"
+}'
+```
+
+**PEDIDO - API - ENDPOINTS**
+
+Obter pedido por ID
+```
+curl --location 'http://localhost:8080/sgr/pedidos/4'
+```
+
+Criar Pedido
+```
+curl --location 'http://localhost:8080/sgr/pedidos' \
+--header 'Content-Type: application/json' \
+--data '{
+  "observacao": "Sem cebolaaaa",
+  "clienteId": 2,
+  "itens": [
+    {
+      "quantidade": 2,
+      "produtoId": 8
+    },
+    {
+      "quantidade": 1,
+      "produtoId": 10
+    }
+  ]
+}'
+```
+
+Obter pedido em andamento
+```
+curl --location 'http://localhost:8080/sgr/pedidos/andamento'
+```
+
+Obter pagameto pelo identificador pagameno
+```
+curl --location 'http://localhost:8080/sgr/pedidos/pagamentos/identificiadorPagamentoMock?identificadorPagamento=any'
+```
+
+Alterar status do pedido
+```
+curl --location --request PATCH 'http://localhost:8080/sgr/pedidos/4/status' \
+--header 'Content-Type: application/json' \
+--data '{
+  "status": "PAGAMENTO_INVALIDO"
+}'
 ```
