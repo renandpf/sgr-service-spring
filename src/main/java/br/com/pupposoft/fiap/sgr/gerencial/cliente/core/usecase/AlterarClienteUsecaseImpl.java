@@ -23,7 +23,7 @@ public class AlterarClienteUsecaseImpl implements AlterarClienteUsecase {
 
         cliente.validar();
 
-        Optional<ClienteDto> clienteOp = this.clienteRepositoryGateway.obterPorCpf(cliente.getCpf());
+        Optional<ClienteDto> clienteOp = this.clienteRepositoryGateway.obterPorId(cliente.getId());
         
         if (clienteOp.isEmpty()) {
         	log.warn("Cliente não encontrado: cpf={}", paramsDto.getCliente().getCpf());
