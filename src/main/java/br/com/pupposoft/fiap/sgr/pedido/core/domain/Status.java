@@ -1,7 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pedido.core.domain;
 
-import java.util.Arrays;
-
 public enum Status {
     RECEBIDO,
     AGUARDANDO_CONFIRMACAO_PAGAMENTO,
@@ -12,9 +10,8 @@ public enum Status {
     PAGAMENTO_INVALIDO;
     
     public static Status get(Long id) {
-    	return Arrays.stream(Status.values())
-    			.filter(s -> s.ordinal() == id)
-    			.findAny().orElseThrow();
+    	Status[] values = Status.values();
+    	return values[id.intValue()]; 
     }
     
     public static Long get(Status status) {

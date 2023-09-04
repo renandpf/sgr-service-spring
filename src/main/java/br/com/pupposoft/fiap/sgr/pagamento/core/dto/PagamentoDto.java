@@ -1,8 +1,5 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.dto;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,18 +10,14 @@ import lombok.ToString;
 @ToString
 public class PagamentoDto {
     private Long id;
-    private List<CartaoCreditoDto> cartoesCredito;
+    private String formaPagamento;
 
     @Setter
-    private BigDecimal valor;
+    private Double valor;
     
     @Setter
     private PedidoDto pedido;
 
     @Setter
-    private String identificadorPagamentoExterno;
-    
-    public boolean haveCartaoCredito() {
-    	return cartoesCredito != null && !cartoesCredito.isEmpty();
-    }
+    private String pagamentoExternoId;
 }

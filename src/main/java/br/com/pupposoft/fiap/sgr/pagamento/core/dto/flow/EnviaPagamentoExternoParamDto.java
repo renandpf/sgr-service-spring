@@ -1,8 +1,6 @@
 package br.com.pupposoft.fiap.sgr.pagamento.core.dto.flow;
 
-import java.util.List;
-
-import br.com.pupposoft.fiap.sgr.pagamento.core.dto.CartaoCreditoDto;
+import br.com.pupposoft.fiap.sgr.pagamento.core.domain.ModoPagamento;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,5 +9,12 @@ import lombok.ToString;
 @Getter
 @ToString
 public class EnviaPagamentoExternoParamDto {
-	private List<CartaoCreditoDto> cartoesCredito;
+	private String nomeProduto;
+	private String nomeCliente;
+	private String sobrenomeCliente;
+	private String emailCliente;
+	private Integer parcelas;
+	private Double valor;
+	private ModoPagamento modoPagamento;
+	
 }

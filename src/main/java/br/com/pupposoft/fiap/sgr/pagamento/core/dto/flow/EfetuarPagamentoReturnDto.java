@@ -9,4 +9,5 @@ import lombok.ToString;
 @ToString
 public class EfetuarPagamentoReturnDto {
 	private Long pagamentoId;
+	private String pagamentoExternoId;
 }
