@@ -88,7 +88,7 @@ Para execução do projeto usando K8S, deve seguir os passos abaixo.
 
 NOTA: foi utilizado o minikube para testes
 
-NOTA: recomendado que o banco de dados deve estar up. Deve rodar nesta ordem
+NOTA: recomendado que o banco de dados deve estar up (vide readme do projeto do banco de dado). Deve executar nesta ordem
 
 ```
 kubectl apply -f sgr-service-spring-cm.yaml
