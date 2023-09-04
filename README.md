@@ -36,7 +36,6 @@ Cada módulo do sistema seguem a mesma estrutura. Essa estrutura visa separa as 
     - **gateway** *(contêm as interfaces que determinam o 'contrato' a serem implementados pelos adaptadores (pacote/diretório adapter))*
     - **usecase** *(contêm as classes que representam o processamento, jornada ou fluxo a ser executada por uma entrada (ex: controller). Um usecase utiliza-se de dados contidos nos DTOs para montar objetos de negócio (domain/entidade) e assim realizar processamentos até salvar dados no repositorio e/ou retornar o processamento para o serviço cliente)*
 
-
 **TESTES AUTOMATIZADOS**
 
 Foram criados diversos testes unitários e testes de componente. Tais testes encontram-se no diretório 'test'.
@@ -48,6 +47,12 @@ Foram criados diversos testes unitários e testes de componente. Tais testes enc
 **BANCO DE DADOS**
 
 O banco de dados do sistema está no respositório git: https://github.com/renandpf/sgr-database-mysql
+
+**SISTEMA DE PAGAMENTOS**
+
+O sistema está preparado para trabalhar com o mercado pago (somente com PIX).
+
+No entanto, o sistema está preparado para operar com mais de uma plataforma de pagamento (mercado pago, etc). Para tal foi utilizado SOLID e Factory. No caso de querer adicionar uma nova plataforma, poucas alterações serão necessárias.
 
 **DOCKER: GERAR BUILD**
 
@@ -130,6 +135,8 @@ Obter produto por categoria
 ```
 curl --location 'http://localhost:8080/sgr/gerencial/categorias/LANCHE/produtos'
 ```
+
+# DETALHAMENTO DA API
 
 **CLIENTE - API - ENDPOINTS**
 
