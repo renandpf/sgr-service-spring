@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtGateway implements TokenGateway {
 		
-    @Value("${wehandle.security.token.jwt.secretKey}")
+    @Value("${sgr.security.token.jwt.secretkey}")
 	private String secretKey;
 
 	@Override
