@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.pupposoft.fiap.starter.token.TokenGateway;
@@ -69,9 +69,9 @@ public class TokenInterceptorFilter extends OncePerRequestFilter {
 
 	private void createAutentication(final Map<String, String> headersInfos) {
 		String role = headersInfos.get(USUARIO_PERFIL);
-		Collection<? extends GrantedAuthority> authorities = role == null ? null : Arrays.asList(() -> "ROLE_"+role);
-		Authentication auth = new UsernamePasswordAuthenticationToken("admin", "", authorities);
-		SecurityContextHolder.getContext().setAuthentication(auth);
+//		Collection<? extends GrantedAuthority> authorities = role == null ? null : Arrays.asList(() -> "ROLE_"+role);
+//		Authentication auth = new UsernamePasswordAuthenticationToken("admin", "", authorities);
+//		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
 	
 	private Boolean isValidToken(String token) {
