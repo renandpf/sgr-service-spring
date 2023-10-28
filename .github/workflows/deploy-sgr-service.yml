@@ -35,7 +35,7 @@ env:
   ECR_REPOSITORY: sgr-service-spring           # set this to your Amazon ECR repository name
   ECS_SERVICE: sgr-service-spring                 # set this to your Amazon ECS service name
   ECS_CLUSTER: prd-sgr                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: sgr-service-spring-td # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: task-definition.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: sgr-service           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
@@ -76,6 +76,11 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Download task definition
+      run: |
+        aws ecs describe-task-definition --task-definition sgr-service-spring-td --query taskDefinition > task-definition.json
+  
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
