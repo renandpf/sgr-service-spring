@@ -30,7 +30,7 @@ name: SonarCloud
 
 on:
   push:
-    branches: [ "main", "develop", "2.1.0" ]
+    branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
