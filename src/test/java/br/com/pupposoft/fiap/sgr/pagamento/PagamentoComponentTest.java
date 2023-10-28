@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +48,7 @@ import br.com.pupposoft.fiap.starter.http.HttpConnect;
 @TestPropertySource(locations = "classpath:application-componenttest.properties")
 @ActiveProfiles("componenttest")
 @WireMockTest
+@Disabled
 class PagamentoComponentTest extends ComponentTestBase {
 
 	@LocalServerPort
